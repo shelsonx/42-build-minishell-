@@ -25,7 +25,7 @@ void    go_to_dir(char *path)
 int main(void)
 {
     show_current_dir();
-    go_to_dir("/home/shelson/");
+    go_to_dir("../../");
     show_current_dir();
     return (0);
 }
