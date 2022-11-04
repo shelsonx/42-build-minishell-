@@ -14,7 +14,7 @@ OBJECTS =				$(addprefix ${OBJECTS_PATH}/, ${OBJECTS_FILES})
 HEADER =				${INCLUDES_PATH}/minishell.h
 
 REMOVE =				rm -rf
-CC =					cc -g3 -Wall -Wextra -Werror
+CC =					@cc -g3 -Wall -Wextra -Werror
 
 all:					${NAME}
 
@@ -24,13 +24,13 @@ ${NAME}:				${OBJECTS_PATH} ${OBJECTS} ${LIBFT}
 						@echo "$(GREEN)$(NAME) created$(DEFAULT)"
 
 ${OBJECTS_PATH}:
-						mkdir -p $@
+						@mkdir -p $@
 
 ${OBJECTS_PATH}/%.o:	${SOURCES_PATH}/%.c ${HEADER} Makefile | ${OBJECTS_PATH}
-						${CC} -c $< -o $@
+						@${CC} -c $< -o $@
 
 ${LIBFT}:
-						${MAKE} -C ${LIBFT_PATH} 
+						@${MAKE} -C ${LIBFT_PATH} 
 
 clean:
 						@$(MAKE) -C $(LIBFT_PATH) clean
