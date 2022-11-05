@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
+/*   By: progerio <progerio@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:01 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/05 08:48:34 by shelson          ###   ########.fr       */
+/*   Updated: 2022/11/05 18:54:58 by progerio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,7 @@
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <sys/types.h>
+
+void prompt();
 
 #endif /* MINISHELL */

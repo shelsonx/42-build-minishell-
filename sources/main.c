@@ -6,7 +6,7 @@
 /*   By: progerio <progerio@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:19 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/04 22:17:08 by progerio         ###   ########.fr       */
+/*   Updated: 2022/11/05 18:54:52 by progerio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,6 @@
 
 int main(){
 	
-	ft_printf("Test Minishell\n");
+	prompt();
 	
 }

@@ -1,50 +1,56 @@
-NAME =					minishell
- 
-LIBFT = 				${LIBFT_PATH}/libft.a 
-LIBFT_PATH = 			libs/libft
+NAME			= minishell
+LIBFT			= libft.a
 
-SOURCES_FILES =			main.c
-OBJECTS_FILES =			${SOURCES_FILES:.c=.o}
-INCLUDES_PATH =			includes
-SOURCES_PATH =			sources
-OBJECTS_PATH =			objects
+CC 				= cc
+CF 				= -g -Wall -Wextra -Werror
+CFI 			= -I $(INCLUDE)
+CREADLINE		= -lreadline
 
-SOURCES =				$(addprefix ${SOURCES_PATH}/, ${SOURCES_FILES})
-OBJECTS =				$(addprefix ${OBJECTS_PATH}/, ${OBJECTS_FILES})
-HEADER =				${INCLUDES_PATH}/minishell.h
+LIBFT_PATH 		= ./libs/libft/
+SRC_PATH 		= ./sources/
+OBJ_PATH		= ./obj/
+INCLUDE 		= ./includes/
 
-REMOVE =				rm -rf
-CC =					@cc -g3 -Wall -Wextra -Werror
+SRC				= main.c\
+				  prompt.c
 
-all:					${NAME}
+VPATH 			:= $(SRC_PATH)\
+				$(SRC_PATH)prompt\
 
-${NAME}:				${OBJECTS_PATH} ${OBJECTS} ${LIBFT} 
-						@${CC} ${OBJECTS} ${LIBFT} \
-						-o ${NAME}
-						@echo "$(GREEN)$(NAME) created$(DEFAULT)"
+OBJ				= $(addprefix $(OBJ_PATH), $(notdir $(SRC:.c=.o)))
 
-${OBJECTS_PATH}:
-						@mkdir -p $@
+RM 				= rm -rf
 
-${OBJECTS_PATH}/%.o:	${SOURCES_PATH}/%.c ${HEADER} Makefile | ${OBJECTS_PATH}
-						@${CC} -c $< -o $@
+$(OBJ_PATH)%.o: %.c
+				mkdir -p $(OBJ_PATH)
+				$(CC) $(CF) $(CFI) -c $< -o $@
 
-${LIBFT}:
-						@${MAKE} -C ${LIBFT_PATH} 
+$(NAME):		$(OBJ)
+				make -C $(LIBFT_PATH) $(LIBFT)
+				$(CC) -g $(CF) -I $(INCLUDE) -o $(NAME) $(OBJ) -L $(LIBFT_PATH) -lft $(CREADLINE)
+				@echo "$(GREEN)$(NAME) created$(DEFAULT)"
+
+all:			$(NAME)
+
+re:				fclean all
 
 clean:
-						@$(MAKE) -C $(LIBFT_PATH) clean
-						@${REMOVE} ${OBJECTS_PATH}
-						@echo "$(YELLOW)object files deleted$(DEFAULT)"
+				make -C $(LIBFT_PATH) clean
+				$(RM) $(OBJ) $(OBJDIR)
+				@echo "$(YELLOW)object files deleted$(DEFAULT)"
 
-fclean:					clean
-						@$(MAKE) -C $(LIBFT_PATH) fclean
-						@${REMOVE} ${NAME}
-						@echo "$(RED)all deleted$(DEFAULT)"
+fclean:			clean
+				make -C $(LIBFT_PATH) fclean
+				$(RM) $(NAME)
+				@echo "$(RED)all deleted$(DEFAULT)"
 
-re:						fclean all
+install:		
+				sudo apt-get install -y libreadline-dev valgrind
 
-.PHONY:					all clean fclean re run vg
+leak:							
+				valgrind --suppressions=./local.supp --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(NAME)
+
+.PHONY:			all clean fclean re bonus rebonus
 
 #COLORS
 RED = \033[1;31m
