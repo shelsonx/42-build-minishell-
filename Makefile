@@ -12,10 +12,12 @@ OBJ_PATH		= ./obj/
 INCLUDE 		= ./includes/
 
 SRC				= main.c\
-				  prompt.c
+				  prompt.c\
+				  exec.c\
 
 VPATH 			:= $(SRC_PATH)\
 				$(SRC_PATH)prompt\
+				$(SRC_PATH)execute\
 
 OBJ				= $(addprefix $(OBJ_PATH), $(notdir $(SRC:.c=.o)))
 

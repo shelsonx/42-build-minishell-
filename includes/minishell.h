@@ -6,7 +6,7 @@
 /*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:01 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/05 12:40:19 by shelson          ###   ########.fr       */
+/*   Updated: 2022/11/05 14:34:54 by shelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 
-enum e_boolean {FALSE, TRUE};
+enum    e_boolean {FALSE, TRUE};
 
+int execute(char *line);
 void    prompt();
 #endif /* MINISHELL */

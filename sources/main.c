@@ -6,12 +6,14 @@
 /*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:19 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/05 09:48:52 by shelson          ###   ########.fr       */
+/*   Updated: 2022/11/05 14:35:16 by shelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int main(){
+int main(void)
+{
 	prompt();
+	return (0);
 }

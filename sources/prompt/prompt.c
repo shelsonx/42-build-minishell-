@@ -11,7 +11,7 @@ void    prompt()
     {
         line = readline("Minishell:");
         add_history(line);
-        printf("%s\n", line);
+		execute(line);
         free(line);
     }
 }
