@@ -2,11 +2,12 @@
 
 //-lreadline
 //--suppressions=readline.supp
+
 void    prompt()
 {
     char    *line;
 
-    while (1)
+    while (TRUE)
     {
         line = readline("Minishell:");
         add_history(line);
