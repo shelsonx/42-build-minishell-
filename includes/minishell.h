@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: progerio <progerio@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:01 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/04 21:46:20 by progerio         ###   ########.fr       */
+/*   Updated: 2022/11/05 08:48:34 by shelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# include "../libft/libft.h"
+# include "../libs/libft/libft.h"
 
 # include <stdio.h>
 # include <string.h>

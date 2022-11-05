@@ -1,7 +1,7 @@
 NAME =					minishell
  
 LIBFT = 				${LIBFT_PATH}/libft.a 
-LIBFT_PATH = 			libft
+LIBFT_PATH = 			libs/libft
 
 SOURCES_FILES =			main.c
 OBJECTS_FILES =			${SOURCES_FILES:.c=.o}
