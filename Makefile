@@ -4,6 +4,7 @@ LIBFT = 				${LIBFT_PATH}/libft.a
 LIBFT_PATH = 			libs/libft
 
 SOURCES_FILES =			main.c
+SOURCES_FILES +=		prompt/prompt.c
 OBJECTS_FILES =			${SOURCES_FILES:.c=.o}
 INCLUDES_PATH =			includes
 SOURCES_PATH =			sources

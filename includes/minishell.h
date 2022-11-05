@@ -6,7 +6,7 @@
 /*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:01 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/05 08:48:34 by shelson          ###   ########.fr       */
+/*   Updated: 2022/11/05 09:46:06 by shelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,5 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 
+void    prompt();
 #endif /* MINISHELL */
