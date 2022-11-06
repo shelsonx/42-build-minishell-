@@ -51,23 +51,52 @@ char	*get_exec_command(char *arg)
 int execute(char *line)
 {
     char    **pipeline;
-    char    *exec_command;
+    char    *exec_command1;
+	char    *exec_command2;
+	int	fd[2];
 
+	//ls -l grep m
     pipeline = ft_split(line, ' ');
-    exec_command = get_exec_command(pipeline[0]);
-    char *args[] = {exec_command,pipeline[1], NULL};
-    ft_printf("exec_command=%s\n", exec_command);
-    pid_t child_pid = fork();
+    exec_command1 = get_exec_command(pipeline[0]);
+	exec_command2 = get_exec_command(pipeline[2]);
+    char *args1[] = {exec_command1,pipeline[1], NULL};
+	char *args2[] = {exec_command2,pipeline[3], NULL};
 
-    if (child_pid < 0)
+	if (pipe(fd) < 0) 
+		perror("minishell");
+	
+    pid_t child_pid1 = fork();
+    if (child_pid1 < 0)
     {
         perror("pipex");
 		exit(EXIT_FAILURE);
     }
-    if (child_pid == 0)
-        execve(args[0], args, NULL);
-    waitpid(child_pid, NULL, 0);
+
+    if (child_pid1 == 0)
+	{	
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+		execve(args1[0], args1, NULL);
+	}
+
+	pid_t child_pid2 = fork();
+	if (child_pid2 == 0)
+	{	
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+		execve(args2[0], args2, NULL);
+	}
+        
+	close(fd[0]);
+	close(fd[1]);
+    waitpid(child_pid1, NULL, 0);
+	waitpid(child_pid2, NULL, 0);
     ft_printf("Fim!\n");
-    free(exec_command);
+    free(exec_command1);
+	free(exec_command2);
     return (0);
 }
+
+
