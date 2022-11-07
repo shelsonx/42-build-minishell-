@@ -52,7 +52,7 @@ install:
 				sudo apt-get install -y libreadline-dev valgrind
 
 leak:							
-				valgrind --suppressions=./local.supp --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(NAME)
+				valgrind --suppressions=readline.supp --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(NAME)
 
 .PHONY:			all clean fclean re bonus rebonus
 

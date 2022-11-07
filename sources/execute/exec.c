@@ -93,10 +93,11 @@ int execute(char *line)
 	close(fds[0][1]);
     waitpid(child_pid1, NULL, 0);
 	waitpid(child_pid2, NULL, 0);
-    ft_printf("Fim!\n");
-	ft_free_fds(fds);
     free(exec_command1);
 	free(exec_command2);
+	ft_free_tab(pipeline);
+	ft_free_fds(fds);
+    ft_printf("Fim!\n");
     return (0);
 }
 
