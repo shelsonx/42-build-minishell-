@@ -53,16 +53,16 @@ int execute(char *line)
     char    **pipeline;
     char    *exec_command1;
 	char    *exec_command2;
-	int	fd[2];
+	int	**fds;
 
-	//ls -l grep m
     pipeline = ft_split(line, ' ');
     exec_command1 = get_exec_command(pipeline[0]);
 	exec_command2 = get_exec_command(pipeline[2]);
     char *args1[] = {exec_command1,pipeline[1], NULL};
 	char *args2[] = {exec_command2,pipeline[3], NULL};
 
-	if (pipe(fd) < 0) 
+	fds = create_pipes(1);
+	if (pipe(fds[0]) < 0) 
 		perror("minishell");
 	
     pid_t child_pid1 = fork();
@@ -74,26 +74,27 @@ int execute(char *line)
 
     if (child_pid1 == 0)
 	{	
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[0]);
-		close(fd[1]);
+		dup2(fds[0][1], STDOUT_FILENO);
+		close(fds[0][0]);
+		close(fds[0][1]);
 		execve(args1[0], args1, NULL);
 	}
 
 	pid_t child_pid2 = fork();
 	if (child_pid2 == 0)
 	{	
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[0]);
-		close(fd[1]);
+		dup2(fds[0][0], STDIN_FILENO);
+		close(fds[0][0]);
+		close(fds[0][1]);
 		execve(args2[0], args2, NULL);
 	}
         
-	close(fd[0]);
-	close(fd[1]);
+	close(fds[0][0]);
+	close(fds[0][1]);
     waitpid(child_pid1, NULL, 0);
 	waitpid(child_pid2, NULL, 0);
     ft_printf("Fim!\n");
+	ft_free_fds(fds);
     free(exec_command1);
 	free(exec_command2);
     return (0);

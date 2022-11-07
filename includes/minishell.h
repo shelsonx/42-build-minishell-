@@ -6,7 +6,7 @@
 /*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:01 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/05 14:34:54 by shelson          ###   ########.fr       */
+/*   Updated: 2022/11/07 09:22:28 by shelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,17 @@
 
 enum    e_boolean {FALSE, TRUE};
 
-int execute(char *line);
+//execute
+int     execute(char *line);
+
+//prompt
 void    prompt();
+
+//pipes
+int     **create_pipes(int amount);
+
+//utils pipes
+void	ft_free_fds(int **fds);
+void	close_fds(int **fds);
+
 #endif /* MINISHELL */

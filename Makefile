@@ -13,11 +13,13 @@ INCLUDE 		= ./includes/
 
 SRC				= main.c\
 				  prompt.c\
-				  exec.c\
+				  exec.c pipe.c\
+				  utils_pipes.c
 
 VPATH 			:= $(SRC_PATH)\
 				$(SRC_PATH)prompt\
 				$(SRC_PATH)execute\
+				$(SRC_PATH)utils\
 
 OBJ				= $(addprefix $(OBJ_PATH), $(notdir $(SRC:.c=.o)))
 
