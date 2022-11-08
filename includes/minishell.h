@@ -6,7 +6,7 @@
 /*   By: progerio <progerio@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:01 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/08 15:20:33 by progerio         ###   ########.fr       */
+/*   Updated: 2022/11/08 16:46:28 by progerio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,6 @@ int     **create_pipes(int amount);
 
 //utils pipes
 void	ft_free_fds(int **fds);
-void	close_fds(int **fds);
+void	ft_close_fds(int **fds);
 
 #endif /* MINISHELL */

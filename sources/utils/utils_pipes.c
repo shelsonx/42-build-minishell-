@@ -19,7 +19,7 @@ void	ft_free_fds(int **fds)
 	free(fds);
 }
 
-void	close_fds(int **fds)
+void	ft_close_fds(int **fds)
 {
 	int	i;
 

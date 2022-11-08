@@ -82,8 +82,7 @@ int execute(char *line)
     if (child_pid1 == 0)
 	{	
 		dup2(fds[0][1], STDOUT_FILENO);
-		close(fds[0][0]);
-		close(fds[0][1]);
+		ft_close_fds(fds);
 		execve(args1[0], args1, NULL);
 	}
 
@@ -91,13 +90,11 @@ int execute(char *line)
 	if (child_pid2 == 0)
 	{	
 		dup2(fds[0][0], STDIN_FILENO);
-		close(fds[0][0]);
-		close(fds[0][1]);
+		ft_close_fds(fds);
 		execve(args2[0], args2, NULL);
 	}
         
-	close(fds[0][0]);
-	close(fds[0][1]);
+	ft_close_fds(fds);
     waitpid(child_pid1, NULL, 0);
 	waitpid(child_pid2, NULL, 0);
 	ft_free_tab(pipeline);
