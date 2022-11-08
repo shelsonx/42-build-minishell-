@@ -59,10 +59,38 @@ char **create_args(char **pipeline, int pos_cmd, int pos_param)
 	return args;
 }
 
+pid_t	create_child_process(void)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("Error: ");
+		exit(EXIT_FAILURE);
+	}
+	return (pid);
+}
+
+pid_t	execute_child_process(int dest, int src, char **args, int **fds)
+{
+	pid_t pid = create_child_process();
+
+	if (pid == 0)
+	{
+		dup2(dest, src);
+		ft_close_fds(fds);
+		execve(args[0], args, NULL);
+	}
+	return (pid);
+}
+
 int execute(char *line)
 {
     char    **pipeline;
 	int	**fds;
+    pid_t child_pid1;
+	pid_t child_pid2;
 
     pipeline = ft_split(line, ' ');
     char **args1 = create_args(pipeline, 0, 1);
@@ -72,27 +100,8 @@ int execute(char *line)
 	if (pipe(fds[0]) < 0) 
 		perror("minishell");
 	
-    pid_t child_pid1 = fork();
-    if (child_pid1 < 0)
-    {
-        perror("pipex");
-		exit(EXIT_FAILURE);
-    }
-
-    if (child_pid1 == 0)
-	{	
-		dup2(fds[0][1], STDOUT_FILENO);
-		ft_close_fds(fds);
-		execve(args1[0], args1, NULL);
-	}
-
-	pid_t child_pid2 = fork();
-	if (child_pid2 == 0)
-	{	
-		dup2(fds[0][0], STDIN_FILENO);
-		ft_close_fds(fds);
-		execve(args2[0], args2, NULL);
-	}
+	child_pid1 = execute_child_process(fds[0][1], STDOUT_FILENO, args1, fds);
+	child_pid2 = execute_child_process(fds[0][0], STDIN_FILENO, args2, fds);
         
 	ft_close_fds(fds);
     waitpid(child_pid1, NULL, 0);
@@ -102,5 +111,3 @@ int execute(char *line)
     ft_printf("Fim!\n");
     return (0);
 }
-
-
