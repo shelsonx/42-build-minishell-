@@ -48,18 +48,25 @@ char	*get_exec_command(char *arg)
 	return (NULL);
 }
 
+char **create_args(char **pipeline, int pos_cmd, int pos_param)
+{
+	char **args = malloc(sizeof (char**) * 1);
+	*args = malloc(sizeof (char*) * 3);
+	args[0] = get_exec_command(pipeline[pos_cmd]);
+	args[1] = pipeline[pos_param];
+	args[2] = NULL;
+
+	return args;
+}
+
 int execute(char *line)
 {
     char    **pipeline;
-    char    *exec_command1;
-	char    *exec_command2;
 	int	**fds;
 
     pipeline = ft_split(line, ' ');
-    exec_command1 = get_exec_command(pipeline[0]);
-	exec_command2 = get_exec_command(pipeline[2]);
-    char *args1[] = {exec_command1,pipeline[1], NULL};
-	char *args2[] = {exec_command2,pipeline[3], NULL};
+    char **args1 = create_args(pipeline, 0, 1);
+	char **args2 = create_args(pipeline, 2, 3);
 
 	fds = create_pipes(1);
 	if (pipe(fds[0]) < 0) 
@@ -93,8 +100,6 @@ int execute(char *line)
 	close(fds[0][1]);
     waitpid(child_pid1, NULL, 0);
 	waitpid(child_pid2, NULL, 0);
-    free(exec_command1);
-	free(exec_command2);
 	ft_free_tab(pipeline);
 	ft_free_fds(fds);
     ft_printf("Fim!\n");
