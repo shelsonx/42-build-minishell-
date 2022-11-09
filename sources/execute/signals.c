@@ -9,9 +9,4 @@ void	sighandler(int sigtype)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-
-	if (sigtype == SIGQUIT)
-	{
-		exit(0);
-	}
 }

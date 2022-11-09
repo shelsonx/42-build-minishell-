@@ -9,7 +9,7 @@ void    prompt()
 
     while (TRUE)
     {	
-		signal(SIGQUIT, sighandler);
+		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sighandler);
         line = readline("Minishell:");
         add_history(line);
