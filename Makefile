@@ -14,7 +14,8 @@ INCLUDE 		= ./includes/
 SRC				= main.c\
 				  prompt.c\
 				  exec.c pipe.c\
-				  utils_pipes.c
+				  utils_pipes.c\
+				  signals.c\
 
 VPATH 			:= $(SRC_PATH)\
 				$(SRC_PATH)prompt\
