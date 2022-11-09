@@ -80,7 +80,8 @@ pid_t	execute_child_process(int dest, int src, char **args, int **fds)
 	{
 		dup2(dest, src);
 		ft_close_fds(fds);
-		execve(args[0], args, NULL);
+		if (execve(args[0], args, NULL) == -1)
+			exit(EXIT_FAILURE);
 	}
 	return (pid);
 }
@@ -89,8 +90,8 @@ int execute(char *line)
 {
     char    **pipeline;
 	int	**fds;
-    pid_t child_pid1;
-	pid_t child_pid2;
+    pid_t child_pid;
+	int status;
 
     pipeline = ft_split(line, ' ');
     char **args1 = create_args(pipeline, 0, 1);
@@ -100,12 +101,11 @@ int execute(char *line)
 	if (pipe(fds[0]) < 0) 
 		perror("minishell");
 	
-	child_pid1 = execute_child_process(fds[0][1], STDOUT_FILENO, args1, fds);
-	child_pid2 = execute_child_process(fds[0][0], STDIN_FILENO, args2, fds);
+	child_pid = execute_child_process(fds[0][1], STDOUT_FILENO, args1, fds);
+	child_pid = execute_child_process(fds[0][0], STDIN_FILENO, args2, fds);
         
 	ft_close_fds(fds);
-    waitpid(child_pid1, NULL, 0);
-	waitpid(child_pid2, NULL, 0);
+    waitpid(child_pid, &status, 0);
 	ft_free_tab(pipeline);
 	ft_free_fds(fds);
     ft_printf("Fim!\n");
