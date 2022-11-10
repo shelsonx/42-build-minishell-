@@ -6,7 +6,7 @@
 /*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:01 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/09 18:57:18 by shelson          ###   ########.fr       */
+/*   Updated: 2022/11/09 19:32:34 by shelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,9 @@ void	ft_close_fds(int **fds);
 
 //signals
 void	sighandler(int sigtype);
+
+//paths
+char	**get_paths_cmds(char *env_path);
+char	*join_path_command(char *path, char *command);
 
 #endif /* MINISHELL */

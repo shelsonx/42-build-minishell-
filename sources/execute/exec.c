@@ -1,27 +1,5 @@
 #include "../../includes/minishell.h"
 
-char	**get_paths_cmds(char *env_path)
-{
-	char	*sub_path;
-	char	**paths;
-
-	sub_path = ft_substr(env_path, 5, ft_strlen(env_path));
-	paths = ft_split(sub_path, ':');
-	free(sub_path);
-	return (paths);
-}
-
-char	*join_path_command(char *path, char *command)
-{
-	char	*full_path;
-	char	*path_tmp;
-
-	path_tmp = ft_strjoin(path, "/");
-	full_path = ft_strjoin(path_tmp, command);
-	free(path_tmp);
-	return (full_path);
-}
-
 char	*get_exec_command(char *arg)
 {
 	char	*exec_command;
@@ -107,7 +85,7 @@ int execute(char *line)
 	data.fd_src = STDIN_FILENO;
 	data.args = create_args(data.pipeline, 2, 3);
 	child_pid = execute_child_process(&data);
-        
+
 	ft_close_fds(data.fds);
     waitpid(child_pid, &status, 0);
 	ft_free_tab(data.pipeline);
