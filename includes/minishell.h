@@ -6,7 +6,7 @@
 /*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:01 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/09 19:32:34 by shelson          ###   ########.fr       */
+/*   Updated: 2022/11/09 20:36:29 by shelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,8 @@ void	sighandler(int sigtype);
 //paths
 char	**get_paths_cmds(char *env_path);
 char	*join_path_command(char *path, char *command);
+
+//command
+char	*get_exec_command(char *arg);
 
 #endif /* MINISHELL */
