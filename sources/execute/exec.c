@@ -89,7 +89,6 @@ int execute(char *line)
 
     data.pipeline = ft_split(line, ' ');
 	total_commands = ft_len_rows_tab(data.pipeline) /2;
-	ft_printf("total_commands=%d\n", total_commands);
 	if (total_commands == 1)
 	{
 		pid_t	child_pid;
