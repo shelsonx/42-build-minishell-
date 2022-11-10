@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: progerio <progerio@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:01 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/09 00:42:22 by progerio         ###   ########.fr       */
+/*   Updated: 2022/11/09 18:57:18 by shelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@
 
 typedef struct s_data {
 	char    **pipeline;
-	
+	int		**fds;
+	char	**args;
+	int		fd_src;
+	int		fd_dest;
 } t_data;
 
 enum    e_boolean {FALSE, TRUE};

@@ -72,15 +72,15 @@ pid_t	create_child_process(void)
 	return (pid);
 }
 
-pid_t	execute_child_process(int dest, int src, char **args, int **fds)
+pid_t	execute_child_process(t_data *data)
 {
 	pid_t pid = create_child_process();
 
 	if (pid == 0)
 	{
-		dup2(dest, src);
-		ft_close_fds(fds);
-		if (execve(args[0], args, NULL) == -1)
+		dup2(data->fd_dest, data->fd_src);
+		ft_close_fds(data->fds);
+		if (execve(data->args[0], data->args, NULL) == -1)
 			exit(EXIT_FAILURE);
 	}
 	return (pid);
@@ -88,26 +88,30 @@ pid_t	execute_child_process(int dest, int src, char **args, int **fds)
 
 int execute(char *line)
 {
-    char    **pipeline;
-	int	**fds;
-    pid_t child_pid;
-	int status;
+	t_data	data;
+    pid_t	child_pid;
+	int 	status;
 
-    pipeline = ft_split(line, ' ');
-    char **args1 = create_args(pipeline, 0, 1);
-	char **args2 = create_args(pipeline, 2, 3);
+    data.pipeline = ft_split(line, ' ');
 
-	fds = create_pipes(1);
-	if (pipe(fds[0]) < 0) 
+	data.fds = create_pipes(1);
+	if (pipe(data.fds[0]) < 0)
 		perror("minishell");
 	
-	child_pid = execute_child_process(fds[0][1], STDOUT_FILENO, args1, fds);
-	child_pid = execute_child_process(fds[0][0], STDIN_FILENO, args2, fds);
+	data.fd_dest = data.fds[0][1];
+	data.fd_src = STDOUT_FILENO;
+	data.args = create_args(data.pipeline, 0, 1);
+	child_pid = execute_child_process(&data);
+
+	data.fd_dest = data.fds[0][0];
+	data.fd_src = STDIN_FILENO;
+	data.args = create_args(data.pipeline, 2, 3);
+	child_pid = execute_child_process(&data);
         
-	ft_close_fds(fds);
+	ft_close_fds(data.fds);
     waitpid(child_pid, &status, 0);
-	ft_free_tab(pipeline);
-	ft_free_fds(fds);
-    ft_printf("Fim!\n");
+	ft_free_tab(data.pipeline);
+	ft_free_fds(data.fds);
+    ft_printf("End!\n");
     return (0);
 }
