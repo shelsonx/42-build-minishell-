@@ -30,7 +30,8 @@ pid_t	execute_child_process(t_data *data)
 
 	if (pid == 0)
 	{
-		dup2(data->fd_dest, data->fd_src);
+		dup2(data->fd_in, STDIN_FILENO);
+		dup2(data->fd_out, STDOUT_FILENO);
 		ft_close_fds(data->fds);
 		if (execve(data->args[0], data->args, NULL) == -1)
 			exit(EXIT_FAILURE);
@@ -45,19 +46,32 @@ int execute(char *line)
 	int 	status;
 
     data.pipeline = ft_split(line, ' ');
-
-	data.fds = create_pipes(1);
+	//ft_printf("size args=%d\n", ft_len_rows_tab(data.pipeline));
+	data.fds = create_pipes(3);
 	if (pipe(data.fds[0]) < 0)
 		perror("minishell");
 	
-	data.fd_dest = data.fds[0][1];
-	data.fd_src = STDOUT_FILENO;
+	if (pipe(data.fds[1]) < 0)
+		perror("minishell");
+	//ls -l grep x
+	data.fd_in = STDIN_FILENO;
+	data.fd_out = data.fds[0][1];
 	data.args = create_args(data.pipeline, 0, 1);
 	child_pid = execute_child_process(&data);
 
-	data.fd_dest = data.fds[0][0];
-	data.fd_src = STDIN_FILENO;
+	data.fd_in = data.fds[0][0];
+	data.fd_out = data.fds[1][1];
 	data.args = create_args(data.pipeline, 2, 3);
+	child_pid = execute_child_process(&data);
+
+	data.fd_in = data.fds[1][0];
+	data.fd_out = data.fds[2][1];
+	data.args = create_args(data.pipeline, 4, 5);
+	child_pid = execute_child_process(&data);
+
+	data.fd_in = data.fds[2][0];
+	data.fd_out = STDOUT_FILENO;
+	data.args = create_args(data.pipeline, 6, 7);
 	child_pid = execute_child_process(&data);
 
 	ft_close_fds(data.fds);

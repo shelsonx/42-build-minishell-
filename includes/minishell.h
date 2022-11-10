@@ -6,7 +6,7 @@
 /*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:01 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/09 20:36:29 by shelson          ###   ########.fr       */
+/*   Updated: 2022/11/10 07:52:50 by shelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ typedef struct s_data {
 	char    **pipeline;
 	int		**fds;
 	char	**args;
-	int		fd_src;
-	int		fd_dest;
+	int		fd_in;
+	int		fd_out;
 } t_data;
 
 enum    e_boolean {FALSE, TRUE};
