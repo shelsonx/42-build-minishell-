@@ -39,45 +39,89 @@ pid_t	execute_child_process(t_data *data)
 	return (pid);
 }
 
+void	exec_first_command(t_data *data)
+{
+	pid_t	child_pid;
+	int		status;
+
+	data->fd_in = STDIN_FILENO;
+	data->fd_out = data->fds[0][1];
+	data->args = create_args(data->pipeline, 0, 1);
+	child_pid = execute_child_process(data);
+    waitpid(child_pid, &status, 0);
+}
+
+void	exec_middles_commands(t_data *data, int total_cmds_middles)
+{
+	int		i;
+	int     pos_cmd;
+
+	i = 0;
+	pos_cmd = 2;
+	while (i < total_cmds_middles)
+	{ 
+		data->fd_in = data->fds[i][0];
+		data->fd_out = data->fds[i+1][1];
+		data->args = create_args(data->pipeline, pos_cmd, pos_cmd + 1);
+		execute_child_process(data);
+		i++;
+		pos_cmd += 2;
+	}
+}
+
+void	exec_last_command(t_data *data, int index, int pos_cmd, int pos_param)
+{
+	pid_t	child_pid;
+	int		status;
+
+	data->fd_in = data->fds[index][0];
+	data->fd_out = STDOUT_FILENO;
+	data->args = create_args(data->pipeline, pos_cmd, pos_param);
+	child_pid = execute_child_process(data);
+	ft_close_fds(data->fds);
+    waitpid(child_pid, &status, 0);
+}
+
 int execute(char *line)
 {
 	t_data	data;
-    pid_t	child_pid;
-	int 	status;
+	int		total_commands;
 
     data.pipeline = ft_split(line, ' ');
-	//ft_printf("size args=%d\n", ft_len_rows_tab(data.pipeline));
-	data.fds = create_pipes(3);
-	if (pipe(data.fds[0]) < 0)
-		perror("minishell");
-	
-	if (pipe(data.fds[1]) < 0)
-		perror("minishell");
-	//ls -l grep x
-	data.fd_in = STDIN_FILENO;
-	data.fd_out = data.fds[0][1];
-	data.args = create_args(data.pipeline, 0, 1);
-	child_pid = execute_child_process(&data);
+	total_commands = ft_len_rows_tab(data.pipeline) /2;
+	ft_printf("total_commands=%d\n", total_commands);
+	if (total_commands == 1)
+	{
+		pid_t	child_pid;
+		int		status;
 
-	data.fd_in = data.fds[0][0];
-	data.fd_out = data.fds[1][1];
-	data.args = create_args(data.pipeline, 2, 3);
-	child_pid = execute_child_process(&data);
-
-	data.fd_in = data.fds[1][0];
-	data.fd_out = data.fds[2][1];
-	data.args = create_args(data.pipeline, 4, 5);
-	child_pid = execute_child_process(&data);
-
-	data.fd_in = data.fds[2][0];
-	data.fd_out = STDOUT_FILENO;
-	data.args = create_args(data.pipeline, 6, 7);
-	child_pid = execute_child_process(&data);
-
+		data.fds = create_pipes(1);
+		data.fd_in = STDIN_FILENO;
+		data.fd_out = STDOUT_FILENO;
+		data.args = create_args(data.pipeline, 0, 1);
+		child_pid = execute_child_process(&data);
+		ft_close_fds(data.fds);
+		waitpid(child_pid, &status, 0);
+	}
+	if (total_commands == 2)
+	{
+		data.fds = create_pipes(1);
+		exec_first_command(&data);
+		exec_last_command(&data, total_commands -2, 
+			ft_len_rows_tab(data.pipeline) -2, 
+			ft_len_rows_tab(data.pipeline) -1);
+	}
+	else if (total_commands > 2)
+	{
+		data.fds = create_pipes(total_commands -1);
+		exec_first_command(&data);
+		exec_middles_commands(&data, total_commands -2);
+		exec_last_command(&data, total_commands -2, 
+			ft_len_rows_tab(data.pipeline) -2, 
+			ft_len_rows_tab(data.pipeline) -1);
+	}
 	ft_close_fds(data.fds);
-    waitpid(child_pid, &status, 0);
 	ft_free_tab(data.pipeline);
 	ft_free_fds(data.fds);
-    ft_printf("End!\n");
     return (0);
 }
