@@ -46,7 +46,7 @@
 
     char isPipe(char c) 
     {
-		if (c == '|'  || c == '|')
+		if (c == '|'  || c == '||')
         {
             printf("print - %c\n", c);
             return c;
@@ -66,16 +66,9 @@
         }
     }
 	
-    char isSpace(char c) 
+     char isSpace(char c) 
     {
-		if (c == '\n' || c== '\r') 
-           {
-                printf("print - %c\n", c);
-                return c;
-            } else {
-                return FALSE;
-            } 
-		if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+		if (c == '\n' || c== '\r' || c == ' ' || c == '\t' || c == '\n' || c == '\r')
             {
                 printf("print - %c\n", c);
                 return c;
@@ -96,7 +89,6 @@
             isPipe(string[i]);
             isQuote(string[i]);
             isSpace(string[i]);
-            //printf("%d - %c\n",i, text[i]);
             i++;
         }
 
