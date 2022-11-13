@@ -68,7 +68,7 @@
 	
      char isSpace(char c) 
     {
-		if (c == '\n' || c== '\r' || c == ' ' || c == '\t' || c == '\n' || c == '\r')
+		if (c == '\n' || c== '\r' || c == ' ' || c == '\t')
             {
                 printf("print - %c\n", c);
                 return c;
