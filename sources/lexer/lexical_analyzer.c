@@ -77,7 +77,7 @@
             }
 	}
 
-    char lexycal_analyzer(char *string)
+    char lexical_scanner(char *string)
     {
         int i = 0; 
         while(i <= ft_strlen(string))
