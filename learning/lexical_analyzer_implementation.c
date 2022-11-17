@@ -1,5 +1,4 @@
-# include <fcntl.h>
-#include "../libs/libft/libft.h"
+# include "../libs/libft/libft.h"
 
 enum boolean {FALSE, TRUE};
 
@@ -14,9 +13,15 @@ enum TOKENS
 
 typedef struct token 
 {
-    int     type;
-    int     pos;
-    char    *value;
+    int         type; //ok
+    size_t      pos;
+    int         loc;
+    char        *value; //ok
+    char        current_char;
+    int         state;
+    int         len;
+    char        *term;
+    //Token       token;
 } Token;
 
 //variable
@@ -42,10 +47,102 @@ void    back(int pos)
     pos--;
 }
 
-int is_EOF(int pos, char *content) 
-{
-    return pos == ft_strlen(content);
+void nt_initial(Token *token) {
+    token->state = 0;
+    token->pos = 0;
+    token->len = 0;
+    token->term = ft_strdup("");
+    token->type = -1;
 }
+
+void nt_case0(Token *token)
+    {
+        if (ft_isalpha(token->current_char))
+            {
+                token->term[ft_strlen(token->term)] = token->current_char;
+                token->term[ft_strlen(token->term)] = '\0';
+                token->state = 1;
+            }
+            else if (ft_isdigit(token->current_char))
+            {
+                token->term[ft_strlen(token->term)] = token->current_char;
+                token->term[ft_strlen(token->term)] = '\0';
+                token->state = 3;
+            }
+            else if (is_space(token->current_char))
+                token->state = 0;
+            else if (is_operator(token->current_char))
+            {
+                token->term[ft_strlen(token->term)] = token->current_char;
+                token->term[ft_strlen(token->term)] = '\0';
+                token->state = 5;
+            }
+            else
+            {
+                token->type = -1;
+                token->pos = pos;
+            }
+    }
+
+void nt_case1(Token *token)
+    {
+        if (ft_isalpha(token->current_char) || ft_isdigit(token->current_char))
+            {
+                token->term[ft_strlen(token->term)] = token->current_char;
+                token->term[ft_strlen(token->term)] = '\0';
+                token->state = 1;
+            }
+            else if (is_space(token->current_char) || is_operator(token->current_char))
+                token->state = 2;
+            else
+            {
+                token->type = -1;
+                token->pos = pos;
+            }
+    }
+
+ void nt_case2(Token *token)
+    {
+        token->type = TK_IDENTIFIER;
+        token->value = ft_strdup(token->term);
+        token->pos = pos;
+        free(token->term);
+        pos--;
+    }
+
+void nt_case3(Token *token)
+    {
+        if (ft_isdigit(token->current_char))
+            {
+                token->term[ft_strlen(token->term)] = token->current_char;
+                token->term[ft_strlen(token->term)] = '\0';
+                token->state = 3;
+            }
+            else if (!ft_isalpha(token->current_char))
+                token->state = 4;
+            else
+            {
+                token->type = -1;
+                token->pos = pos;
+            }
+    }
+
+void nt_case4(Token *token)
+    {
+        token->type = TK_NUMBER;
+        token->value = ft_strdup(token->term);
+        token->pos = pos;
+        free(token->term);
+        pos--;   
+    }
+
+void nt_case5(Token *token)
+    {
+        token->type = TK_OPERATOR;
+        token->value = ft_strdup(token->term);
+        token->pos = pos;
+        free(token->term);
+    }
 
 Token next_token(char *content)
 {
@@ -54,79 +151,26 @@ Token next_token(char *content)
 
     while (TRUE)
     {
-        current_char = content[pos++];
-        switch(state)
-        {
-            case 0:
-                if (ft_isalpha(current_char))
-                {
-                    term[ft_strlen(term)] = current_char;
-                    term[ft_strlen(term)] = '\0';
-                    state = 1;
-                }
-                else if (ft_isdigit(current_char))
-                {
-                    term[ft_strlen(term)] = current_char;
-                    term[ft_strlen(term)] = '\0';
-                    state = 3;
-                }
-                else if (is_space(current_char))
-                    state = 0;
-                else if (is_operator(current_char))
-                {
-                    term[ft_strlen(term)] = current_char;
-                    term[ft_strlen(term)] = '\0';
-                    state = 5;
-                }
-                else
-                    token.type = -1;
-                    token.pos = pos;
-                break ;
-            case 1:
-                if (ft_isalpha(current_char) || ft_isdigit(current_char))
-                {
-                    term[ft_strlen(term)] = current_char;
-                    term[ft_strlen(term)] = '\0';
-                    state = 1;
-                }
-                else if (is_space(current_char) || is_operator(current_char))
-                    state = 2;
-                else
-                    token.type = -1;
-                    token.pos = pos;
-                break;
-            case 2:
-                token.type = TK_IDENTIFIER;
-                token.value = ft_strdup(term);
-                token.pos = pos;
-                free(term);
-                pos--;
+        token.current_char = content[pos++];
+            if (token.state == 0) 
+                nt_case0(&token);
+            if (token.state == 1) 
+                nt_case1(&token);
+            if (token.state == 2) 
+            {
+                nt_case2(&token);
                 return token;
-            case 3:
-                if (ft_isdigit(current_char))
-                {
-                    term[ft_strlen(term)] = current_char;
-                    term[ft_strlen(term)] = '\0';
-                    state = 3;
-                }
-                else if (!ft_isalpha(current_char))
-                    state = 4;
-                else
-                    token.type = -1;
-                    token.pos = pos;
-                break;
-            case 4:
-                token.type = TK_NUMBER;
-                token.value = ft_strdup(term);
-                token.pos = pos;
-                free(term);
-                pos--;
+            }
+            if (token.state == 3) 
+                nt_case3(&token);
+            if (token.state == 4) 
+            {
+                nt_case4(&token);
                 return token;
-            case 5:
-                token.type = TK_OPERATOR;
-                token.value = ft_strdup(term);
-                token.pos = pos;
-                free(term);
+            }
+            if (token.state == 5) 
+            {
+                nt_case5(&token);
                 return token;
             }
     }
@@ -135,13 +179,16 @@ Token next_token(char *content)
 
 int main(void)
 {
-    char *line= " = abc123  123";
+
+    char *line= " = abc123 123 ";
     Token token;
     size_t i = 0;
     while (i < ft_strlen(line))
     {
+        if (token.pos >= ft_strlen(line))
+            return -1;
         token = next_token(line);
-        ft_printf("type= |%d| value= |%s|\n", token.type, token.value);
+        ft_printf("type= |%d| value= |%s| pos= |%d|\n", token.type, token.value, token.pos);
         i++;
     }
     return (0);
