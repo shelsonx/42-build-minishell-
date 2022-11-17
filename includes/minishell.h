@@ -23,6 +23,8 @@ enum    e_boolean {FALSE, TRUE};
 
 //execute
 int     execute(char *line);
+//after remove
+char 	**create_args(char **pipeline, int pos_cmd, int pos_param);
 
 //prompt
 void    prompt();
@@ -43,5 +45,13 @@ char	*join_path_command(char *path, char *command);
 
 //command
 char	*get_exec_command(char *arg);
+void	exec_one_command(t_data *data, int fd_in, int fd_out);
+void	exec_first_command(t_data *data, int fd_in);
+void	exec_middles_commands(t_data *data, int total_cmds_middles);
+void	exec_last_command(t_data *data, int index, int fd_out, int pos_cmd, int pos_param);
+
+//children processes
+pid_t	create_child_process(void);
+pid_t	execute_child_process(t_data *data);
 
 #endif /* MINISHELL */

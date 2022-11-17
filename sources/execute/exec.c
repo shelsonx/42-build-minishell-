@@ -1,5 +1,4 @@
 #include "../../includes/minishell.h"
-#include <fcntl.h>
 
 char **create_args(char **pipeline, int pos_cmd, int pos_param)
 {
@@ -12,91 +11,7 @@ char **create_args(char **pipeline, int pos_cmd, int pos_param)
 	return args;
 }
 
-pid_t	create_child_process(void)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid < 0)
-	{
-		perror("Error: ");
-		exit(EXIT_FAILURE);
-	}
-	return (pid);
-}
-
-pid_t	execute_child_process(t_data *data)
-{
-	pid_t pid = create_child_process();
-
-	if (pid == 0)
-	{
-		dup2(data->fd_in, STDIN_FILENO);
-		dup2(data->fd_out, STDOUT_FILENO);
-		ft_close_fds(data->fds);
-		if (execve(data->args[0], data->args, NULL) == -1)
-			exit(EXIT_FAILURE);
-	}
-	return (pid);
-}
-
-void	exec_first_command(t_data *data, int fd_in)
-{
-	pid_t	child_pid;
-	int		status;
-
-	data->fd_in = fd_in;
-	data->fd_out = data->fds[0][1];
-	data->args = create_args(data->pipeline, 0, 1);
-	child_pid = execute_child_process(data);
-    waitpid(child_pid, &status, 0);
-}
-
-void	exec_middles_commands(t_data *data, int total_cmds_middles)
-{
-	int		i;
-	int     pos_cmd;
-
-	i = 0;
-	pos_cmd = 2;
-	while (i < total_cmds_middles)
-	{ 
-		data->fd_in = data->fds[i][0];
-		data->fd_out = data->fds[i+1][1];
-		data->args = create_args(data->pipeline, pos_cmd, pos_cmd + 1);
-		execute_child_process(data);
-		i++;
-		pos_cmd += 2;
-	}
-}
-
-void	exec_last_command(t_data *data, int index, int fd_out, int pos_cmd, int pos_param)
-{
-	pid_t	child_pid;
-	int		status;
-
-	data->fd_in = data->fds[index][0];
-	data->fd_out = fd_out;
-	data->args = create_args(data->pipeline, pos_cmd, pos_param);
-	child_pid = execute_child_process(data);
-	ft_close_fds(data->fds);
-    waitpid(child_pid, &status, 0);
-}
-
-void	exec_one_command(t_data *data, int fd_in, int fd_out)
-{
-	pid_t	child_pid;
-	int		status;
-
-	data->fds = create_pipes(1);
-	data->fd_in = fd_in;
-	data->fd_out = fd_out;
-	data->args = create_args(data->pipeline, 0, 1);
-	child_pid = execute_child_process(data);
-	ft_close_fds(data->fds);
-	waitpid(child_pid, &status, 0);
-}
-
+#include <fcntl.h>
 int execute(char *line)
 {
 	t_data	data;

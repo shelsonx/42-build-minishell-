@@ -13,7 +13,7 @@ INCLUDE 		= ./includes/
 
 SRC				= main.c\
 				  prompt.c\
-				  exec.c pipe.c paths.c command.c\
+				  exec.c pipe.c paths.c command.c children_process.c\
 				  utils_pipes.c\
 				  signals.c\
 
