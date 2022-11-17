@@ -1,3 +1,4 @@
+# include <fcntl.h>
 #include "../libs/libft/libft.h"
 
 enum boolean {FALSE, TRUE};
@@ -14,8 +15,12 @@ enum TOKENS
 typedef struct token 
 {
     int     type;
+    int     pos;
     char    *value;
 } Token;
+
+//variable
+int pos;
 
 int is_operator(char c)
 {
@@ -39,24 +44,17 @@ void    back(int pos)
 
 int is_EOF(int pos, char *content) 
 {
-    return pos >= (ft_strlen(content) +2);
+    return pos == ft_strlen(content);
 }
 
 Token next_token(char *content)
 {
-    char        current_char;
-    int         state = 0;
-    int static  pos = 0;
-    int         len = 0;
-    char        *term = ft_strdup("");
     Token       token;
-    token.type = -1;
+    nt_initial(&token);   
 
     while (TRUE)
     {
         current_char = content[pos++];
-        if (is_EOF(pos, content))
-            exit(0);
         switch(state)
         {
             case 0:
@@ -82,6 +80,7 @@ Token next_token(char *content)
                 }
                 else
                     token.type = -1;
+                    token.pos = pos;
                 break ;
             case 1:
                 if (ft_isalpha(current_char) || ft_isdigit(current_char))
@@ -93,16 +92,15 @@ Token next_token(char *content)
                 else if (is_space(current_char) || is_operator(current_char))
                     state = 2;
                 else
-                {
-                    ft_printf("Malformed Identifier: %c\n", current_char);
-                    exit(1);
-                }
+                    token.type = -1;
+                    token.pos = pos;
                 break;
             case 2:
-                pos--;
                 token.type = TK_IDENTIFIER;
                 token.value = ft_strdup(term);
+                token.pos = pos;
                 free(term);
+                pos--;
                 return token;
             case 3:
                 if (ft_isdigit(current_char))
@@ -115,28 +113,31 @@ Token next_token(char *content)
                     state = 4;
                 else
                     token.type = -1;
+                    token.pos = pos;
                 break;
             case 4:
                 token.type = TK_NUMBER;
                 token.value = ft_strdup(term);
+                token.pos = pos;
                 free(term);
                 pos--;
                 return token;
             case 5:
                 token.type = TK_OPERATOR;
                 token.value = ft_strdup(term);
+                token.pos = pos;
                 free(term);
                 return token;
-        }
+            }
     }
-    return token;
+   // return token;
 }
 
 int main(void)
 {
-    char *line= " = > 12 abc$123 ";
+    char *line= " = abc123  123";
     Token token;
-    int i = 0;
+    size_t i = 0;
     while (i < ft_strlen(line))
     {
         token = next_token(line);
