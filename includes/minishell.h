@@ -54,4 +54,7 @@ void	exec_last_command(t_data *data, int index, int fd_out, int pos_cmd, int pos
 pid_t	create_child_process(void);
 pid_t	execute_child_process(t_data *data);
 
+//exit program
+void    exit_program(t_data *data);
+
 #endif /* MINISHELL */
