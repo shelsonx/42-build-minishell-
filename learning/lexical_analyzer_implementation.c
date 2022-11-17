@@ -25,7 +25,7 @@ typedef struct token
 } Token;
 
 //variable
-int pos;
+size_t pos;
 
 int is_operator(char c)
 {
@@ -45,6 +45,11 @@ char    next_char(char *content, int pos)
 void    back(int pos)
 {
     pos--;
+}
+
+int is_EOF(size_t pos, char *content) 
+{
+    return pos >= (ft_strlen(content) +2);
 }
 
 void nt_initial(Token *token) {
@@ -80,7 +85,6 @@ void nt_case0(Token *token)
             else
             {
                 token->type = -1;
-                token->pos = pos;
             }
     }
 
@@ -96,8 +100,8 @@ void nt_case1(Token *token)
                 token->state = 2;
             else
             {
-                token->type = -1;
-                token->pos = pos;
+                ft_printf("Malformed Identifier: %c\n", token->current_char);
+                exit(1);
             }
     }
 
@@ -107,7 +111,6 @@ void nt_case1(Token *token)
         token->value = ft_strdup(token->term);
         token->pos = pos;
         free(token->term);
-        pos--;
     }
 
 void nt_case3(Token *token)
@@ -123,7 +126,6 @@ void nt_case3(Token *token)
             else
             {
                 token->type = -1;
-                token->pos = pos;
             }
     }
 
@@ -140,7 +142,6 @@ void nt_case5(Token *token)
     {
         token->type = TK_OPERATOR;
         token->value = ft_strdup(token->term);
-        token->pos = pos;
         free(token->term);
     }
 
@@ -152,6 +153,9 @@ Token next_token(char *content)
     while (TRUE)
     {
         token.current_char = content[pos++];
+            if (is_EOF(pos, content))
+                exit(0);
+
             if (token.state == 0) 
                 nt_case0(&token);
             if (token.state == 1) 
@@ -180,7 +184,7 @@ Token next_token(char *content)
 int main(void)
 {
 
-    char *line= " = abc123 123 ";
+    char *line= " = > 12 abc$123 ";
     Token token;
     size_t i = 0;
     while (i < ft_strlen(line))
@@ -188,7 +192,7 @@ int main(void)
         if (token.pos >= ft_strlen(line))
             return -1;
         token = next_token(line);
-        ft_printf("type= |%d| value= |%s| pos= |%d|\n", token.type, token.value, token.pos);
+        ft_printf("type= |%d| value= |%s| \n", token.type, token.value);
         i++;
     }
     return (0);
