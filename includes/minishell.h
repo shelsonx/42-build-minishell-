@@ -21,6 +21,20 @@ typedef struct s_data {
 
 enum    e_boolean {FALSE, TRUE};
 
+enum TOKENS 
+{
+	TK_WORD,
+	TK_DIGIT,
+	TK_QUOTE,
+	TK_PARENTHESIS,
+	TK_OPERATOR,
+	TK_GREAT,
+	TK_LESS,
+	TK_DGREAT,
+	TK_DLESS,
+	TK_PIPE
+};
+
 //execute
 int     execute(char *line);
 //after remove
