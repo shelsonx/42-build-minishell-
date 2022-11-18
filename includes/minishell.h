@@ -21,7 +21,7 @@ typedef struct s_data {
 
 enum    e_boolean {FALSE, TRUE};
 
-enum TOKENS 
+enum e_TOKENS 
 {
 	TK_WORD,
 	TK_DIGIT,

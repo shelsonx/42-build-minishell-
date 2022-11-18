@@ -16,14 +16,55 @@ typedef struct token
 //variable
 size_t pos;
 
+int is_quote(char c)
+{
+    return c == '\"' || c == '\'';
+}
+
+int is_parenthesis(char c)
+{
+    return c == '(' || c == ')';
+}
+
+int is_great(char c)
+{
+    return c == '>';
+}
+
+int is_dgreat(char *c)
+{
+    if (ft_strcmp(c, ">>") == 0)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+int is_less(char c)
+{
+    return c == '<';
+}
+
+int is_dless(char *c)
+{
+    if (ft_strcmp(c, "<<") == 0)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+int is_pipe(char c)
+{
+    return c == '|';
+}
+
 int is_operator(char c)
 {
-    return c == '>' || c == '<' || c == '=' || c == '!';
+    return c == '-' || c == '+' || c == '*' || c == '/' || c == '=';
 }
 
 int is_space(char c)
 {
-    return c == ' ' || c == '\t' || c == '\r' || c == '\n';
+    return c == ' ' || c == '\t' || c == '\r' || c == '\v' || c == '\f';
 }
 
 char    next_char(char *content, int pos)
@@ -173,7 +214,7 @@ Token next_token(char *content)
 int main(void)
 {
 
-    char *line= " = > 12 abc$123 ";
+    char *line= " = - 12 abc$123 ";
     Token token;
     size_t i = 0;
     while (i < ft_strlen(line))
@@ -185,4 +226,5 @@ int main(void)
         i++;
     }
     return (0);
+
 }
