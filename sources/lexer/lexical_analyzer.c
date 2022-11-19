@@ -12,7 +12,7 @@ void    back(int pos)
 
 int is_eof(size_t *pos, char *content) 
 {
-    return *pos == (ft_strlen(content) -1);
+    return *pos == (ft_strlen(content) +2);
 }
 
 void nt_initial(t_token *token) {
@@ -143,7 +143,7 @@ t_token next_token(char *content)
 int main(void)
 {
 
-    char *line= "= - 12 abc 123";
+    char *line= "abc 123 = - 12 $ xyz 911";
     t_token token;
     size_t i = 0;
     while (i < ft_strlen(line))
