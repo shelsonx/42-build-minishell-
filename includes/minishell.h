@@ -19,6 +19,17 @@ typedef struct s_data {
 	int		fd_out;
 } t_data;
 
+typedef struct s_token 
+{
+    int         type;
+    int         loc;
+    char        *value;
+    char        current_char;
+    int         state;
+    int         len;
+    char        *term;
+}   t_token;
+
 enum    e_boolean {FALSE, TRUE};
 
 enum e_TOKENS 
