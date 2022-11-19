@@ -32,12 +32,10 @@ void nt_case0(t_token *token)
     {
         if (ft_isalpha(token->current_char))
             {
-                set_term(token);
                 token->state = 1;
             }
             else if (ft_isdigit(token->current_char))
             {
-                set_term(token);
                 token->state = 3;
             }
             else if (ft_isspace(token->current_char))
@@ -116,7 +114,7 @@ t_token next_token(char *content)
     {
         token.current_char = content[pos++];
             if (is_eof(&pos, content))
-                exit(0);
+               exit(0);
 
             if (token.state == 0) 
                 nt_case0(&token);
