@@ -30,8 +30,6 @@ typedef struct s_token
     char        *term;
 }   t_token;
 
-enum    e_boolean {FALSE, TRUE};
-
 enum e_TOKENS 
 {
 	TK_WORD,

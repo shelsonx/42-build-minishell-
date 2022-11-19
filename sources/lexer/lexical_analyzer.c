@@ -40,9 +40,9 @@ void nt_case0(t_token *token)
                 set_term(token);
                 token->state = 3;
             }
-            else if (is_space(token->current_char))
+            else if (ft_isspace(token->current_char))
                 token->state = 0;
-            else if (is_operator(token->current_char))
+            else if (ft_isoperator(token->current_char))
             {
                 set_term(token);
                 token->state = 5;
@@ -60,7 +60,7 @@ void nt_case1(t_token *token)
                 set_term(token);
                 token->state = 1;
             }
-            else if (is_space(token->current_char) || is_operator(token->current_char))
+            else if (ft_isspace(token->current_char) || ft_isoperator(token->current_char))
                 token->state = 2;
             else
             {
@@ -112,7 +112,7 @@ t_token next_token(char *content)
     nt_initial(&token);
     static size_t pos;
 
-    while (TRUE)
+    while (true)
     {
         token.current_char = content[pos++];
             if (is_eof(&pos, content))
