@@ -61,7 +61,7 @@ void    back(int pos)
     pos--;
 }
 
-int is_EOF(size_t *pos, char *content) 
+int is_eof(size_t *pos, char *content) 
 {
     return *pos == (ft_strlen(content) -1);
 }
@@ -73,26 +73,29 @@ void nt_initial(t_token *token) {
     token->type = -1;
 }
 
+void set_term(t_token *token)
+{
+    token->term[ft_strlen(token->term)] = token->current_char;
+    token->term[ft_strlen(token->term)] = '\0';
+}
+
 void nt_case0(t_token *token)
     {
         if (ft_isalpha(token->current_char))
             {
-                token->term[ft_strlen(token->term)] = token->current_char;
-                token->term[ft_strlen(token->term)] = '\0';
+                set_term(token);
                 token->state = 1;
             }
             else if (ft_isdigit(token->current_char))
             {
-                token->term[ft_strlen(token->term)] = token->current_char;
-                token->term[ft_strlen(token->term)] = '\0';
+                set_term(token);
                 token->state = 3;
             }
             else if (is_space(token->current_char))
                 token->state = 0;
             else if (is_operator(token->current_char))
             {
-                token->term[ft_strlen(token->term)] = token->current_char;
-                token->term[ft_strlen(token->term)] = '\0';
+                set_term(token);
                 token->state = 5;
             }
             else
@@ -103,10 +106,9 @@ void nt_case0(t_token *token)
 
 void nt_case1(t_token *token)
     {
-        if (ft_isalpha(token->current_char) || ft_isdigit(token->current_char))
+        if (ft_isalpha(token->current_char))
             {
-                token->term[ft_strlen(token->term)] = token->current_char;
-                token->term[ft_strlen(token->term)] = '\0';
+                set_term(token);
                 token->state = 1;
             }
             else if (is_space(token->current_char) || is_operator(token->current_char))
@@ -129,8 +131,7 @@ void nt_case3(t_token *token)
 {
     if (ft_isdigit(token->current_char))
         {
-            token->term[ft_strlen(token->term)] = token->current_char;
-            token->term[ft_strlen(token->term)] = '\0';
+            set_term(token);
             token->state = 3;
         }
         else if (!ft_isalpha(token->current_char))
@@ -165,7 +166,7 @@ t_token next_token(char *content)
     while (TRUE)
     {
         token.current_char = content[pos++];
-            if (is_EOF(&pos, content))
+            if (is_eof(&pos, content))
                 exit(0);
 
             if (token.state == 0) 
@@ -195,7 +196,7 @@ t_token next_token(char *content)
 int main(void)
 {
 
-    char *line= "= - 12 abc$123";
+    char *line= "= - 12 abc 123";
     t_token token;
     size_t i = 0;
     while (i < ft_strlen(line))
