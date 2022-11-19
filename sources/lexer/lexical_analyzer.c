@@ -1,56 +1,5 @@
 #include "../../includes/minishell.h"
 
-int is_quote(char c)
-{
-    return c == '\"' || c == '\'';
-}
-
-int is_parenthesis(char c)
-{
-    return c == '(' || c == ')';
-}
-
-int is_great(char c)
-{
-    return c == '>';
-}
-
-int is_dgreat(char *c)
-{
-    if (ft_strcmp(c, ">>") == 0)
-        return TRUE;
-    else
-        return FALSE;
-}
-
-int is_less(char c)
-{
-    return c == '<';
-}
-
-int is_dless(char *c)
-{
-    if (ft_strcmp(c, "<<") == 0)
-        return TRUE;
-    else
-        return FALSE;
-}
-
-int is_pipe(char c)
-{
-    return c == '|';
-}
-
-int is_operator(char c)
-{
-    return c == '-' || c == '+' || c == '*' || c == '/' || c == '=';
-}
-
-int is_space(char c)
-{
-    return c == ' ' || c == '\t' || c == '\r' || c == '\v' || c == '\f';
-}
-
 char    next_char(char *content, int pos)
 {
     return content[pos++];
@@ -147,7 +96,7 @@ void nt_case4(size_t *pos, t_token *token)
     token->type = TK_DIGIT;
     token->value = ft_strdup(token->term);
     free(token->term);
-    pos--;
+    (*pos)--;
 }
 
 void nt_case5(t_token *token)

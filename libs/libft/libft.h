@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: progerio <progerio@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 13:32:44 by sjhony-x          #+#    #+#             */
-/*   Updated: 2022/11/14 15:50:45 by pedro            ###   ########.fr       */
+/*   Updated: 2022/11/19 18:46:30 by progerio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <unistd.h>
 # include <stdarg.h>
 # define BUFFER_SIZE 42
+
+enum	e_boolean {false, true};
 
 typedef struct s_list
 {
@@ -27,7 +29,16 @@ int		ft_isalpha(int c);
 int		ft_isdigit(int c);
 int		ft_isalnum(int c);
 int		ft_isascii(int c);
+char	ft_isdgreat(char *c);
+char	ft_isdless(char *c);
+int		ft_isgreat(int c);
+int		ft_isless(int c);
+int		ft_isoperator(int c);
+int		ft_isparenthesis(int c);
+int		ft_ispipe(int c);
 int		ft_isprint(int c);
+int		t_isquote(int c);
+int		ft_isspace(int c);
 size_t	ft_strlen(const char *s);
 void	*ft_memset(void *s, int c, size_t n);
 void	ft_bzero(void *s, size_t n);
@@ -40,7 +51,7 @@ int		ft_tolower(int c);
 char	*ft_strchr(const char *s, int c);
 int		ft_strcmp(char *s1, char *s2);
 char	*ft_strrchr(const char *s, int c);
-char    *ft_strcpy(char *s1, char *s2);
+char	*ft_strcpy(char *s1, char *s2);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void	*ft_memchr(const void *s, int c, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);

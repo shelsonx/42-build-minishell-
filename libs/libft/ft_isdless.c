@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcpy.c                                        :+:      :+:    :+:   */
+/*   ft_isdless.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: progerio <progerio@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/19 18:29:22 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/19 18:51:35 by progerio         ###   ########.fr       */
+/*   Created: 2022/11/19 18:02:23 by progerio          #+#    #+#             */
+/*   Updated: 2022/11/19 18:49:04 by progerio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char *ft_strcpy(char *dest, char *src)
+char	ft_isdless(char *c)
 {
-	int i;
-
-	i = 0;
-	while (src[i] != '\0')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
+	if (ft_strcmp(c, "<<") == 0)
+		return (true);
+	else
+		return (false);
 }
-	
