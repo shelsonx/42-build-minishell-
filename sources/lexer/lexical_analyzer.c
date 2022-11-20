@@ -49,6 +49,15 @@ void set_term(t_tokenizer *tokenizer)
     free(old_term);
 }
 
+void set_invalid_token(t_tokenizer *tokenizer)
+{
+    tokenizer->token.type = -1;
+    set_term(tokenizer);
+    tokenizer->token.value = ft_strdup(tokenizer->term);
+    free(tokenizer->term);
+    tokenizer->state = -1;
+}
+
 void nt_case0(t_tokenizer *tokenizer)
 {
     if (ft_isalpha(tokenizer->current_char))
@@ -67,23 +76,17 @@ void nt_case0(t_tokenizer *tokenizer)
 }
 
 void nt_case1(t_tokenizer *tokenizer)
+{
+    if (ft_isalpha(tokenizer->current_char))
     {
-        if (ft_isalpha(tokenizer->current_char))
-            {
-                set_term(tokenizer);
-                tokenizer->state = 1;
-            }
-            else if (ft_isspace(tokenizer->current_char))
-                tokenizer->state = 2;
-            else
-            {
-               tokenizer->token.type = -1;
-               set_term(tokenizer);
-               tokenizer->token.value = ft_strdup(tokenizer->term);
-               free(tokenizer->term);
-               tokenizer->state = -1;
-            }
+        set_term(tokenizer);
+        tokenizer->state = 1;
     }
+    else if (ft_isspace(tokenizer->current_char) || tokenizer->current_char == '\0')
+        tokenizer->state = 2;
+    else
+        set_invalid_token(tokenizer);
+}
 
  void nt_case2(t_tokenizer *tokenizer)
 {
@@ -99,12 +102,10 @@ void nt_case3(t_tokenizer *tokenizer)
             set_term(tokenizer);
             tokenizer->state = 3;
         }
-        else if (!ft_isalpha(tokenizer->current_char))
+        else if (ft_isspace(tokenizer->current_char) || tokenizer->current_char == '\0')
             tokenizer->state = 4;
         else
-        {
-            tokenizer->token.type = -1;
-        }
+            set_invalid_token(tokenizer);
 }
 
 void nt_case4(size_t *pos, t_tokenizer *tokenizer)
@@ -167,7 +168,7 @@ t_token next_token(char *content)
 int main(void)
 {
 
-    char *line= "abc 123 = - 12 x#yz 911";
+    char *line= "abc 123 = - 12 xyz 911 pedro";
     t_token token;
 
     size_t i = 0;
@@ -176,7 +177,7 @@ int main(void)
         token = next_token(line);
         if (token.type == -1)
         {
-            ft_printf("Malformed word: %s\n", token.value);
+            ft_printf("Malformed token: %s\n", token.value);
             free(token.value);
             return -1;
         }
