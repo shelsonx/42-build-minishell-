@@ -1,5 +1,30 @@
 #include "../../includes/minishell.h"
 
+char    *get_name_token(int type_token)
+{
+    if (type_token == TK_WORD)
+        return "WORD";
+    if (type_token == TK_DIGIT)
+        return "DIGIT";
+    if (type_token == TK_QUOTE)
+        return "QUOTE";
+    if (type_token == TK_PARENTHESIS)
+        return "PARENTHESIS";
+    if (type_token == TK_OPERATOR)
+        return "OPERATOR";
+    if (type_token == TK_GREAT)
+        return "GREAT";
+    if (type_token == TK_LESS)
+        return "LESS";
+    if (type_token == TK_DGREAT)
+        return "DGREAT";
+    if (type_token == TK_DLESS)
+        return "DLESS";
+    if (type_token == TK_PIPE)
+        return "PIPE";
+    return NULL;
+}
+
 int is_eof(size_t *pos, char *content) 
 {
     return *pos == (ft_strlen(content) +2);
@@ -25,27 +50,21 @@ void set_term(t_tokenizer *tokenizer)
 }
 
 void nt_case0(t_tokenizer *tokenizer)
+{
+    if (ft_isalpha(tokenizer->current_char))
+        tokenizer->state = 1;
+    else if (ft_isdigit(tokenizer->current_char))
+        tokenizer->state = 3;
+    else if (ft_isspace(tokenizer->current_char))
+        tokenizer->state = 0;
+    else if (ft_isoperator(tokenizer->current_char))
     {
-        if (ft_isalpha(tokenizer->current_char))
-            {
-                tokenizer->state = 1;
-            }
-            else if (ft_isdigit(tokenizer->current_char))
-            {
-                tokenizer->state = 3;
-            }
-            else if (ft_isspace(tokenizer->current_char))
-                tokenizer->state = 0;
-            else if (ft_isoperator(tokenizer->current_char))
-            {
-                set_term(tokenizer);
-                tokenizer->state = 5;
-            }
-            else
-            {
-                tokenizer->token.type = -1;
-            }
+        set_term(tokenizer);
+        tokenizer->state = 5;
     }
+    else
+        tokenizer->token.type = -1;
+}
 
 void nt_case1(t_tokenizer *tokenizer)
     {
@@ -54,12 +73,15 @@ void nt_case1(t_tokenizer *tokenizer)
                 set_term(tokenizer);
                 tokenizer->state = 1;
             }
-            else if (ft_isspace(tokenizer->current_char) || ft_isoperator(tokenizer->current_char))
+            else if (ft_isspace(tokenizer->current_char))
                 tokenizer->state = 2;
             else
             {
-                ft_printf("Malformed Identifier: %c\n", tokenizer->current_char);
-                exit(1);
+               tokenizer->token.type = -1;
+               set_term(tokenizer);
+               tokenizer->token.value = ft_strdup(tokenizer->term);
+               free(tokenizer->term);
+               tokenizer->state = -1;
             }
     }
 
@@ -137,20 +159,29 @@ t_token next_token(char *content)
                 nt_case5(&tokenizer);
                 return tokenizer.token;
             }
+            if (tokenizer.state == -1)
+                return (tokenizer.token);
     }
 }
 
 int main(void)
 {
 
-    char *line= "abc 123 = - 12 xyz 911";
+    char *line= "abc 123 = - 12 x#yz 911";
     t_token token;
 
     size_t i = 0;
     while (i < ft_strlen(line))
     {
         token = next_token(line);
-        ft_printf("type= |%d| value= |%s| \n", token.type, token.value);
+        if (token.type == -1)
+        {
+            ft_printf("Malformed word: %s\n", token.value);
+            free(token.value);
+            return -1;
+        }
+        ft_printf("type= |%d| name= |%s| value= |%s| \n", 
+            token.type, get_name_token(token.type), token.value);
         free(token.value);
         i++;
     }
