@@ -19,16 +19,20 @@ typedef struct s_data {
 	int		fd_out;
 } t_data;
 
-typedef struct s_token 
+typedef struct s_token
 {
-    int         type;
-    int         loc;
-    char        *value;
+    int		type;
+    char	*value;
+}	t_token;
+
+typedef struct s_tokenizer 
+{
     char        current_char;
     int         state;
     int         len;
     char        *term;
-}   t_token;
+	t_token		token;
+}   t_tokenizer;
 
 enum e_TOKENS 
 {
