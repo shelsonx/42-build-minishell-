@@ -24,8 +24,14 @@ void nt_initial(t_token *token) {
 
 void set_term(t_token *token)
 {
-    token->term[ft_strlen(token->term)] = token->current_char;
-    token->term[ft_strlen(token->term)] = '\0';
+    char    *old_term;
+    char    current_char_p[2];
+
+    old_term = token->term;
+    current_char_p[0] = token->current_char;
+    current_char_p[1] = '\0';
+    token->term = ft_strjoin(token->term, current_char_p);
+    free(old_term);
 }
 
 void nt_case0(t_token *token)
@@ -107,6 +113,7 @@ void nt_case5(t_token *token)
 t_token next_token(char *content)
 {
     t_token       token;
+
     nt_initial(&token);
     static size_t pos;
 
@@ -114,7 +121,10 @@ t_token next_token(char *content)
     {
         token.current_char = content[pos++];
             if (is_eof(&pos, content))
-               exit(0);
+            {
+                free(token.term);
+                exit(0);
+            }
 
             if (token.state == 0) 
                 nt_case0(&token);
@@ -143,13 +153,15 @@ t_token next_token(char *content)
 int main(void)
 {
 
-    char *line= "abc 123 = - 12 $ xyz 911";
+    char *line= "abc 123 = - 12 xyz 911";
     t_token token;
+
     size_t i = 0;
     while (i < ft_strlen(line))
     {
         token = next_token(line);
         ft_printf("type= |%d| value= |%s| \n", token.type, token.value);
+        free(token.value);
         i++;
     }
     return (0);
