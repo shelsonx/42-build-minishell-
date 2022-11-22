@@ -28,24 +28,22 @@ typedef struct s_token
 typedef struct s_tokenizer 
 {
     char        current_char;
-    int         state;
-    int         len;
+    int         pos;
+	char		*content;
     char        *term;
 	t_token		token;
 }   t_tokenizer;
 
 enum e_TOKENS 
 {
-	TK_WORD,
-	TK_DIGIT,
-	TK_QUOTE,
+	TK_IDENTIFIER,
 	TK_PARENTHESIS,
-	TK_OPERATOR,
 	TK_GREAT,
 	TK_LESS,
 	TK_DGREAT,
 	TK_DLESS,
-	TK_PIPE
+	TK_PIPE,
+	TK_EOF
 };
 
 //execute
