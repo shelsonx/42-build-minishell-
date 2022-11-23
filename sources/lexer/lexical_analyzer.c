@@ -93,12 +93,14 @@ t_token get_identifier(t_tokenizer *tokenizer)
     identifier(tokenizer);
     tokenizer->token.type = TK_IDENTIFIER;
     tokenizer->token.value = ft_strdup(tokenizer->term);
+    return (tokenizer->token);
 }
 
 t_token get_parenthesis(t_tokenizer *tokenizer)
 {
     set_term(tokenizer);
     tokenizer->token.type = TK_PARENTHESIS;
+    return get_next_token(tokenizer);
 }
 
 t_token get_great(t_tokenizer *tokenizer)
@@ -112,6 +114,7 @@ t_token get_great(t_tokenizer *tokenizer)
     else
         tokenizer->token.type = TK_GREAT;
         set_term(tokenizer);
+    return get_next_token(tokenizer);
 }
 
 t_token get_less(t_tokenizer *tokenizer)
@@ -125,12 +128,14 @@ t_token get_less(t_tokenizer *tokenizer)
     else
         tokenizer->token.type = TK_LESS;
         set_term(tokenizer);
+    return get_next_token(tokenizer);
 }
 
 t_token get_pipe(t_tokenizer *tokenizer)
 {
     set_term(tokenizer);
     tokenizer->token.type = TK_PIPE;
+    return get_next_token(tokenizer);
 }
 
 t_token next_token(t_tokenizer *tokenizer)
@@ -139,43 +144,23 @@ t_token next_token(t_tokenizer *tokenizer)
     {   
         if (ft_isspace(tokenizer->current_char))
             skip_space(tokenizer);
-        
         if (ft_isalpha(tokenizer->current_char) || tokenizer->current_char == '_')
-        {   
-            get_identifier(tokenizer);
-            return (tokenizer->token);
-        }
+            return get_identifier(tokenizer);
         if (ft_isparenthesis(tokenizer->current_char))
-        {    
-            get_parenthesis(tokenizer);
-            return get_next_token(tokenizer);
-        }
+            return get_parenthesis(tokenizer);
         if (ft_isgreat(tokenizer->current_char))
-        {
-            get_great(tokenizer);
-            return get_next_token(tokenizer);
-        }
+            return get_great(tokenizer);
         if (ft_isless(tokenizer->current_char))
-        {    
-            get_less(tokenizer);
-            return get_next_token(tokenizer);
-        }
+            return get_less(tokenizer);
         if (ft_ispipe(tokenizer->current_char))
-        {
-            get_pipe(tokenizer);
-            return get_next_token(tokenizer);
-        }
-
+            return get_pipe(tokenizer);
         invalid_token(tokenizer);
         advance(tokenizer);
-
     }
      if (tokenizer->token.type == TK_EOF)
             exit(0);
     return tokenizer->token;
-    
 }
-
 int main(void)
 {
 
