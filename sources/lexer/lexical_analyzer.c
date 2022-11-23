@@ -88,6 +88,51 @@ t_token get_next_token(t_tokenizer *tokenizer)
     return (tokenizer->token);
 }
 
+t_token get_identifier(t_tokenizer *tokenizer)
+{
+    identifier(tokenizer);
+    tokenizer->token.type = TK_IDENTIFIER;
+    tokenizer->token.value = ft_strdup(tokenizer->term);
+}
+
+t_token get_parenthesis(t_tokenizer *tokenizer)
+{
+    set_term(tokenizer);
+    tokenizer->token.type = TK_PARENTHESIS;
+}
+
+t_token get_great(t_tokenizer *tokenizer)
+{
+    if (ft_isgreat(tokenizer->content[tokenizer->pos+1]))
+    {
+        tokenizer->token.type = TK_DGREAT;
+        set_term(tokenizer);
+        advance(tokenizer);
+    }
+    else
+        tokenizer->token.type = TK_GREAT;
+        set_term(tokenizer);
+}
+
+t_token get_less(t_tokenizer *tokenizer)
+{
+    if (ft_isless(tokenizer->content[tokenizer->pos+1]))
+    {
+        tokenizer->token.type = TK_DLESS;
+        set_term(tokenizer);
+        advance(tokenizer);
+    }
+    else
+        tokenizer->token.type = TK_LESS;
+        set_term(tokenizer);
+}
+
+t_token get_pipe(t_tokenizer *tokenizer)
+{
+    set_term(tokenizer);
+    tokenizer->token.type = TK_PIPE;
+}
+
 t_token next_token(t_tokenizer *tokenizer)
 {
     while (tokenizer->token.type != TK_EOF)
@@ -96,50 +141,31 @@ t_token next_token(t_tokenizer *tokenizer)
             skip_space(tokenizer);
         
         if (ft_isalpha(tokenizer->current_char) || tokenizer->current_char == '_')
-        {
-            identifier(tokenizer);
-            tokenizer->token.type = TK_IDENTIFIER;
-            tokenizer->token.value = ft_strdup(tokenizer->term);
+        {   
+            get_identifier(tokenizer);
             return (tokenizer->token);
         }
         if (ft_isparenthesis(tokenizer->current_char))
-        {
-            set_term(tokenizer);
-            tokenizer->token.type = TK_PARENTHESIS;
+        {    
+            get_parenthesis(tokenizer);
             return get_next_token(tokenizer);
         }
         if (ft_isgreat(tokenizer->current_char))
         {
-            if (ft_isgreat(tokenizer->content[tokenizer->pos+1]))
-            {
-                tokenizer->token.type = TK_DGREAT;
-                set_term(tokenizer);
-                advance(tokenizer);
-            }
-            else
-                tokenizer->token.type = TK_GREAT;
-            set_term(tokenizer);
+            get_great(tokenizer);
             return get_next_token(tokenizer);
         }
         if (ft_isless(tokenizer->current_char))
-        {
-            if (ft_isless(tokenizer->content[tokenizer->pos+1]))
-            {
-                tokenizer->token.type = TK_DLESS;
-                set_term(tokenizer);
-                advance(tokenizer);
-            }
-            else
-                tokenizer->token.type = TK_LESS;
-            set_term(tokenizer);
+        {    
+            get_less(tokenizer);
             return get_next_token(tokenizer);
         }
         if (ft_ispipe(tokenizer->current_char))
         {
-            set_term(tokenizer);
-            tokenizer->token.type = TK_PIPE;
+            get_pipe(tokenizer);
             return get_next_token(tokenizer);
         }
+
         invalid_token(tokenizer);
         advance(tokenizer);
 
