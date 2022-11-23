@@ -27,9 +27,7 @@ int is_eof(size_t *pos, char *content)
 void init_tokenizer(t_tokenizer *tokenizer) {
     tokenizer->pos = 0;
     tokenizer->current_char = tokenizer->content[tokenizer->pos];
-    tokenizer->content;
     tokenizer->term = ft_strdup("");
-    tokenizer->token.type = -1;
 }
 
 void set_term(t_tokenizer *tokenizer)
@@ -68,43 +66,82 @@ void    skip_space(t_tokenizer *tokenizer)
         advance(tokenizer);
 }
 
+void    identifier(t_tokenizer *tokenizer)
+{
+    while (ft_isalnum(tokenizer->current_char) || tokenizer->current_char == '_' &&
+        (tokenizer->token.type != TK_EOF))
+    {
+        set_term(tokenizer);
+        advance(tokenizer);
+         if (tokenizer->token.type == TK_EOF)
+            return ;
+    }
+
+}
+
 t_token next_token(t_tokenizer *tokenizer)
 {
-   
-    while (true)
-    {
-        ft_printf("current_char= |%c| pos=%d\n", tokenizer->current_char, tokenizer->pos);
+    while (tokenizer->token.type != TK_EOF)
+    {   
+        //ft_printf("current_char= |%c| pos=%d\n", tokenizer->current_char, tokenizer->pos);
+        if (ft_isspace(tokenizer->current_char))
+            skip_space(tokenizer);
+        
+        //ft_printf("current_char=%c\n", tokenizer->current_char);
+        if (ft_isalpha(tokenizer->current_char) || tokenizer->current_char == '_')
+        {
+            identifier(tokenizer);
+            tokenizer->token.type = TK_IDENTIFIER;
+            tokenizer->token.value = ft_strdup(tokenizer->term);
+            return (tokenizer->token);
+        }
+        if (ft_isparenthesis(tokenizer->current_char))
+        {
+            set_term(tokenizer);
+            tokenizer->token.type = TK_PARENTHESIS;
+            tokenizer->token.value = ft_strdup(tokenizer->term);
+            advance(tokenizer);
+            return (tokenizer->token);
+        }
+        if (tokenizer->token.type != TK_EOF && tokenizer->current_char != '\0')
+        {
+            ft_printf("Invalid character |%c|\n", tokenizer->current_char);
+            exit(1);
+        }
         advance(tokenizer);
-        if (tokenizer->token.type == TK_EOF)
-            exit(0);
+        //ft_printf("pos=%d\n", tokenizer->pos);
+        //ft_printf("Cheguei aqui!\n");
     }
+     if (tokenizer->token.type == TK_EOF)
+            exit(0);
+    return tokenizer->token;
     
 }
 
 int main(void)
 {
 
-    char *line= "_ab_c1 $a123";
+    char *line= "a112 _ab_c1 ( a123";
     t_token token;
     t_tokenizer tokenizer;
+    static int pos;
 
     tokenizer.content = ft_strdup(line);
     init_tokenizer(&tokenizer);
-    size_t i = 0;
+
     while (true)
     {
         token = next_token(&tokenizer);
-        
-       /*  if (token.type == -1)
+        if (token.type == TK_EOF)
         {
             ft_printf("Malformed token: %s\n", token.value);
-            free(token.value);
+            //free(token.value);
             return -1;
         }
         ft_printf("type= |%d| name= |%s| value= |%s| \n", 
             token.type, get_name_token(token.type), token.value);
-        free(token.value); */
-        i++;
+        free(tokenizer.term);
+        tokenizer.term = ft_strdup("");
     }
     return (0);
 }
