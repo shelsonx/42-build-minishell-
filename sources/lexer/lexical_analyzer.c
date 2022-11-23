@@ -27,115 +27,14 @@ int is_eof(size_t *pos, char *content)
 void init_tokenizer(t_tokenizer *tokenizer) {
     tokenizer->pos = 0;
     tokenizer->current_char = tokenizer->content[tokenizer->pos];
-    tokenizer->term = ft_strdup("");
-}
-
-void set_term(t_tokenizer *tokenizer)
-{
-    char    *old_term;
-    char    current_char_p[2];
-
-    old_term = tokenizer->term;
-    current_char_p[0] = tokenizer->current_char;
-    current_char_p[1] = '\0';
-    tokenizer->term = ft_strjoin(tokenizer->term, current_char_p);
-    free(old_term);
-}
-
-t_token invalid_token(t_tokenizer *tokenizer)
-{
-     if (tokenizer->token.type != TK_EOF && tokenizer->current_char != '\0' &&
-        tokenizer->current_char != tokenizer->content[ft_strlen(tokenizer->content)-1])
-    {
-        set_term(tokenizer);
-        tokenizer->token.type = -1;
-        tokenizer->token.value = ft_strdup(tokenizer->term);
-        return (tokenizer->token);
-    }
-}
-
-void    advance(t_tokenizer *tokenizer)
-{
-    tokenizer->pos++;
-    if (tokenizer->pos > ft_strlen(tokenizer->content) -1)
-        tokenizer->token.type = TK_EOF;
-    else
-        tokenizer->current_char = tokenizer->content[tokenizer->pos];
-}
-
-void    skip_space(t_tokenizer *tokenizer)
-{
-    while (ft_isspace(tokenizer->current_char) && tokenizer->token.type != TK_EOF)
-        advance(tokenizer);
-}
-
-void    identifier(t_tokenizer *tokenizer)
-{
-    while (ft_isalnum(tokenizer->current_char) || tokenizer->current_char == '_' &&
-        (tokenizer->token.type != TK_EOF))
-    {
-        set_term(tokenizer);
-        advance(tokenizer);
-        if (tokenizer->token.type == TK_EOF)
-            return ;
-    }
+    tokenizer->characteres = ft_strdup("");
 }
 
 t_token get_next_token(t_tokenizer *tokenizer)
 {
-    tokenizer->token.value = ft_strdup(tokenizer->term);
+    tokenizer->token.value = ft_strdup(tokenizer->characteres);
     advance(tokenizer);
     return (tokenizer->token);
-}
-
-t_token get_identifier(t_tokenizer *tokenizer)
-{
-    identifier(tokenizer);
-    tokenizer->token.type = TK_IDENTIFIER;
-    tokenizer->token.value = ft_strdup(tokenizer->term);
-    return (tokenizer->token);
-}
-
-t_token get_parenthesis(t_tokenizer *tokenizer)
-{
-    set_term(tokenizer);
-    tokenizer->token.type = TK_PARENTHESIS;
-    return get_next_token(tokenizer);
-}
-
-t_token get_great(t_tokenizer *tokenizer)
-{
-    if (ft_isgreat(tokenizer->content[tokenizer->pos+1]))
-    {
-        tokenizer->token.type = TK_DGREAT;
-        set_term(tokenizer);
-        advance(tokenizer);
-    }
-    else
-        tokenizer->token.type = TK_GREAT;
-        set_term(tokenizer);
-    return get_next_token(tokenizer);
-}
-
-t_token get_less(t_tokenizer *tokenizer)
-{
-    if (ft_isless(tokenizer->content[tokenizer->pos+1]))
-    {
-        tokenizer->token.type = TK_DLESS;
-        set_term(tokenizer);
-        advance(tokenizer);
-    }
-    else
-        tokenizer->token.type = TK_LESS;
-        set_term(tokenizer);
-    return get_next_token(tokenizer);
-}
-
-t_token get_pipe(t_tokenizer *tokenizer)
-{
-    set_term(tokenizer);
-    tokenizer->token.type = TK_PIPE;
-    return get_next_token(tokenizer);
 }
 
 t_token next_token(t_tokenizer *tokenizer)
@@ -157,7 +56,8 @@ t_token next_token(t_tokenizer *tokenizer)
         invalid_token(tokenizer);
         advance(tokenizer);
     }
-    tokenizer->token.type == TK_EOF;
+     if (tokenizer->token.type == TK_EOF)
+            exit(0);
     return tokenizer->token;
 }
 int main(void)
@@ -174,8 +74,6 @@ int main(void)
     while (true)
     {
         token = next_token(&tokenizer);
-        if (tokenizer.token.type == TK_EOF)
-            exit(0);
         if (token.type == -1)
         {
             ft_printf("Malformed token: %s\n", token.value);
@@ -184,8 +82,8 @@ int main(void)
         }
         ft_printf("type= |%d| name= |%s| value= |%s| \n", 
             token.type, get_name_token(token.type), token.value);
-        free(tokenizer.term);
-        tokenizer.term = ft_strdup("");
+        free(tokenizer.characteres);
+        tokenizer.characteres = ft_strdup("");
     }
     return (0);
 }
