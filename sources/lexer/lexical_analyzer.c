@@ -157,8 +157,7 @@ t_token next_token(t_tokenizer *tokenizer)
         invalid_token(tokenizer);
         advance(tokenizer);
     }
-     if (tokenizer->token.type == TK_EOF)
-            exit(0);
+    tokenizer->token.type == TK_EOF;
     return tokenizer->token;
 }
 int main(void)
@@ -175,6 +174,8 @@ int main(void)
     while (true)
     {
         token = next_token(&tokenizer);
+        if (tokenizer.token.type == TK_EOF)
+            exit(0);
         if (token.type == -1)
         {
             ft_printf("Malformed token: %s\n", token.value);
