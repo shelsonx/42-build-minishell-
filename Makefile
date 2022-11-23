@@ -16,13 +16,15 @@ SRC				= main.c\
 				  exec.c pipe.c paths.c command.c children_process.c\
 				  utils_pipes.c\
 				  signals.c\
-				  exit.c
+				  exit.c \
+				  get_token.c lexical_analyzer.c lexical_resources.c
 
 VPATH 			:= $(SRC_PATH)\
 				$(SRC_PATH)prompt\
 				$(SRC_PATH)execute\
 				$(SRC_PATH)utils\
 				$(SRC_PATH)exit\
+				$(SRC_PATH)lexer\
 
 OBJ				= $(addprefix $(OBJ_PATH), $(notdir $(SRC:.c=.o)))
 

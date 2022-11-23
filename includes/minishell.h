@@ -30,7 +30,7 @@ typedef struct s_tokenizer
     char        current_char;
     int         pos;
 	char		*content;
-    char        *term;
+    char        *characteres;
 	t_token		token;
 }   t_tokenizer;
 
@@ -81,5 +81,26 @@ pid_t	execute_child_process(t_data *data);
 
 //exit program
 void    exit_program(t_data *data);
+
+//get token
+t_token get_identifier(t_tokenizer *tokenizer);
+t_token get_parenthesis(t_tokenizer *tokenizer);
+t_token get_great(t_tokenizer *tokenizer);
+t_token get_less(t_tokenizer *tokenizer);
+t_token get_pipe(t_tokenizer *tokenizer);
+
+//lexical analyzer
+char    *get_name_token(int type_token);
+int is_eof(size_t *pos, char *content);
+void init_tokenizer(t_tokenizer *tokenizer); 
+t_token get_next_token(t_tokenizer *tokenizer);
+t_token next_token(t_tokenizer *tokenizer);
+
+//lexical resources
+void add_char(t_tokenizer *tokenizer);
+t_token invalid_token(t_tokenizer *tokenizer);
+void    advance(t_tokenizer *tokenizer);
+void    skip_space(t_tokenizer *tokenizer);
+void    identifier(t_tokenizer *tokenizer);
 
 #endif /* MINISHELL */
