@@ -22,12 +22,13 @@ t_token invalid_token(t_tokenizer *tokenizer)
         tokenizer->token.value = ft_strdup(tokenizer->characteres);
         return (tokenizer->token);
     }
+    return (tokenizer->token);
 }
 
 void    advance(t_tokenizer *tokenizer)
 {
     tokenizer->pos++;
-    if (tokenizer->pos > ft_strlen(tokenizer->content) -1)
+    if ((size_t)tokenizer->pos > ft_strlen(tokenizer->content) -1)
         tokenizer->token.type = TK_EOF;
     else
         tokenizer->current_char = tokenizer->content[tokenizer->pos];
@@ -41,7 +42,7 @@ void    skip_space(t_tokenizer *tokenizer)
 
 void    identifier(t_tokenizer *tokenizer)
 {
-    while (ft_isalnum(tokenizer->current_char) || tokenizer->current_char == '_' &&
+    while ((ft_isalnum(tokenizer->current_char) || tokenizer->current_char == '_') &&
         (tokenizer->token.type != TK_EOF))
     {
         add_char(tokenizer);

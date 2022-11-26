@@ -7,7 +7,7 @@ void    prompt()
 {
     char    *line;
 
-    while (TRUE)
+    while (true)
     {	
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sighandler);
