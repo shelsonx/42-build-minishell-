@@ -31,7 +31,7 @@ t_token next_token(t_tokenizer *tokenizer)
         if (ft_ispipe(tokenizer->current_char))
             return get_pipe(tokenizer);
         advance(tokenizer);
-        return invalid_token(tokenizer);
+        invalid_token(tokenizer);
     }
     return tokenizer->token;
 }
