@@ -29,10 +29,8 @@ t_token next_token(t_tokenizer *tokenizer)
             return get_less(tokenizer);
         if (ft_ispipe(tokenizer->current_char))
             return get_pipe(tokenizer);
-        invalid_token(tokenizer);
         advance(tokenizer);
+        return invalid_token(tokenizer);
     }
-     if (tokenizer->token.type == TK_EOF)
-            exit(0);
     return tokenizer->token;
 }
