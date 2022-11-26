@@ -4,6 +4,7 @@ void init_tokenizer(t_tokenizer *tokenizer) {
     tokenizer->pos = 0;
     tokenizer->current_char = tokenizer->content[tokenizer->pos];
     tokenizer->characteres = ft_strdup("");
+    tokenizer->token.type = -1;
 }
 
 t_token get_next_token(t_tokenizer *tokenizer)

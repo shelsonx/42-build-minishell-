@@ -16,30 +16,31 @@ char    *get_name_token(int type_token)
         return "DLESS";
     if (type_token == TK_PIPE)
         return "PIPE";
+     if (type_token == TK_EOF)
+        return "EOF";
     return NULL;
 }
 
 int main(void)
 {
-
-    char *line= "(ls) a112 _ab_c1 | >> > < << ( a123";
     t_token token;
     t_tokenizer tokenizer;
-    static int pos;
 
-    tokenizer.content = ft_strdup(line);
+    tokenizer.content = ft_strdup("(ls) a11$2 _ab_c1 | >> > < << ( a123");
     init_tokenizer(&tokenizer);
 
     while (true)
     {
         token = next_token(&tokenizer);
+        if (tokenizer.token.type == TK_EOF)
+            break ;
         if (token.type == -1)
         {
             ft_printf("Malformed token: %s\n", token.value);
             free(token.value);
             free(tokenizer.content);
             free(tokenizer.characteres);
-            return -1;
+            exit(1);
         }
         ft_printf("type= |%d| name= |%s| value= |%s| \n", 
             token.type, get_name_token(token.type), token.value);
