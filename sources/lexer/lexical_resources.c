@@ -17,6 +17,7 @@ t_token invalid_token(t_tokenizer *tokenizer)
      if (tokenizer->token.type != TK_EOF && tokenizer->current_char != '\0' &&
         tokenizer->current_char != tokenizer->content[ft_strlen(tokenizer->content)-1])
     {
+        tokenizer->current_char = tokenizer->content[tokenizer->pos-1];
         add_char(tokenizer);
         tokenizer->token.type = -1;
         tokenizer->token.value = ft_strdup(tokenizer->characteres);
