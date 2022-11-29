@@ -24,10 +24,8 @@ t_token get_great(t_tokenizer *tokenizer)
         advance(tokenizer);
     }
     else
-    {
         tokenizer->token.type = TK_GREAT;
-        add_char(tokenizer);
-    }
+    add_char(tokenizer);
     return get_next_token(tokenizer);
 }
 
@@ -40,10 +38,8 @@ t_token get_less(t_tokenizer *tokenizer)
         advance(tokenizer);
     }
     else
-    {
         tokenizer->token.type = TK_LESS;
-        add_char(tokenizer);
-    }
+    add_char(tokenizer);
     return get_next_token(tokenizer);
 }
 

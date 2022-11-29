@@ -20,7 +20,7 @@ t_token next_token(t_tokenizer *tokenizer)
     {   
         if (ft_isspace(tokenizer->current_char))
             skip_space(tokenizer);
-        if (ft_isalpha(tokenizer->current_char) || tokenizer->current_char == '_')
+        if (ft_isalpha(tokenizer->current_char) || tokenizer->current_char == '-')
             return get_identifier(tokenizer);
         if (ft_isparenthesis(tokenizer->current_char))
             return get_parenthesis(tokenizer);
