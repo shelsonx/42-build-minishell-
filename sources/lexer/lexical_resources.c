@@ -34,7 +34,7 @@ void    invalid_token(t_tokenizer *tokenizer)
 void    advance(t_tokenizer *tokenizer)
 {
     tokenizer->pos++;
-    if ((size_t)tokenizer->pos > ft_strlen(tokenizer->content) -1)
+    if ((size_t)tokenizer->pos > ft_strlen(tokenizer->content))
         tokenizer->token.type = TK_EOF;
     else
         tokenizer->current_char = tokenizer->content[tokenizer->pos];
@@ -42,13 +42,13 @@ void    advance(t_tokenizer *tokenizer)
 
 void    skip_space(t_tokenizer *tokenizer)
 {
-    while (ft_isspace(tokenizer->current_char) && tokenizer->token.type != TK_EOF)
+    while (ft_isspace(tokenizer->current_char) && (tokenizer->token.type != TK_EOF))
         advance(tokenizer);
 }
 
 void    identifier(t_tokenizer *tokenizer)
 {
-    while ((ft_isalnum(tokenizer->current_char) || tokenizer->current_char == '_') &&
+    while ((ft_isalnum(tokenizer->current_char) || tokenizer->current_char == '-') &&
         (tokenizer->token.type != TK_EOF))
     {
         add_char(tokenizer);
