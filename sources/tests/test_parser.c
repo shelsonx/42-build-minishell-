@@ -28,12 +28,16 @@ int main(void)
     parser_data.tokenizer = malloc(sizeof(t_tokenizer *));
     parser_data.tokenizer->content = malloc(sizeof(char *));
     //"(ls) a112 -ab-c1 | >> > < << ( a123"
-    parser_data.tokenizer->content = ft_strdup("ls >>");
-    init_tokenizer(parser_data.tokenizer);
-   /*  int i = 0;
-    while (i++ < 12) */
-    parser(&parser_data);
-    free(parser_data.tokenizer->characteres);
-    parser_data.tokenizer->characteres = ft_strdup("");
+
+    while ((parser_data.tokenizer->content = 
+        ft_get_next_line(STDIN_FILENO)) != NULL)
+    {
+        init_tokenizer(parser_data.tokenizer);
+    /*  int i = 0;
+        while (i++ < 12) */
+        parser(&parser_data);
+        free(parser_data.tokenizer->characteres);
+        parser_data.tokenizer->characteres = ft_strdup("");
+    }
     return (0);
 }

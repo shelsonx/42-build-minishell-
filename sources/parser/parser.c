@@ -38,12 +38,26 @@ t_token simple_command(t_parser *parser)
     return (current_token);
 }
 
+t_token pipe_sequence(t_parser *parser)
+{
+    t_token current_token;
+
+    current_token = simple_command(parser);
+    if (parser->current_token->type == TK_PIPE)
+    {
+        parser->token_type = TK_PIPE;
+        consume(parser);
+        current_token = simple_command(parser);
+    }
+    return (current_token);
+}
+
 void    parser(t_parser *parser)
 {
     t_token token;
 
     *parser->current_token = next_token(parser->tokenizer);
-    token = simple_command(parser);
+    token = pipe_sequence(parser);
     if (parser->current_token->type != TK_IDENTIFIER && parser->current_token->type != TK_EOF)
         error();
     ft_printf("%s\n", token.value);
