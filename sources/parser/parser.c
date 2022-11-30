@@ -45,7 +45,7 @@ t_token pipe_sequence(t_parser *parser)
     t_token current_token;
 
     current_token = simple_command(parser);
-    if (parser->current_token->type == TK_PIPE)
+    while (parser->current_token->type == TK_PIPE)
     {
         parser->token_type = TK_PIPE;
         consume(parser);
@@ -62,7 +62,7 @@ void    parser(t_parser *parser)
     token = pipe_sequence(parser);
     if (parser->current_token->type != TK_IDENTIFIER && parser->current_token->type != TK_EOF)
     {
-        ft_printf("token_type= %d\n", parser->current_token->type);
+        ft_printf("token_type= %s\n", get_name_token(parser->current_token->type));
         error();
     }
     
