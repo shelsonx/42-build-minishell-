@@ -23,11 +23,17 @@ char    *get_name_token(int type_token)
 
 int main(void)
 {
-    t_tokenizer tokenizer;
-    tokenizer.content = ft_strdup("(ls) a112 _ab_c1 | >> > < << ( a123");
-    init_tokenizer(&tokenizer);
-    int i = 0;
-    while (i++ < 15)
-        parser(&tokenizer);
+    t_parser parser_data;
+    parser_data.current_token = malloc(sizeof(t_token));
+    parser_data.tokenizer = malloc(sizeof(t_tokenizer *));
+    parser_data.tokenizer->content = malloc(sizeof(char *));
+    //"(ls) a112 -ab-c1 | >> > < << ( a123"
+    parser_data.tokenizer->content = ft_strdup("ls >>");
+    init_tokenizer(parser_data.tokenizer);
+   /*  int i = 0;
+    while (i++ < 12) */
+    parser(&parser_data);
+    free(parser_data.tokenizer->characteres);
+    parser_data.tokenizer->characteres = ft_strdup("");
     return (0);
 }

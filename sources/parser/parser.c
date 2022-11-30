@@ -2,22 +2,50 @@
 
 void    error(void)
 {
-    ft_printf("Invalid syntax");
-    return ;
+    ft_printf("Invalid syntax\n");
+    exit(1);
 }
 
-void    consume(t_tokenizer *tokenizer, t_token *current_token, int token_type)
+void    consume(t_parser *parser)
 {
-    if (current_token->type == token_type)
-        *current_token = next_token(tokenizer);
+    if (parser->current_token->type == parser->token_type)
+    {
+        free(parser->tokenizer->characteres);
+        parser->tokenizer->characteres = ft_strdup("");
+        *parser->current_token = next_token(parser->tokenizer);
+    }
     else
         error();
 }
 
-void    parser(t_tokenizer *tokenizer)
+t_token cmd_name(t_parser *parser)
 {
     t_token current_token;
-    current_token = next_token(tokenizer);
-    ft_printf("%s\n", get_name_token(current_token.type));
-    free(current_token.value);
+
+    current_token = *parser->current_token;
+    parser->token_type = TK_IDENTIFIER;
+    consume(parser);
+    return (current_token);
+}
+
+t_token simple_command(t_parser *parser)
+{
+    t_token current_token;
+    
+    current_token = cmd_name(parser);
+    if (parser->current_token->type == TK_IDENTIFIER)
+        current_token = cmd_name(parser);
+    return (current_token);
+}
+
+void    parser(t_parser *parser)
+{
+    t_token token;
+
+    *parser->current_token = next_token(parser->tokenizer);
+    token = simple_command(parser);
+    if (parser->current_token->type != TK_IDENTIFIER && parser->current_token->type != TK_EOF)
+        error();
+    ft_printf("%s\n", token.value);
+    //ft_printf("current_token %s\n", get_name_token(parser->current_token->type));
 }

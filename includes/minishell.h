@@ -34,6 +34,13 @@ typedef struct s_tokenizer
 	t_token		token;
 }   t_tokenizer;
 
+typedef struct s_parser
+{
+	t_tokenizer	*tokenizer;
+	t_token		*current_token;
+	int			token_type;
+}	t_parser;
+
 enum e_TOKENS 
 {
 	TK_IDENTIFIER,
@@ -104,6 +111,6 @@ void    skip_space(t_tokenizer *tokenizer);
 void    identifier(t_tokenizer *tokenizer);
 
 //parser
-void    parser(t_tokenizer *tokenizer);
+void    parser(t_parser *parser);
 
 #endif /* MINISHELL */
