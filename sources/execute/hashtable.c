@@ -12,36 +12,6 @@ unsigned long hash_function(char* str) {
     return i % CAPACITY;
 }
 
-typedef struct Ht_item Ht_item;
-
-// Define the Hash Table Item here
-struct Ht_item {
-    char* key;
-    char* value;
-};
-
-
-typedef struct LinkedList LinkedList;
-
-// Define the Linkedlist here
-struct LinkedList {
-    Ht_item* item; 
-    LinkedList* next;
-};
-
-
-typedef struct HashTable HashTable;
-
-// Define the Hash Table here
-struct HashTable {
-    // Contains an array of pointers
-    // to items
-    Ht_item** items;
-    LinkedList** overflow_buckets;
-    int size;
-    int count;
-};
-
 
 static LinkedList* allocate_list () {
     // Allocates memory for a Linkedlist pointer
@@ -362,21 +332,21 @@ void print_hashtable(HashTable* table) {
 }
 
 
-// int main() {
-//     HashTable* ht = create_table(CAPACITY);
-//     ht_insert(ht, "1", "First address");
-//     ht_insert(ht, "2", "Second address");
-//     ht_insert(ht, "Hel", "Third address");
-//     ht_insert(ht, "Cau", "Fourth address");
-//     print_search(ht, "1");
-//     print_search(ht, "2");
-//     print_search(ht, "3");
-//     print_search(ht, "Hel");
-//     print_search(ht, "Cau"); // Collision!
-//     print_hashtable(ht);
-//     ht_delete(ht, "1");
-//     ht_delete(ht, "Cau");
-//     print_hashtable(ht);
-//     free_hashtable(ht);
-//     return 0;
-// }
+/*  int main() {
+     HashTable* ht = create_table(CAPACITY);
+     ht_insert(ht, "1", "First address");
+     ht_insert(ht, "2", "Second address");
+     ht_insert(ht, "Hel", "Third address");
+     ht_insert(ht, "Cau", "Fourth address");
+     print_search(ht, "1");
+     print_search(ht, "2");
+     print_search(ht, "3");
+     print_search(ht, "Hel");
+     print_search(ht, "Cau");  //Collision!
+     print_hashtable(ht);
+     ht_delete(ht, "1");
+     ht_delete(ht, "Cau");
+     print_hashtable(ht);
+     free_hashtable(ht);
+     return 0;
+ } */

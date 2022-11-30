@@ -24,6 +24,8 @@ char    *get_name_token(int type_token)
 int main(void)
 {
     t_parser parser_data;
+    parser_data.index = 0;
+    parser_data.table = create_table(5000);
     parser_data.current_token = malloc(sizeof(t_token));
     parser_data.tokenizer = malloc(sizeof(t_tokenizer *));
     parser_data.tokenizer->content = malloc(sizeof(char *));
@@ -38,6 +40,12 @@ int main(void)
         parser(&parser_data);
         free(parser_data.tokenizer->characteres);
         parser_data.tokenizer->characteres = ft_strdup("");
+    }
+    int i = 0;
+    while (i < parser_data.index)
+    {
+        ft_printf("%s ", ht_search(parser_data.table, ft_itoa(i)));
+        i++;
     }
     return (0);
 }

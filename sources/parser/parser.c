@@ -13,6 +13,8 @@ void    consume(t_parser *parser)
         free(parser->tokenizer->characteres);
         parser->tokenizer->characteres = ft_strdup("");
         *parser->current_token = next_token(parser->tokenizer);
+        parser->index++;
+        ht_insert(parser->table, ft_itoa(parser->index), parser->current_token->value);
     }
     else
         error();
@@ -55,11 +57,16 @@ t_token pipe_sequence(t_parser *parser)
 void    parser(t_parser *parser)
 {
     t_token token;
-
     *parser->current_token = next_token(parser->tokenizer);
+    ht_insert(parser->table, ft_itoa(parser->index), parser->current_token->value);
     token = pipe_sequence(parser);
     if (parser->current_token->type != TK_IDENTIFIER && parser->current_token->type != TK_EOF)
+    {
+        ft_printf("token_type= %d\n", parser->current_token->type);
         error();
-    ft_printf("%s\n", token.value);
+    }
+    
+    /* ft_printf("%s\n", ht_search(parser->table, ft_itoa(0)));
+    ft_printf("%s\n", ht_search(parser->table, ft_itoa(1))); */
     //ft_printf("current_token %s\n", get_name_token(parser->current_token->type));
 }
