@@ -28,6 +28,34 @@ t_token cmd_name(t_parser *parser)
     return (current_token);
 }
 
+t_token redirection_op(t_parser *parser)
+{
+    t_token current_token;
+
+    current_token = *parser->current_token;
+    if (current_token.type == TK_GREAT)
+        parser->token_type = TK_GREAT;
+    else if (current_token.type == TK_LESS)
+        parser->token_type = TK_LESS;
+    consume(parser);
+    return (current_token);
+}
+
+t_token redirection(t_parser *parser)
+{
+    t_token current_token;
+    char    *tokens;
+
+    tokens = ft_strdup("");
+    current_token = redirection_op(parser);
+    tokens = ft_strjoin(tokens, current_token.value);
+    current_token = cmd_name(parser);
+    tokens = ft_strjoin(tokens, " ");
+    tokens = ft_strjoin(tokens, current_token.value);
+    ht_insert(parser->table_redirection, ft_itoa(0), tokens);
+    return (current_token);
+}
+
 t_token simple_command(t_parser *parser)
 {
     t_token current_token;
@@ -42,6 +70,9 @@ t_token simple_command(t_parser *parser)
         tokens = ft_strjoin(tokens, " ");
         tokens = ft_strjoin(tokens, current_token.value);
     }
+    if (parser->current_token->type == TK_GREAT || 
+        parser->current_token->type == TK_LESS)
+            redirection(parser);
     ht_insert(parser->table, ft_itoa(parser->index), tokens);
     parser->index++;
     return (current_token);

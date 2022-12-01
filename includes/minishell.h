@@ -10,6 +10,7 @@
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <sys/types.h>
+# include <fcntl.h>
 
 typedef struct s_data {
 	char    **pipeline;
@@ -78,6 +79,7 @@ typedef struct s_parser
 	int			token_type;
 	int			index;
 	HashTable	*table;
+	HashTable	*table_redirection;
 }	t_parser;
 
 enum e_TOKENS 

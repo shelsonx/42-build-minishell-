@@ -26,7 +26,23 @@ int execute(t_parser *parser_data)
 	data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(0)), ' ');
     
 	if (total_commands == 1)
-		exec_one_command(&data, STDIN_FILENO, STDOUT_FILENO);
+	{
+		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
+			exec_one_command(&data, STDIN_FILENO, STDOUT_FILENO);
+		else
+		{
+			char **redirection;
+			int file_fd;
+			
+			redirection = ft_split(ht_search(
+							parser_data->table_redirection, ft_itoa(0)), ' ');
+			file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+			if (file_fd < 0)
+				perror("minishell");
+			ht_delete(parser_data->table_redirection, ft_itoa(0));
+			exec_one_command(&data, STDIN_FILENO, file_fd);
+		}
+	}
 	if (total_commands == 2)
 	{
 		data.fds = create_pipes(1);
