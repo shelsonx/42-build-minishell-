@@ -17,6 +17,19 @@ char **create_args(char **pipeline)
 	return args;
 }
 
+int	get_fd_out(t_parser *parser_data)
+{
+	char	**redirection;
+	int 	file_fd;
+	
+	redirection = ft_split(ht_search(
+					parser_data->table_redirection, ft_itoa(0)), ' ');
+	file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (file_fd < 0)
+		perror("minishell");
+	return (file_fd);
+}
+
 int execute(t_parser *parser_data)
 {
 	t_data	data;
@@ -30,25 +43,17 @@ int execute(t_parser *parser_data)
 		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
 			exec_one_command(&data, STDIN_FILENO, STDOUT_FILENO);
 		else
-		{
-			char **redirection;
-			int file_fd;
-			
-			redirection = ft_split(ht_search(
-							parser_data->table_redirection, ft_itoa(0)), ' ');
-			file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-			if (file_fd < 0)
-				perror("minishell");
-			ht_delete(parser_data->table_redirection, ft_itoa(0));
-			exec_one_command(&data, STDIN_FILENO, file_fd);
-		}
+			exec_one_command(&data, STDIN_FILENO, get_fd_out(parser_data));
 	}
 	if (total_commands == 2)
 	{
 		data.fds = create_pipes(1);
 		exec_first_command(&data, STDIN_FILENO);
 		data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(1)), ' ');
-		exec_last_command(&data, total_commands -2, STDOUT_FILENO);
+		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
+			exec_last_command(&data, total_commands -2, STDOUT_FILENO);
+		else
+			exec_last_command(&data, total_commands -2, get_fd_out(parser_data));
 	}
 	else if (total_commands > 2)
 	{
@@ -56,7 +61,10 @@ int execute(t_parser *parser_data)
 		exec_first_command(&data, STDIN_FILENO);
 		exec_middles_commands(&data, parser_data, total_commands -2);
 		data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(total_commands -1)), ' ');
-		exec_last_command(&data, total_commands -2, STDOUT_FILENO);
+		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
+			exec_last_command(&data, total_commands -2, STDOUT_FILENO);
+		else
+			exec_last_command(&data, total_commands -2, get_fd_out(parser_data));
 	}
 	exit_program(&data);
     return (0);
