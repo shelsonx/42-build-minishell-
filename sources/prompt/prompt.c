@@ -6,14 +6,24 @@
 void    prompt()
 {
     char    *line;
+    t_parser parser_data;
+
+    parser_data.index = 0;
+    parser_data.table = create_table(5000);
+    parser_data.current_token = malloc(sizeof(t_token));
+    parser_data.tokenizer = malloc(sizeof(t_tokenizer *));
+    parser_data.tokenizer->content = malloc(sizeof(char *));
 
     while (true)
     {	
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sighandler);
-        line = readline("Minishell:");
+        line = readline("🎸𝄫: ");
         add_history(line);
-		execute(line);
+        parser_data.tokenizer->content = ft_strdup(line);
+        init_tokenizer(parser_data.tokenizer);
+        parser(&parser_data);
+        execute(&parser_data);
         free(line);
     }
 }

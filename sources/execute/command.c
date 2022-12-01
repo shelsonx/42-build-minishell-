@@ -71,7 +71,7 @@ void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_m
 	}
 }
 
-void	exec_last_command(t_data *data, int index, int fd_out, int pos_cmd, int pos_param)
+void	exec_last_command(t_data *data, int index, int fd_out)
 {
 	pid_t	child_pid;
 	int		status;

@@ -13,7 +13,8 @@ INCLUDE 		= ./includes/
 
 SRC				= main.c\
 				  prompt.c\
-				  exec.c pipe.c paths.c command.c children_process.c\
+				  parser.c\
+				  exec.c pipe.c paths.c command.c children_process.c hashtable.c\
 				  utils_pipes.c\
 				  signals.c\
 				  exit.c \
@@ -25,6 +26,7 @@ VPATH 			:= $(SRC_PATH)\
 				$(SRC_PATH)utils\
 				$(SRC_PATH)exit\
 				$(SRC_PATH)lexer\
+				$(SRC_PATH)parser\
 
 OBJ				= $(addprefix $(OBJ_PATH), $(notdir $(SRC:.c=.o)))
 

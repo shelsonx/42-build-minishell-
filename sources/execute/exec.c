@@ -32,9 +32,7 @@ int execute(t_parser *parser_data)
 		data.fds = create_pipes(1);
 		exec_first_command(&data, STDIN_FILENO);
 		data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(1)), ' ');
-		exec_last_command(&data, total_commands -2, STDOUT_FILENO,
-			ft_len_rows_tab(data.pipeline) -2,
-			ft_len_rows_tab(data.pipeline) -1);
+		exec_last_command(&data, total_commands -2, STDOUT_FILENO);
 	}
 	else if (total_commands > 2)
 	{
@@ -42,9 +40,7 @@ int execute(t_parser *parser_data)
 		exec_first_command(&data, STDIN_FILENO);
 		exec_middles_commands(&data, parser_data, total_commands -2);
 		data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(total_commands -1)), ' ');
-		exec_last_command(&data, total_commands -2, STDOUT_FILENO, 
-			ft_len_rows_tab(data.pipeline) -2, 
-			ft_len_rows_tab(data.pipeline) -1);
+		exec_last_command(&data, total_commands -2, STDOUT_FILENO);
 	}
 	exit_program(&data);
     return (0);

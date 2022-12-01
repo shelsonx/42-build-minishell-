@@ -63,12 +63,8 @@ t_token pipe_sequence(t_parser *parser)
 
 void    parser(t_parser *parser)
 {
-    t_token token;
     *parser->current_token = next_token(parser->tokenizer);
-    token = pipe_sequence(parser);
+    pipe_sequence(parser);
     if (parser->current_token->type != TK_IDENTIFIER && parser->current_token->type != TK_EOF)
-    {
-        ft_printf("token_type= %s\n", get_name_token(parser->current_token->type));
         error();
-    }
 }

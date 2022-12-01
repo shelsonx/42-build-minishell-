@@ -50,7 +50,7 @@ static LinkedList* linkedlist_insert(LinkedList* list, Ht_item* item) {
     return list;
 }
 
-static Ht_item* linkedlist_remove(LinkedList* list) {
+/* static Ht_item* linkedlist_remove(LinkedList* list) {
     // Removes the head from the linked list
     // and returns the item of the popped element
     if (!list)
@@ -68,7 +68,7 @@ static Ht_item* linkedlist_remove(LinkedList* list) {
     free(temp->item);
     free(temp);
     return it;
-}
+} */
 
 static void free_linkedlist(LinkedList* list) {
     LinkedList* temp = list;
