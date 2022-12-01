@@ -44,7 +44,7 @@ int main(void)
     int i = 0;
     while (i < parser_data.index)
     {
-        ft_printf("%s ", ht_search(parser_data.table, ft_itoa(i)));
+        ft_printf("%d-> %s \n",i, ht_search(parser_data.table, ft_itoa(i)));
         i++;
     }
     return (0);
