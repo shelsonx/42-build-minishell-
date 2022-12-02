@@ -69,6 +69,7 @@ struct HashTable {
 };
 HashTable* create_table(int size);
 void ht_insert(HashTable* table, char* key, char* value);
+void free_hashtable(HashTable* table);
 char* ht_search(HashTable* table, char* key);
 
 

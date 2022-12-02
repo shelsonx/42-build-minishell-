@@ -9,7 +9,7 @@ void    prompt()
     t_parser parser_data;
 
     parser_data.current_token = malloc(sizeof(t_token));
-    parser_data.tokenizer = malloc(sizeof(t_tokenizer *));
+    parser_data.tokenizer = malloc(sizeof(t_tokenizer));
     parser_data.tokenizer->content = malloc(sizeof(char *));
 
     while (true)
@@ -25,6 +25,10 @@ void    prompt()
         init_tokenizer(parser_data.tokenizer);
         parser(&parser_data);
         execute(&parser_data);
+        free(parser_data.tokenizer->token.value);
+        free(parser_data.tokenizer->characteres);
+        free_hashtable(parser_data.table);
+        free_hashtable(parser_data.table_redirection);
         free(line);
     }
 }

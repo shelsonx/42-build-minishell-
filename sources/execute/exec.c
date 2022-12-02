@@ -2,19 +2,12 @@
 
 char **create_args(char **pipeline)
 {
-	int i;
-	char **args = malloc(sizeof (char**) * 1);
-	*args = malloc(sizeof (char*) * ft_len_rows_tab(pipeline) + 1);
-	args[0] = get_exec_command(pipeline[0]);
+    char	*old_pos;
 
-	i = 1;
-	while (i < ft_len_rows_tab(pipeline))
-	{
-		args[i] = pipeline[i];
-		i++;
-	}
-	args[ft_len_rows_tab(pipeline)] = NULL;
-	return args;
+    old_pos = pipeline[0];
+    pipeline[0] = get_exec_command(pipeline[0]);
+    free(old_pos);
+	return (pipeline);
 }
 
 int	get_fd_out(t_parser *parser_data)
