@@ -29,7 +29,7 @@ t_token next_token(t_tokenizer *tokenizer)
         if (ft_ispipe(tokenizer->current_char))
             return get_pipe(tokenizer);
         if (tokenizer->current_char != '\0')
-            return get_identifier(tokenizer);
+            return get_word(tokenizer);
         advance(tokenizer);
     }
     return tokenizer->token;

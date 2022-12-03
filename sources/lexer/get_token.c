@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-t_token get_identifier(t_tokenizer *tokenizer)
+t_token get_word(t_tokenizer *tokenizer)
 {
     identifier(tokenizer);
     tokenizer->token.type = TK_WORD;

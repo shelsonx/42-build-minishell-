@@ -132,7 +132,7 @@ pid_t	execute_child_process(t_data *data);
 void    exit_program(t_data *data);
 
 //get token
-t_token get_identifier(t_tokenizer *tokenizer);
+t_token get_word(t_tokenizer *tokenizer);
 t_token get_parenthesis(t_tokenizer *tokenizer);
 t_token get_great(t_tokenizer *tokenizer);
 t_token get_less(t_tokenizer *tokenizer);

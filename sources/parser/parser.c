@@ -18,7 +18,7 @@ void    consume(t_parser *parser)
         error();
 }
 
-t_token cmd_name(t_parser *parser)
+t_token cmd_word(t_parser *parser)
 {
     t_token current_token;
 
@@ -49,7 +49,7 @@ t_token redirection(t_parser *parser)
     tokens = ft_strdup("");
     current_token = redirection_op(parser);
     tokens = ft_strjoin(tokens, current_token.value);
-    current_token = cmd_name(parser);
+    current_token = cmd_word(parser);
     tokens = ft_strjoin(tokens, " ");
     tokens = ft_strjoin(tokens, current_token.value);
     ht_insert(parser->table_redirection, ft_itoa(0), tokens);
@@ -62,11 +62,11 @@ t_token simple_command(t_parser *parser)
     char    *tokens;
 
     tokens = ft_strdup("");
-    current_token = cmd_name(parser);
+    current_token = cmd_word(parser);
     tokens = ft_strjoin(tokens, current_token.value);
     while (parser->current_token->type == TK_WORD)
     {
-        current_token = cmd_name(parser);
+        current_token = cmd_word(parser);
         tokens = ft_strjoin(tokens, " ");
         tokens = ft_strjoin(tokens, current_token.value);
     }
