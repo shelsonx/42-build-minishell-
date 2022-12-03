@@ -20,8 +20,6 @@ t_token next_token(t_tokenizer *tokenizer)
     {   
         if (ft_isspace(tokenizer->current_char))
             skip_space(tokenizer);
-        if (ft_isalpha(tokenizer->current_char) || tokenizer->current_char == '-')
-            return get_identifier(tokenizer);
         if (ft_isparenthesis(tokenizer->current_char))
             return get_parenthesis(tokenizer);
         if (ft_isgreat(tokenizer->current_char))
@@ -30,8 +28,9 @@ t_token next_token(t_tokenizer *tokenizer)
             return get_less(tokenizer);
         if (ft_ispipe(tokenizer->current_char))
             return get_pipe(tokenizer);
+        if (tokenizer->current_char != '\0')
+            return get_identifier(tokenizer);
         advance(tokenizer);
-        invalid_token(tokenizer);
     }
     return tokenizer->token;
 }

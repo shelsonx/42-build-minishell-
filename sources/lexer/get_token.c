@@ -3,7 +3,7 @@
 t_token get_identifier(t_tokenizer *tokenizer)
 {
     identifier(tokenizer);
-    tokenizer->token.type = TK_IDENTIFIER;
+    tokenizer->token.type = TK_WORD;
     tokenizer->token.value = ft_strdup(tokenizer->characteres);
     return (tokenizer->token);
 }

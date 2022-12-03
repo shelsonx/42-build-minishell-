@@ -2,8 +2,8 @@
 
 char    *get_name_token(int type_token)
 {
-    if (type_token == TK_IDENTIFIER)
-        return "IDENTIFIER";
+    if (type_token == TK_WORD)
+        return "WORD";
     if (type_token == TK_PARENTHESIS)
         return "PARENTHESIS";
     if (type_token == TK_GREAT)

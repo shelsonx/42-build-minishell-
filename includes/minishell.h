@@ -85,7 +85,7 @@ typedef struct s_parser
 
 enum e_TOKENS 
 {
-	TK_IDENTIFIER,
+	TK_WORD,
 	TK_PARENTHESIS,
 	TK_GREAT,
 	TK_LESS,

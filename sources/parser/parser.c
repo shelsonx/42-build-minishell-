@@ -23,7 +23,7 @@ t_token cmd_name(t_parser *parser)
     t_token current_token;
 
     current_token = *parser->current_token;
-    parser->token_type = TK_IDENTIFIER;
+    parser->token_type = TK_WORD;
     consume(parser);
     return (current_token);
 }
@@ -64,7 +64,7 @@ t_token simple_command(t_parser *parser)
     tokens = ft_strdup("");
     current_token = cmd_name(parser);
     tokens = ft_strjoin(tokens, current_token.value);
-    while (parser->current_token->type == TK_IDENTIFIER)
+    while (parser->current_token->type == TK_WORD)
     {
         current_token = cmd_name(parser);
         tokens = ft_strjoin(tokens, " ");
@@ -96,6 +96,6 @@ void    parser(t_parser *parser)
 {
     *parser->current_token = next_token(parser->tokenizer);
     pipe_sequence(parser);
-    if (parser->current_token->type != TK_IDENTIFIER && parser->current_token->type != TK_EOF)
+    if (parser->current_token->type != TK_WORD && parser->current_token->type != TK_EOF)
         error();
 }

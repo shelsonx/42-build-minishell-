@@ -12,25 +12,6 @@ void add_char(t_tokenizer *tokenizer)
     free(old_characteres);
 }
 
-void    invalid_token(t_tokenizer *tokenizer)
-{
-     if (tokenizer->token.type != TK_EOF && tokenizer->current_char != '\0' &&
-        tokenizer->current_char != tokenizer->content[ft_strlen(tokenizer->content)-1])
-    {
-        tokenizer->current_char = tokenizer->content[tokenizer->pos-1];
-        add_char(tokenizer);
-        tokenizer->token.type = -1;
-        tokenizer->token.value = ft_strdup(tokenizer->characteres);
-         ft_printf("Malformed token: %c\n", tokenizer->token.value[ft_strlen(
-            tokenizer->token.value
-        )-1]);
-        free(tokenizer->token.value);
-        free(tokenizer->content);
-        free(tokenizer->characteres);
-        exit(1);
-    }
-}
-
 void    advance(t_tokenizer *tokenizer)
 {
     tokenizer->pos++;
@@ -48,8 +29,13 @@ void    skip_space(t_tokenizer *tokenizer)
 
 void    identifier(t_tokenizer *tokenizer)
 {
-    while ((ft_isalnum(tokenizer->current_char) || tokenizer->current_char == '-') &&
-        (tokenizer->token.type != TK_EOF))
+    while (tokenizer->current_char != '\0' && 
+            !ft_isparenthesis(tokenizer->current_char) &&
+            !ft_isgreat(tokenizer->current_char) &&
+            !ft_isless(tokenizer->current_char) &&
+            !ft_ispipe(tokenizer->current_char) &&
+            !ft_isspace(tokenizer->current_char) &&
+            (tokenizer->token.type != TK_EOF))
     {
         add_char(tokenizer);
         advance(tokenizer);
