@@ -1,18 +1,35 @@
 #include "../../includes/minishell.h"
 
+int	is_full_path(char *arg)
+{
+	int		i;
+	char	**paths;
+	
+	paths = get_paths_cmds(getenv("PATH"));
+	i = 0;
+	while (paths[i])
+	{
+		if (ft_strncmp(paths[i], arg, ft_strlen(paths[i])) == 0)
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
 char	*get_exec_command(char *arg)
 {
 	char	*exec_command;
 	char	**paths;
-	char	*env_path;
 	int		i;
 
-	env_path = getenv("PATH");
-	paths = get_paths_cmds(env_path);
+	paths = get_paths_cmds(getenv("PATH"));
 	i = 0;
 	while (paths[i])
 	{
-		exec_command = join_path_command(paths[i], arg);
+		if (!is_full_path(arg))
+			exec_command = join_path_command(paths[i], arg);
+		else
+			exec_command = ft_strdup(arg);
 		if (access(exec_command, X_OK) == 0)
 		{
 			ft_free_tab(paths);
