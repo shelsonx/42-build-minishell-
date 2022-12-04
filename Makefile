@@ -14,7 +14,7 @@ INCLUDE 		= ./includes/
 SRC				= main.c\
 				  prompt.c\
 				  parser.c\
-				  exec.c pipe.c paths.c command.c children_process.c hashtable.c\
+				  exec.c pipe.c paths.c command.c children_process.c hashtable.c linkedlist_utils.c\
 				  utils_pipes.c\
 				  signals.c\
 				  exit.c \

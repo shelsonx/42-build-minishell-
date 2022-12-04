@@ -12,6 +12,8 @@
 # include <sys/types.h>
 # include <fcntl.h>
 
+#define CAPACITY 50000 // Size of the Hash Table
+
 typedef struct s_data {
 	char    **pipeline;
 	int		**fds;
@@ -117,6 +119,10 @@ void	sighandler(int sigtype);
 char	**get_paths_cmds(char *env_path);
 char	*join_path_command(char *path, char *command);
 
+//children processes
+pid_t	create_child_process(void);
+pid_t	execute_child_process(t_data *data);
+
 //command
 char	*get_exec_command(char *arg);
 void	exec_one_command(t_data *data, int fd_in, int fd_out);
@@ -124,9 +130,12 @@ void	exec_first_command(t_data *data, int fd_in);
 void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_middles);
 void	exec_last_command(t_data *data, int index, int fd_out);
 
-//children processes
-pid_t	create_child_process(void);
-pid_t	execute_child_process(t_data *data);
+//linkedlist_utils
+LinkedList* allocate_list ();
+LinkedList* linkedlist_insert(LinkedList* list, Ht_item* item);
+void free_linkedlist(LinkedList* list);
+LinkedList** create_overflow_buckets(HashTable* table);
+void free_overflow_buckets(HashTable* table);
 
 //exit program
 void    exit_program(t_data *data);
