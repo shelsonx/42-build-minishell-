@@ -3,7 +3,7 @@
 void    error(void)
 {
     ft_printf("Invalid syntax\n");
-    exit(1);
+    prompt();
 }
 
 void    consume(t_parser *parser)
