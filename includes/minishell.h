@@ -69,11 +69,6 @@ struct HashTable {
     int size;
     int count;
 };
-HashTable* create_table(int size);
-void ht_insert(HashTable* table, char* key, char* value);
-void free_hashtable(HashTable* table);
-char* ht_search(HashTable* table, char* key);
-
 
 typedef struct s_parser
 {
@@ -105,15 +100,9 @@ char **create_args(char **pipeline);
 //prompt
 void    prompt();
 
-//pipes
-int     **create_pipes(int amount);
-
 //utils pipes
 void	ft_free_fds(int **fds);
 void	ft_close_fds(int **fds);
-
-//signals
-void	sighandler(int sigtype);
 
 //paths
 char	**get_paths_cmds(char *env_path);
@@ -130,12 +119,31 @@ void	exec_first_command(t_data *data, int fd_in);
 void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_middles);
 void	exec_last_command(t_data *data, int index, int fd_out);
 
+//ht_functions
+unsigned long hash_function(char* str);
+Ht_item* create_item(char* key, char* value); 
+void free_item(Ht_item* item);
+void handle_collision(HashTable* table, unsigned long index, Ht_item* item);
+void ht_delete(HashTable* table, char* key);
+
+//ht_utils
+HashTable* create_table(int size);
+void free_hashtable(HashTable* table);
+void ht_insert(HashTable* table, char* key, char* value);
+char* ht_search(HashTable* table, char* key);
+
 //linkedlist_utils
 LinkedList* allocate_list ();
 LinkedList* linkedlist_insert(LinkedList* list, Ht_item* item);
 void free_linkedlist(LinkedList* list);
 LinkedList** create_overflow_buckets(HashTable* table);
 void free_overflow_buckets(HashTable* table);
+
+//pipes
+int     **create_pipes(int amount);
+
+//signals
+void	sighandler(int sigtype);
 
 //exit program
 void    exit_program(t_data *data);
