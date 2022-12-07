@@ -15,6 +15,7 @@ char	*get_env_path(char *path, t_builtins *builtin)
 	char	*env_path;
     char    *result_search;
     char    *num_str;
+    char    *value;
 	int		i;
 
 	i = 0;
@@ -26,11 +27,15 @@ char	*get_env_path(char *path, t_builtins *builtin)
 		if (env_path)
         {
             free(num_str);
-			return (ft_substr(env_path, ft_strlen(path)+1, ft_strlen(env_path)));
+            value = ft_substr(env_path, ft_strlen(path)+1, ft_strlen(env_path));
+            result_search = ft_strjoin(value, "\n");
+            free(value);
+			return (result_search);
         }
         free(num_str);
 		i++;
 	}
+    env_path = ft_strdup("\n");
 	return (env_path);
 }
 
@@ -60,14 +65,14 @@ int main(int argc, char **argv, char **envp)
         i++;
     }
     
-    char *var = "PWD";
+    char *var = "SHELL";
     printf("*************************************************\n");
-    printf("TEST GET_ENV %s\n", var);
+    printf("TEST GET_ENV |%s|\n", var);
     printf("*************************************************\n");
     
     char *result;
     result = get_env_path(var, &builtins);
-    printf("%s\n", result);
+    printf("%s", result);
     free(result);
     free_hashtable(builtins.env);
 
