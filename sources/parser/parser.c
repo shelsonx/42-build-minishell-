@@ -62,8 +62,14 @@ t_token simple_command(t_parser *parser)
     char    *tokens;
 
     tokens = ft_strdup("");
-    current_token = cmd_word(parser);
-    tokens = ft_strjoin(tokens, current_token.value);
+    if (parser->current_token->type == TK_GREAT || 
+        parser->current_token->type == TK_LESS)
+            redirection(parser);
+    else
+    {
+        current_token = cmd_word(parser);
+        tokens = ft_strjoin(tokens, current_token.value);
+    }
     while (parser->current_token->type == TK_WORD)
     {
         current_token = cmd_word(parser);

@@ -16,7 +16,7 @@ void    prompt()
     {	
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sighandler);
-        line = readline("🎸𝄫: ");
+        line = readline("🎸MINISHELL𝄫: ");
         add_history(line);
         parser_data.tokenizer->content = ft_strdup(line);
         parser_data.index = 0;

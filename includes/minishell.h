@@ -118,6 +118,7 @@ void	exec_one_command(t_data *data, int fd_in, int fd_out);
 void	exec_first_command(t_data *data, int fd_in);
 void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_middles);
 void	exec_last_command(t_data *data, int index, int fd_out);
+int		exists_commands(t_data *data);
 
 //ht_functions
 unsigned long hash_function(char* str);

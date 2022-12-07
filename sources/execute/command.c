@@ -69,11 +69,14 @@ void	exec_one_command(t_data *data, int fd_in, int fd_out)
 	data->fd_in = fd_in;
 	data->fd_out = fd_out;
 	input_cmd = ft_strdup(data->pipeline[0]);
-	data->args = create_args(data->pipeline);
-	error_command_msg(data->args, input_cmd);
-	child_pid = execute_child_process(data);
-	ft_close_fds(data->fds);
-	waitpid(child_pid, &status, 0);
+	if (exists_commands(data))
+	{
+		data->args = create_args(data->pipeline);
+		error_command_msg(data->args, input_cmd);
+		child_pid = execute_child_process(data);
+		ft_close_fds(data->fds);
+		waitpid(child_pid, &status, 0);
+	}
 }
 
 void	exec_first_command(t_data *data, int fd_in)
