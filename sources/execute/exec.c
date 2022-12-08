@@ -82,7 +82,10 @@ int execute(t_parser *parser_data)
 	if (total_commands == 2)
 	{
 		data.fds = create_pipes(1);
-		exec_first_command(&data, STDIN_FILENO);
+		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
+			exec_first_command(&data, STDIN_FILENO);
+		else
+			exec_first_command(&data, get_fd_in(parser_data));
 		data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(1)), ' ');
 		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
 			exec_last_command(&data, total_commands -2, STDOUT_FILENO);
@@ -92,7 +95,10 @@ int execute(t_parser *parser_data)
 	else if (total_commands > 2)
 	{
 		data.fds = create_pipes(total_commands -1);
-		exec_first_command(&data, STDIN_FILENO);
+		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
+			exec_first_command(&data, STDIN_FILENO);
+		else
+			exec_first_command(&data, get_fd_in(parser_data));
 		exec_middles_commands(&data, parser_data, total_commands -2);
 		data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(total_commands -1)), ' ');
 		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
