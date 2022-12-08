@@ -20,6 +20,7 @@ void    prompt()
         add_history(line);
         parser_data.tokenizer->content = ft_strdup(line);
         parser_data.index = 0;
+        parser_data.index_redirect = 0;
         parser_data.table = create_table(5000);
         parser_data.table_redirection = create_table(1000);
         init_tokenizer(parser_data.tokenizer);

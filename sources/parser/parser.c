@@ -52,7 +52,11 @@ t_token redirection(t_parser *parser)
     current_token = cmd_word(parser);
     tokens = ft_strjoin(tokens, " ");
     tokens = ft_strjoin(tokens, current_token.value);
-    ht_insert(parser->table_redirection, ft_itoa(0), tokens);
+     if (ft_strcmp(tokens, "") != 0)
+    {
+        ht_insert(parser->table_redirection, ft_itoa(parser->index_redirect), tokens);
+        parser->index_redirect++;
+    }
     return (current_token);
 }
 

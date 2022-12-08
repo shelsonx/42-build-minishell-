@@ -75,6 +75,7 @@ typedef struct s_parser
 	t_tokenizer	*tokenizer;
 	t_token		*current_token;
 	int			token_type;
+	int			index_redirect;
 	int			index;
 	HashTable	*table;
 	HashTable	*table_redirection;

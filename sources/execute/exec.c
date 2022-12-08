@@ -14,37 +14,53 @@ int	get_fd_in(t_parser *parser_data)
 {
 	char	**redirection;
 	char	*tmp;
+	char	*search;
 	int 	file_fd;
+	int		i;
 
-	redirection = ft_split(ht_search(
-					parser_data->table_redirection, ft_itoa(0)), ' ');
-	if (strcmp(redirection[0], "<") == 0)
-		file_fd = open(redirection[1], O_RDONLY);
-	else
-		file_fd = STDIN_FILENO;
-	if (file_fd < 0)
+	i = 0;
+	while (i < parser_data->index_redirect)
 	{
-		tmp = ft_strjoin("minishell: ", redirection[1]);
-		perror(tmp);
-		free(tmp);
+		search = ht_search(parser_data->table_redirection, ft_itoa(i));
+		redirection = ft_split(search, ' ');
+		if (strcmp(redirection[0], "<") == 0)
+		{
+			file_fd = open(redirection[1], O_RDONLY);
+			if (file_fd < 0)
+			{
+				tmp = ft_strjoin("minishell: ", redirection[1]);
+				perror(tmp);
+				free(tmp);
+			}
+			return (file_fd);
+		}
+		i++;
 	}
-	return (file_fd);
+	return (STDIN_FILENO);
 }
 
 int	get_fd_out(t_parser *parser_data)
 {
 	char	**redirection;
+	char	*search;
 	int 	file_fd;
-	
-	redirection = ft_split(ht_search(
-					parser_data->table_redirection, ft_itoa(0)), ' ');
-	if (strcmp(redirection[0], ">") == 0)
-		file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	else
-		file_fd = STDOUT_FILENO;
-	if (file_fd < 0)
-		perror("minishell");
-	return (file_fd);
+	int		i;
+
+	i = 0;
+	while (i < parser_data->index_redirect)
+	{
+		search = ht_search(parser_data->table_redirection, ft_itoa(i));
+		redirection = ft_split(search, ' ');
+		if (strcmp(redirection[0], ">") == 0)
+		{
+			file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+			if (file_fd < 0)
+				perror("minishell");
+			return (file_fd);
+		}
+		i++;
+	}
+	return (STDOUT_FILENO);
 }
 
 char	**get_pipeline(t_data *data, t_parser *parser_data)
@@ -65,6 +81,13 @@ int execute(t_parser *parser_data)
     
 	total_commands = parser_data->index;
 	//only create files and return without execute nothing command.
+	/* int i = 0;
+	while (i < parser_data->index_redirect)
+	{
+		char *s = ht_search(parser_data->table_redirection, ft_itoa(i));
+		dprintf(2, "%s\n", s);
+		i++;
+	} */
 	if (total_commands == 0)
 	{
 		get_fd_out(parser_data);
