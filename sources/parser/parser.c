@@ -79,8 +79,11 @@ t_token simple_command(t_parser *parser)
     if (parser->current_token->type == TK_GREAT || 
         parser->current_token->type == TK_LESS)
             redirection(parser);
-    ht_insert(parser->table, ft_itoa(parser->index), tokens);
-    parser->index++;
+    if (ft_strcmp(tokens, "") != 0)
+    {
+        ht_insert(parser->table, ft_itoa(parser->index), tokens);
+        parser->index++;
+    }
     return (current_token);
 }
 
