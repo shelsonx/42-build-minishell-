@@ -1,41 +1,41 @@
 #include "../../includes/minishell.h"
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	count;
+//gcc test_builtin_echo.c ../../libs/libft/libft.a 
 
-	count = 0;
-	while (*s++)
-		count++;
-	return (count);
+int	count_args(char **args)
+{
+	int	size;
+
+	size = 0;
+	while (args[size])
+		size++;
+	return (size);
 }
 
-void	ft_putstr_fd(char *s, int fd)
-{
-	write(fd, s, ft_strlen(s));
-}
-
-int	ft_echo(char **cmd)
+int	ft_echo(char **args)
 {
 	int	i;
-	int	option;
+	int	nb_type;
 
 	i = 1;
-	option = 0;
-	if (!cmd[1])
+	nb_type = 0;
+	if (count_args(args) > 1)
 	{
-		ft_putstr_fd("\n", 1);
-		return (0);
+		while (args[i] && ft_strcmp(args[i], "-n") == 0)
+		{
+			nb_type = 1;
+			i++;
+		}
+		while (args[i])
+		{
+			ft_putstr_fd(args[i], 1);
+			if (args[i][0] != '\0' && args[i + 1])
+				write(1, " ", 1);
+			i++;
+		}
 	}
-	while (cmd[i])
-	{
-		ft_putstr_fd(cmd[i], 1);
-		if (cmd[i + 1])
-			ft_putstr_fd(" ", 1);
-		i++;
-	}
-	if (option == 0)
-		ft_putstr_fd("\n", 1);
+	if (nb_type == 0)
+		write(1, "\n", 1);
 	return (0);
 }
 

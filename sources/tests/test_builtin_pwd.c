@@ -1,22 +1,9 @@
 #include "../../includes/minishell.h"
 
+//gcc test_builtin_pwd.c ../../libs/libft/libft.a 
+
 # define ERROR 127
 # define SUCCESS 0
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	count;
-
-	count = 0;
-	while (*s++)
-		count++;
-	return (count);
-}
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	write(fd, s, ft_strlen(s));
-}
 
 void			ft_pwd(char **cmd)
 {
