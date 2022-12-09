@@ -35,6 +35,8 @@ t_token redirection_op(t_parser *parser)
     current_token = *parser->current_token;
     if (current_token.type == TK_GREAT)
         parser->token_type = TK_GREAT;
+    else if (current_token.type == TK_DGREAT)
+        parser->token_type = TK_DGREAT;
     else if (current_token.type == TK_LESS)
         parser->token_type = TK_LESS;
     consume(parser);
@@ -68,7 +70,8 @@ t_token simple_command(t_parser *parser)
     char    *tokens;
 
     tokens = ft_strdup("");
-    while (parser->current_token->type == TK_GREAT || 
+    while (parser->current_token->type == TK_GREAT ||
+        parser->current_token->type == TK_DGREAT ||
         parser->current_token->type == TK_LESS)
             redirection(parser);
     if (parser->current_token->type == TK_WORD)
@@ -82,7 +85,8 @@ t_token simple_command(t_parser *parser)
         tokens = ft_strjoin(tokens, " ");
         tokens = ft_strjoin(tokens, current_token.value);
     }
-    if (parser->current_token->type == TK_GREAT || 
+    if (parser->current_token->type == TK_GREAT ||
+        parser->current_token->type == TK_DGREAT ||
         parser->current_token->type == TK_LESS)
             redirection(parser);
     if (ft_strcmp(tokens, "") != 0)

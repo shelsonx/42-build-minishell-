@@ -28,6 +28,12 @@ void	create_fd_out(t_parser *parser_data)
 			if (file_fd < 0)
 				perror("minishell");
 		}
+		if (strcmp(redirection[0], ">>") == 0)
+		{
+			file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+			if (file_fd < 0)
+				perror("minishell");
+		}
 		i++;
 	}
 }
@@ -92,6 +98,13 @@ int	new_get_fd_out(t_parser *parser_data, char *index_cmd)
 			if (strcmp(redirection[0], ">") == 0)
 			{
 				file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+				if (file_fd < 0)
+					perror("minishell");
+				return (file_fd);
+			}
+			if (strcmp(redirection[0], ">>") == 0)
+			{
+				file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_APPEND, 0777);
 				if (file_fd < 0)
 					perror("minishell");
 				return (file_fd);
