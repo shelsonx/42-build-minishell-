@@ -76,14 +76,17 @@ void	exec_one_command(t_data *data, int fd_in, int fd_out)
 	waitpid(child_pid, &status, 0);
 }
 
-void	exec_first_command(t_data *data, int fd_in)
+void	exec_first_command(t_data *data, int fd_in, int fd_out)
 {
 	pid_t	child_pid;
 	int		status;
 	char	*input_cmd;
 
 	data->fd_in = fd_in;
-	data->fd_out = data->fds[0][1];
+	if (fd_out == -1)
+		data->fd_out = data->fds[0][1];
+	else
+		data->fd_out = fd_out;
 	input_cmd = ft_strdup(data->pipeline[0]);
 	data->args = create_args(data->pipeline);
 	error_command_msg(data->args, input_cmd);
@@ -116,8 +119,11 @@ void	exec_last_command(t_data *data, int index, int fd_out)
 	int		status;
 	char	*input_cmd;
 
-	data->fd_in = data->fds[index][0];
-	data->fd_out = fd_out;
+	data->fd_in = index;
+	if (fd_out == -1)
+		data->fd_out = STDOUT_FILENO;
+	else
+		data->fd_out = fd_out;
 	input_cmd = ft_strdup(data->pipeline[0]);
 	data->args = create_args(data->pipeline);
 	error_command_msg(data->args, input_cmd);

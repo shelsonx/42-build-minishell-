@@ -10,36 +10,7 @@ char **create_args(char **pipeline)
 	return (pipeline);
 }
 
-int	get_fd_in(t_parser *parser_data)
-{
-	char	**redirection;
-	char	*tmp;
-	char	*search;
-	int 	file_fd;
-	int		i;
-
-	i = 0;
-	while (i < parser_data->index_redirect)
-	{
-		search = ht_search(parser_data->table_redirection, ft_itoa(i));
-		redirection = ft_split(search, ' ');
-		if (strcmp(redirection[0], "<") == 0)
-		{
-			file_fd = open(redirection[1], O_RDONLY);
-			if (file_fd < 0)
-			{
-				tmp = ft_strjoin("minishell: ", redirection[1]);
-				perror(tmp);
-				free(tmp);
-			}
-			return (file_fd);
-		}
-		i++;
-	}
-	return (STDIN_FILENO);
-}
-
-int	get_fd_out(t_parser *parser_data)
+void	create_fd_out(t_parser *parser_data)
 {
 	char	**redirection;
 	char	*search;
@@ -56,11 +27,9 @@ int	get_fd_out(t_parser *parser_data)
 			file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 			if (file_fd < 0)
 				perror("minishell");
-			return (file_fd);
 		}
 		i++;
 	}
-	return (STDOUT_FILENO);
 }
 
 char	**get_pipeline(t_data *data, t_parser *parser_data)
@@ -74,48 +43,111 @@ int	exists_commands(t_data *data)
 	return (ft_strcmp(data->pipeline[0], "") != 0);
 }
 
+void	print_table_redirections(t_parser *parser_data)
+{
+	char	**redirection;
+	char	*search;
+	int		i;
+
+	i = 0;
+	while (i < parser_data->index_redirect)
+	{
+		search = ht_search(parser_data->table_redirection, ft_itoa(i));
+		redirection = ft_split(search, ' ');
+		dprintf(2, "redirect[0]= |%s|\n redirect[1]= |%s|\n redirect[2]= |%s|\n", 
+			redirection[0], redirection[1], redirection[2]);
+		dprintf(2, "\n");
+		i++;
+	}
+}
+
+int	new_get_fd_in(t_parser *parser_data, char *index_cmd)
+{
+	char	**redirection;
+	char	*tmp;
+	char	*search;
+	int 	file_fd;
+	int		i;
+
+	i = 0;
+	while (i < parser_data->index_redirect)
+	{
+		search = ht_search(parser_data->table_redirection, ft_itoa(i));
+		redirection = ft_split(search, ' ');
+		if (ft_strcmp(redirection[2], index_cmd) == 0)
+		{
+			if (strcmp(redirection[0], "<") == 0)
+			{
+				file_fd = open(redirection[1], O_RDONLY);
+				if (file_fd < 0)
+				{
+					tmp = ft_strjoin("minishell: ", redirection[1]);
+					perror(tmp);
+					free(tmp);
+				}
+				return (file_fd);
+			}
+		}
+		i++;
+	}
+	return (-1);
+}
+
+int	new_get_fd_out(t_parser *parser_data, char *index_cmd)
+{
+	char	**redirection;
+	char	*search;
+	int 	file_fd;
+	int		i;
+
+	i = 0;
+	while (i < parser_data->index_redirect)
+	{
+		search = ht_search(parser_data->table_redirection, ft_itoa(i));
+		redirection = ft_split(search, ' ');
+		if (ft_strcmp(redirection[2], index_cmd) == 0)
+		{
+			if (strcmp(redirection[0], ">") == 0)
+			{
+				file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+				if (file_fd < 0)
+					perror("minishell");
+				return (file_fd);
+			}
+		}
+		i++;
+	}
+	return (-1);
+}
 int execute(t_parser *parser_data)
 {
 	t_data	data;
 	int		total_commands;
     
 	total_commands = parser_data->index;
-	//only create files and return without execute nothing command.
-	/* int i = 0;
-	while (i < parser_data->index_redirect)
-	{
-		char *s = ht_search(parser_data->table_redirection, ft_itoa(i));
-		dprintf(2, "%s\n", s);
-		i++;
-	} */
+	//print_table_redirections(parser_data);
 	if (total_commands == 0)
 	{
-		get_fd_out(parser_data);
-		get_fd_in(parser_data);
+		create_fd_out(parser_data);
 		return -1;
 	}
 	data.pipeline = get_pipeline(&data, parser_data);
 	if (total_commands == 1)
-	{
-		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
-			exec_one_command(&data, STDIN_FILENO, STDOUT_FILENO);
-		else
-			exec_one_command(&data, get_fd_in(parser_data), get_fd_out(parser_data));
-	}
+		exec_one_command(&data, new_get_fd_in(parser_data, ft_itoa(0)), 
+			new_get_fd_out(parser_data, ft_itoa(0)));
 	if (total_commands == 2)
 	{
 		data.fds = create_pipes(1);
-		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
-			exec_first_command(&data, STDIN_FILENO);
-		else
-			exec_first_command(&data, get_fd_in(parser_data));
+		exec_first_command(&data, 
+			new_get_fd_in(parser_data, ft_itoa(0)),
+			new_get_fd_out(parser_data, ft_itoa(0)));
 		data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(1)), ' ');
-		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
-			exec_last_command(&data, total_commands -2, STDOUT_FILENO);
-		else
-			exec_last_command(&data, total_commands -2, get_fd_out(parser_data));
+		int fd_in = new_get_fd_in(parser_data, ft_itoa(1));
+		if (fd_in == -1)
+			fd_in = data.fds[0][0];
+		exec_last_command(&data, fd_in, new_get_fd_out(parser_data, ft_itoa(1)));
 	}
-	else if (total_commands > 2)
+	/* else if (total_commands > 2)
 	{
 		data.fds = create_pipes(total_commands -1);
 		if (ht_search(parser_data->table_redirection, ft_itoa(0)) == NULL)
@@ -128,7 +160,7 @@ int execute(t_parser *parser_data)
 			exec_last_command(&data, total_commands -2, STDOUT_FILENO);
 		else
 			exec_last_command(&data, total_commands -2, get_fd_out(parser_data));
-	}
+	} */
 	exit_program(&data);
     return (0);
 }
