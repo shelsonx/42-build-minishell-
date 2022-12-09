@@ -52,8 +52,10 @@ t_token redirection(t_parser *parser)
     current_token = cmd_word(parser);
     tokens = ft_strjoin(tokens, " ");
     tokens = ft_strjoin(tokens, current_token.value);
-     if (ft_strcmp(tokens, "") != 0)
+    if (ft_strcmp(tokens, "") != 0)
     {
+        tokens = ft_strjoin(tokens, " ");
+        tokens = ft_strjoin(tokens, ft_itoa(parser->index));
         ht_insert(parser->table_redirection, ft_itoa(parser->index_redirect), tokens);
         parser->index_redirect++;
     }
@@ -66,10 +68,10 @@ t_token simple_command(t_parser *parser)
     char    *tokens;
 
     tokens = ft_strdup("");
-    if (parser->current_token->type == TK_GREAT || 
+    while (parser->current_token->type == TK_GREAT || 
         parser->current_token->type == TK_LESS)
             redirection(parser);
-    else
+    if (parser->current_token->type == TK_WORD)
     {
         current_token = cmd_word(parser);
         tokens = ft_strjoin(tokens, current_token.value);
