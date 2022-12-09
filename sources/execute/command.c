@@ -98,12 +98,22 @@ void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_m
 {
 	int		i;
 	char	*input_cmd;
+	int		fd_in;
+	int		fd_out;
 
 	i = 0;
 	while (i < total_cmds_middles)
-	{ 
-		data->fd_in = data->fds[i][0];
-		data->fd_out = data->fds[i+1][1];
+	{
+		fd_in = new_get_fd_in(parser_data, ft_itoa(i+1)); 
+		fd_out = new_get_fd_out(parser_data, ft_itoa(i+1));
+		if (fd_in == -1) 
+			data->fd_in = data->fds[i][0];
+		else
+			data->fd_in = fd_in;
+		if (fd_out == -1)
+			data->fd_out = data->fds[i+1][1];
+		else
+			data->fd_out = fd_out;
 		data->pipeline = ft_split(ht_search(parser_data->table, ft_itoa(i+1)), ' ');
 		input_cmd = ft_strdup(data->pipeline[0]);
 		data->args = create_args(data->pipeline);
@@ -113,13 +123,13 @@ void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_m
 	}
 }
 
-void	exec_last_command(t_data *data, int index, int fd_out)
+void	exec_last_command(t_data *data, int fd_in, int fd_out)
 {
 	pid_t	child_pid;
 	int		status;
 	char	*input_cmd;
 
-	data->fd_in = index;
+	data->fd_in = fd_in;
 	if (fd_out == -1)
 		data->fd_out = STDOUT_FILENO;
 	else

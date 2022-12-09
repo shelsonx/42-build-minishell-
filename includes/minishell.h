@@ -118,8 +118,11 @@ char	*get_exec_command(char *arg);
 void	exec_one_command(t_data *data, int fd_in, int fd_out);
 void	exec_first_command(t_data *data, int fd_in, int fd_out);
 void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_middles);
-void	exec_last_command(t_data *data, int index, int fd_out);
+void	exec_last_command(t_data *data, int fd_in, int fd_out);
 int		exists_commands(t_data *data);
+int	new_get_fd_in(t_parser *parser_data, char *index_cmd);
+int	new_get_fd_out(t_parser *parser_data, char *index_cmd);
+
 
 //ht_functions
 unsigned long hash_function(char* str);
