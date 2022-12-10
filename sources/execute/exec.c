@@ -75,6 +75,17 @@ int	new_get_fd_in(t_parser *parser_data, char *index_cmd)
 				}
 				return (file_fd);
 			}
+			if (strcmp(redirection[0], "<<") == 0)
+			{
+				int		**fd;
+
+				fd = ft_calloc(sizeof(int **), 2);
+				fd[0] = ft_calloc(sizeof(int *), 2);
+				if (pipe(fd[0]) < 0)
+					perror("minishell: ");
+				here_doc(fd, redirection[1]);
+				return (fd[0][0]);
+			}
 		}
 		i++;
 	}

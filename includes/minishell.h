@@ -122,6 +122,7 @@ void	exec_last_command(t_data *data, int fd_in, int fd_out);
 int		exists_commands(t_data *data);
 int	new_get_fd_in(t_parser *parser_data, char *index_cmd);
 int	new_get_fd_out(t_parser *parser_data, char *index_cmd);
+void here_doc(int **fd, char *limiter);
 
 
 //ht_functions
