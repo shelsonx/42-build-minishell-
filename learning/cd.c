@@ -21,7 +21,7 @@ void    builtin_cd(char *path)
 
 int main(int argc, char **argv, char **envp)
 {
-    int i = 0;
+    /* int i = 0;
     char    *key;
     int length;
 
@@ -40,10 +40,10 @@ int main(int argc, char **argv, char **envp)
         if (ft_strncmp(envp[i], "PWD", 3) == 0)
             ft_printf("%s\n", envp[i]);
         i++;
-    }
+    } */
     
-    /* ft_printf("%s\n", getenv("PATH"));
+    //ft_printf("%s\n", getenv("PATH"));
     show_current_dir();
     builtin_cd(argv[1]);
-    show_current_dir(); */
+    show_current_dir();
 }
