@@ -6,14 +6,13 @@
 /*   By: progerio <progerio@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 20:56:19 by progerio          #+#    #+#             */
-/*   Updated: 2022/11/04 22:17:08 by progerio         ###   ########.fr       */
+/*   Updated: 2022/12/13 00:27:52 by progerio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int main(){
-	
+int	main(void)
+{	
 	ft_printf("Test Minishell\n");
-	
 }
