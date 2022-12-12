@@ -100,6 +100,7 @@ int	new_get_fd_out(t_parser *parser_data, char *index_cmd)
 	int		i;
 
 	i = 0;
+	file_fd = -1;
 	while (i < parser_data->index_redirect)
 	{
 		search = ht_search(parser_data->table_redirection, ft_itoa(i));
@@ -111,19 +112,17 @@ int	new_get_fd_out(t_parser *parser_data, char *index_cmd)
 				file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 				if (file_fd < 0)
 					perror("minishell");
-				return (file_fd);
 			}
 			if (strcmp(redirection[0], ">>") == 0)
 			{
 				file_fd = open(redirection[1], O_WRONLY | O_CREAT | O_APPEND, 0777);
 				if (file_fd < 0)
 					perror("minishell");
-				return (file_fd);
 			}
 		}
 		i++;
 	}
-	return (-1);
+	return (file_fd);
 }
 int execute(t_parser *parser_data)
 {
