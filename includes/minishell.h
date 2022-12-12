@@ -37,35 +37,25 @@ typedef struct s_tokenizer
 	t_token		token;
 }   t_tokenizer;
 
+typedef struct s_htItem s_htItem;
 
-
-//hastable
-typedef struct Ht_item Ht_item;
-
-// Define the Hash Table Item here
-struct Ht_item {
+struct s_htItem {
     char* key;
     char* value;
 };
 
+typedef struct s_linkedList s_linkedList;
 
-typedef struct LinkedList LinkedList;
-
-// Define the Linkedlist here
-struct LinkedList {
-    Ht_item* item; 
-    LinkedList* next;
+struct s_linkedList {
+    s_htItem* item; 
+    s_linkedList* next;
 };
 
+typedef struct s_hashTable s_hashTable;
 
-typedef struct HashTable HashTable;
-
-// Define the Hash Table here
-struct HashTable {
-    // Contains an array of pointers
-    // to items
-    Ht_item** items;
-    LinkedList** overflow_buckets;
+struct s_hashTable {
+    s_htItem** items;
+    s_linkedList** overflow_buckets;
     int size;
     int count;
 };
@@ -77,8 +67,8 @@ typedef struct s_parser
 	int			token_type;
 	int			index_redirect;
 	int			index;
-	HashTable	*table;
-	HashTable	*table_redirection;
+	s_hashTable	*table;
+	s_hashTable	*table_redirection;
 }	t_parser;
 
 enum e_TOKENS 
@@ -127,23 +117,23 @@ void here_doc(int **fd, char *limiter);
 
 //ht_functions
 unsigned long hash_function(char* str);
-Ht_item* create_item(char* key, char* value); 
-void free_item(Ht_item* item);
-void handle_collision(HashTable* table, unsigned long index, Ht_item* item);
-void ht_delete(HashTable* table, char* key);
+s_htItem* create_item(char* key, char* value); 
+void free_item(s_htItem* item);
+void handle_collision(s_hashTable* table, unsigned long index, s_htItem* item);
+void ht_delete(s_hashTable* table, char* key);
 
 //ht_utils
-HashTable* create_table(int size);
-void free_hashtable(HashTable* table);
-void ht_insert(HashTable* table, char* key, char* value);
-char* ht_search(HashTable* table, char* key);
+s_hashTable* create_table(int size);
+void free_hashtable(s_hashTable* table);
+void ht_insert(s_hashTable* table, char* key, char* value);
+char* ht_search(s_hashTable* table, char* key);
 
 //linkedlist_utils
-LinkedList* allocate_list ();
-LinkedList* linkedlist_insert(LinkedList* list, Ht_item* item);
-void free_linkedlist(LinkedList* list);
-LinkedList** create_overflow_buckets(HashTable* table);
-void free_overflow_buckets(HashTable* table);
+s_linkedList* allocate_list ();
+s_linkedList* linkedlist_insert(s_linkedList* list, s_htItem* item);
+void free_linkedlist(s_linkedList* list);
+s_linkedList** create_overflow_buckets(s_hashTable* table);
+void free_overflow_buckets(s_hashTable* table);
 
 //pipes
 int     **create_pipes(int amount);
