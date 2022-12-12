@@ -4,13 +4,13 @@ compile:
     cc test_env.c ../utils/ht_functions.c ../utils/ht_utils.c ../utils/linkedlist_utils.c ../../libs/libft/libft.a 
 */
 
-typedef struct s_builtins
+typedef struct builtin_vars
 {
     int         size;
     HashTable   *env;
-}   t_builtins;
+}   t_builtin_vars;
 
-char	*get_env_path(char *path, t_builtins *builtin)
+char	*get_env_path(char *path, t_builtin_vars *builtin)
 {
 	char	*env_path;
     char    *result_search;
@@ -41,9 +41,9 @@ char	*get_env_path(char *path, t_builtins *builtin)
 
 int main(int argc, char **argv, char **envp)
 {
-    t_builtins builtins;
+    t_builtin_vars builtins;
 
-    builtins.env = create_table(2000);
+    builtins.env = create_table(200);
     builtins.size = 0;
 
     char    *num_str;
@@ -55,7 +55,7 @@ int main(int argc, char **argv, char **envp)
         builtins.size++;
     }
 
-    printf("size env= %d\n", builtins.size);
+    /* printf("size env= %d\n", builtins.size);
     int i = 0;
     while (i < builtins.size)
     {
@@ -63,7 +63,7 @@ int main(int argc, char **argv, char **envp)
         printf("%s\n", ht_search(builtins.env, num_str));
         free(num_str);
         i++;
-    }
+    } */
     
     char *var = "SHELL";
     printf("*************************************************\n");

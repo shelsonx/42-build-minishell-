@@ -93,6 +93,12 @@ t_token simple_command(t_parser *parser)
         parser->current_token->type == TK_LESS ||
         parser->current_token->type == TK_DLESS)
             redirection(parser);
+    while (parser->current_token->type == TK_WORD)
+    {
+        current_token = cmd_word(parser);
+        tokens = ft_strjoin(tokens, " ");
+        tokens = ft_strjoin(tokens, current_token.value);
+    }
     if (ft_strcmp(tokens, "") != 0)
     {
         ht_insert(parser->table, ft_itoa(parser->index), tokens);
