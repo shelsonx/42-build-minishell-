@@ -1,16 +1,16 @@
 #include "../../includes/minishell.h"
 
- /*static s_htItem* linkedlist_remove(s_linkedList* list) {
+ /*static t_htitem* linkedlist_remove(t_linkedlist* list) {
     if (!list)
         return NULL;
     if (!list->next)
         return NULL;
-    s_linkedList* node = list->next;
-    s_linkedList* temp = list;
+    t_linkedlist* node = list->next;
+    t_linkedlist* temp = list;
     temp->next = NULL;
     list = node;
-    s_htItem* it = NULL;
-    ft_memcpy(temp->item, it, sizeof(s_htItem));
+    t_htitem* it = NULL;
+    ft_memcpy(temp->item, it, sizeof(t_htitem));
     free(temp->item->key);
     free(temp->item->value);
     free(temp->item);
@@ -18,11 +18,11 @@
     return it;
 }*/
 
-s_hashTable* create_table(int size) {
-    s_hashTable* table = (s_hashTable*) malloc (sizeof(s_hashTable));
+t_hashtable* create_table(int size) {
+    t_hashtable* table = (t_hashtable*) malloc (sizeof(t_hashtable));
     table->size = size;
     table->count = 0;
-    table->items = (s_htItem**) ft_calloc (table->size, sizeof(s_htItem*));
+    table->items = (t_htitem**) ft_calloc (table->size, sizeof(t_htitem*));
     int i=0; 
     while(i<table->size){
         table->items[i] = NULL;
@@ -33,10 +33,10 @@ s_hashTable* create_table(int size) {
     return table;
 }
 
-void free_hashtable(s_hashTable* table) {
+void free_hashtable(t_hashtable* table) {
     int i=0;
     while(i<table->size) {
-        s_htItem* item = table->items[i];
+        t_htitem* item = table->items[i];
         if (item != NULL)
             free_item(item);
         i++;
@@ -47,12 +47,12 @@ void free_hashtable(s_hashTable* table) {
     free(table);
 }
 
-void ht_insert(s_hashTable* table, char* key, char* value) {
-    s_htItem* item = create_item(key, value);
+void ht_insert(t_hashtable* table, char* key, char* value) {
+    t_htitem* item = create_item(key, value);
 
     int index = hash_function(key);
 
-    s_htItem* current_item = table->items[index];
+    t_htitem* current_item = table->items[index];
     
     if (current_item == NULL) {
         if (table->count == table->size) {
@@ -80,10 +80,10 @@ void ht_insert(s_hashTable* table, char* key, char* value) {
     }
 }
 
-char* ht_search(s_hashTable* table, char* key) {
+char* ht_search(t_hashtable* table, char* key) {
     int index = hash_function(key);
-    s_htItem* item = table->items[index];
-    s_linkedList* head = table->overflow_buckets[index];
+    t_htitem* item = table->items[index];
+    t_linkedlist* head = table->overflow_buckets[index];
 
     while (item != NULL) {
         if (ft_strcmp(item->key, key) == 0)
@@ -97,7 +97,7 @@ char* ht_search(s_hashTable* table, char* key) {
 }
 
 /*
-void print_search(s_hashTable* table, char* key) {
+void print_search(t_hashtable* table, char* key) {
     char* val;
     if ((val = ht_search(table, key)) == NULL) {
         printf("%s does not exist\n", key);

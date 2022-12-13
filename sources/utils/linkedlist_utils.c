@@ -1,13 +1,13 @@
 #include "../../includes/minishell.h"
 
-s_linkedList* allocate_list () {
-    s_linkedList* list = (s_linkedList*) ft_calloc (1, sizeof(s_linkedList));
+t_linkedlist* allocate_list () {
+    t_linkedlist* list = (t_linkedlist*) ft_calloc (1, sizeof(t_linkedlist));
     return list;
 }
 
-s_linkedList* linkedlist_insert(s_linkedList* list, s_htItem* item) {
+t_linkedlist* linkedlist_insert(t_linkedlist* list, t_htitem* item) {
     if (!list) {
-        s_linkedList* head = allocate_list();
+        t_linkedlist* head = allocate_list();
         head->item = item;
         head->next = NULL;
         list = head;
@@ -15,19 +15,19 @@ s_linkedList* linkedlist_insert(s_linkedList* list, s_htItem* item) {
     } 
     
     else if (list->next == NULL) {
-        s_linkedList* node = allocate_list();
+        t_linkedlist* node = allocate_list();
         node->item = item;
         node->next = NULL;
         list->next = node;
         return list;
     }
 
-    s_linkedList* temp = list;
+    t_linkedlist* temp = list;
     while (temp->next) {
         temp = temp->next;
     }
     
-    s_linkedList* node = allocate_list();
+    t_linkedlist* node = allocate_list();
     node->item = item;
     node->next = NULL;
     temp->next = node;
@@ -35,8 +35,8 @@ s_linkedList* linkedlist_insert(s_linkedList* list, s_htItem* item) {
     return list;
 }
 
-void free_linkedlist(s_linkedList* list) {
-    s_linkedList* temp = list;
+void free_linkedlist(t_linkedlist* list) {
+    t_linkedlist* temp = list;
     if (!list)
         return;
     while (list) {
@@ -49,8 +49,8 @@ void free_linkedlist(s_linkedList* list) {
     }
 }
 
-s_linkedList** create_overflow_buckets(s_hashTable* table) {
-    s_linkedList** buckets = (s_linkedList**) ft_calloc (table->size, sizeof(s_linkedList*));
+t_linkedlist** create_overflow_buckets(t_hashtable* table) {
+    t_linkedlist** buckets = (t_linkedlist**) ft_calloc (table->size, sizeof(t_linkedlist*));
     int i=0;
     while(i<table->size) {
         buckets[i] = NULL;
@@ -59,8 +59,8 @@ s_linkedList** create_overflow_buckets(s_hashTable* table) {
     return buckets;
 }
 
-void free_overflow_buckets(s_hashTable* table) {
-    s_linkedList** buckets = table->overflow_buckets;
+void free_overflow_buckets(t_hashtable* table) {
+    t_linkedlist** buckets = table->overflow_buckets;
     int i=0;
     while(i<table->size){
         free_linkedlist(buckets[i]);

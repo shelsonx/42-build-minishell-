@@ -10,8 +10,8 @@ unsigned long hash_function(char* str) {
     return i % CAPACITY;
 }
 
-s_htItem* create_item(char* key, char* value) {
-    s_htItem* item = (s_htItem*) malloc (sizeof(s_htItem));
+t_htitem* create_item(char* key, char* value) {
+    t_htitem* item = (t_htitem*) malloc (sizeof(t_htitem));
     item->key = (char*) ft_calloc (ft_strlen(key) + 1, sizeof(char));
     item->value = (char*) ft_calloc (ft_strlen(value) + 1, sizeof(char));
     
@@ -21,14 +21,14 @@ s_htItem* create_item(char* key, char* value) {
     return item;
 }
 
-void free_item(s_htItem* item) {
+void free_item(t_htitem* item) {
     free(item->key);
     free(item->value);
     free(item);
 }
 
-void handle_collision(s_hashTable* table, unsigned long index, s_htItem* item) {
-    s_linkedList* head = table->overflow_buckets[index];
+void handle_collision(t_hashtable* table, unsigned long index, t_htitem* item) {
+    t_linkedlist* head = table->overflow_buckets[index];
 
     if (head == NULL) {
         head = allocate_list();
@@ -42,10 +42,10 @@ void handle_collision(s_hashTable* table, unsigned long index, s_htItem* item) {
     }
  }
 
-void ht_delete(s_hashTable* table, char* key) {
+void ht_delete(t_hashtable* table, char* key) {
     int index = hash_function(key);
-    s_htItem* item = table->items[index];
-    s_linkedList* head = table->overflow_buckets[index];
+    t_htitem* item = table->items[index];
+    t_linkedlist* head = table->overflow_buckets[index];
 
     if (item == NULL) {
         return;
@@ -60,7 +60,7 @@ void ht_delete(s_hashTable* table, char* key) {
         else if (head != NULL) {
             if (ft_strcmp(item->key, key) == 0) {             
                 free_item(item);
-                s_linkedList* node = head;
+                t_linkedlist* node = head;
                 head = head->next;
                 node->next = NULL;
                 table->items[index] = create_item(node->item->key, node->item->value);
@@ -69,8 +69,8 @@ void ht_delete(s_hashTable* table, char* key) {
                 return;
             }
 
-            s_linkedList* curr = head;
-            s_linkedList* prev = NULL;
+            t_linkedlist* curr = head;
+            t_linkedlist* prev = NULL;
             
             while (curr) {
                 if (ft_strcmp(curr->item->key, key) == 0) {
