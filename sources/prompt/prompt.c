@@ -26,8 +26,6 @@ void    prompt()
         init_tokenizer(parser_data.tokenizer);
         parser(&parser_data);
         execute(&parser_data);
-        free(parser_data.tokenizer->token.value);
-        free(parser_data.tokenizer->characteres);
         free_hashtable(parser_data.table);
         free_hashtable(parser_data.table_redirection);
         free(line);

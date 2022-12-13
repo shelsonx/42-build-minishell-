@@ -71,6 +71,8 @@ void	exec_one_command(t_data *data, int fd_in, int fd_out)
 	input_cmd = ft_strdup(data->pipeline[0]);
 	data->args = create_args(data->pipeline);
 	error_command_msg(data->args, input_cmd);
+	if (data->args[0] == NULL)
+		return ;
 	child_pid = execute_child_process(data);
 	ft_close_fds(data->fds);
 	waitpid(child_pid, &status, 0);
@@ -90,6 +92,8 @@ void	exec_first_command(t_data *data, int fd_in, int fd_out)
 	input_cmd = ft_strdup(data->pipeline[0]);
 	data->args = create_args(data->pipeline);
 	error_command_msg(data->args, input_cmd);
+	if (data->args[0] == NULL)
+		return ;
 	child_pid = execute_child_process(data);
     waitpid(child_pid, &status, 0);
 }
@@ -118,6 +122,8 @@ void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_m
 		input_cmd = ft_strdup(data->pipeline[0]);
 		data->args = create_args(data->pipeline);
 		error_command_msg(data->args, input_cmd);
+		if (data->args[0] == NULL)
+			return ;
 		execute_child_process(data);
 		i++;
 	}
@@ -137,6 +143,8 @@ void	exec_last_command(t_data *data, int fd_in, int fd_out)
 	input_cmd = ft_strdup(data->pipeline[0]);
 	data->args = create_args(data->pipeline);
 	error_command_msg(data->args, input_cmd);
+	if (data->args[0] == NULL)
+		return ;
 	child_pid = execute_child_process(data);
 	ft_close_fds(data->fds);
     waitpid(child_pid, &status, 0);
