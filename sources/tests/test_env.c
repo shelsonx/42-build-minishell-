@@ -7,7 +7,7 @@ compile:
 typedef struct builtin_vars
 {
     int         size;
-    HashTable   *env;
+    t_hashtable   *env;
 }   t_builtin_vars;
 
 char	*get_env_path(char *path, t_builtin_vars *builtin)
@@ -39,21 +39,28 @@ char	*get_env_path(char *path, t_builtin_vars *builtin)
 	return (env_path);
 }
 
-int main(int argc, char **argv, char **envp)
+void    init_env(t_builtin_vars *builtins, char **envp)
 {
-    t_builtin_vars builtins;
 
-    builtins.env = create_table(200);
-    builtins.size = 0;
+    builtins->env = create_table(500);
+    builtins->size = 0;
 
     char    *num_str;
-    while (envp[builtins.size])
+    while (envp[builtins->size])
     {
-        num_str = ft_itoa(builtins.size);
-        ht_insert(builtins.env, num_str, envp[builtins.size]);
+        num_str = ft_itoa(builtins->size);
+        ht_insert(builtins->env, num_str, envp[builtins->size]);
         free(num_str);
-        builtins.size++;
+        builtins->size++;
     }
+}
+
+int main(int argc, char **argv, char **envp)
+{
+   
+    t_builtin_vars builtins;
+
+    init_env(&builtins, envp);
 
     /* printf("size env= %d\n", builtins.size);
     int i = 0;

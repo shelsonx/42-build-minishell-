@@ -1,0 +1,5 @@
+type= |0| name= |WORD| value= |ls| 
+type= |6| name= |PIPE| value= ||| 
+type= |0| name= |WORD| value= |echo| 
+type= |2| name= |GREAT| value= |>| 
+type= |0| name= |WORD| value= |filename| 

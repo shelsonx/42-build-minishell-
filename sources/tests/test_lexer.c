@@ -26,7 +26,7 @@ int main(void)
     t_token token;
     t_tokenizer tokenizer;
 
-    tokenizer.content = ft_strdup("(ls) a112 -ab-c1 | >> > < << ( a123");
+    tokenizer.content = ft_strdup("ls");
     init_tokenizer(&tokenizer);
 
     while (true)
