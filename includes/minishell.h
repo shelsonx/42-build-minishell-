@@ -71,6 +71,12 @@ typedef struct s_parser
 	t_hashtable	*table_redirection;
 }	t_parser;
 
+typedef struct s_builtin_vars 
+{
+    int         size;
+    t_hashtable   *env;
+}   t_builtin_vars;
+
 enum e_TOKENS 
 {
 	TK_WORD,
@@ -83,13 +89,18 @@ enum e_TOKENS
 	TK_EOF
 };
 
+//bultin
+char	*get_env_path(char *path, t_builtin_vars *builtin);
+void	init_env(t_builtin_vars *builtin_vars, char **envp);
+void ft_env(t_builtin_vars *builtin_vars);
+
 //execute
-int     execute(t_parser *parser_data);
+int     execute(t_parser *parser_data, char **envp);
 //after remove
 char **create_args(char **pipeline);
 
 //prompt
-void    prompt();
+void    prompt(char **envp);
 
 //utils pipes
 void	ft_free_fds(int **fds);

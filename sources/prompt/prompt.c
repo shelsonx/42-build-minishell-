@@ -3,7 +3,7 @@
 //-lreadline
 //--suppressions=readline.supp
 
-void    prompt()
+void    prompt(char **envp)
 {
     char    *line;
     t_parser parser_data;
@@ -17,6 +17,10 @@ void    prompt()
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sighandler);
         line = readline("🎸MINISHELL𝄫: ");
+        if(line == NULL) 
+        {
+            exit(0);
+        }
         add_history(line);
         parser_data.tokenizer->content = ft_strdup(line);
         parser_data.index = 0;
@@ -25,7 +29,7 @@ void    prompt()
         parser_data.table_redirection = create_table(1000);
         init_tokenizer(parser_data.tokenizer);
         parser(&parser_data);
-        execute(&parser_data);
+        execute(&parser_data, envp);
         free_hashtable(parser_data.table);
         free_hashtable(parser_data.table_redirection);
         free(line);

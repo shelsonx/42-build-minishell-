@@ -124,10 +124,13 @@ int	new_get_fd_out(t_parser *parser_data, char *index_cmd)
 	}
 	return (file_fd);
 }
-int execute(t_parser *parser_data)
+int execute(t_parser *parser_data, char **envp)
 {
 	t_data	data;
 	int		total_commands;
+	t_builtin_vars builtin_vars;
+
+	init_env(&builtin_vars, envp);
     
 	total_commands = parser_data->index;
 	if (total_commands == 0)
@@ -136,6 +139,14 @@ int execute(t_parser *parser_data)
 		return -1;
 	}
 	data.pipeline = get_pipeline(&data, parser_data);
+	
+	//teste builtin env
+	if (ft_strcmp(data.pipeline[0],"env") == 0)
+	{
+		ft_env(&builtin_vars);
+		return -1;
+	}
+
 	if (total_commands == 1)
 		exec_one_command(&data, new_get_fd_in(parser_data, ft_itoa(0)), 
 			new_get_fd_out(parser_data, ft_itoa(0)));

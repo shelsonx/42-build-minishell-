@@ -19,7 +19,8 @@ SRC				= main.c\
 				  utils_pipes.c\
 				  signals.c\
 				  exit.c \
-				  get_token.c lexical_analyzer.c lexical_resources.c
+				  get_token.c lexical_analyzer.c lexical_resources.c \
+				  env.c
 
 VPATH 			:= $(SRC_PATH)\
 				$(SRC_PATH)prompt\
@@ -28,6 +29,7 @@ VPATH 			:= $(SRC_PATH)\
 				$(SRC_PATH)exit\
 				$(SRC_PATH)lexer\
 				$(SRC_PATH)parser\
+				$(SRC_PATH)builtins\
 
 OBJ				= $(addprefix $(OBJ_PATH), $(notdir $(SRC:.c=.o)))
 
