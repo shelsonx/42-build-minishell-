@@ -12,6 +12,8 @@
 # include <sys/types.h>
 # include <fcntl.h>
 
+# define TRUE 1
+# define FALSE 0
 # define MININT -2147483648 
 # define MAXINT 2147483647
 # define CAPACITY 50000 // Size of the Hash Table
@@ -58,7 +60,6 @@ struct s_hashtable {
 typedef struct s_builtin_vars 
 {
     int         size;
-	char 		*args;
     t_hashtable   *env;
 }   t_builtin_vars;
 
@@ -101,6 +102,9 @@ void	init_env(t_builtin_vars *builtin_vars, char **envp);
 void	ft_env(t_builtin_vars *builtin_vars);
 void	ft_pwd(t_builtin_vars *builtin_vars);
 char    **get_env(t_builtin_vars *builtin_vars);
+
+int	count_args(char **declar);
+int	ft_echo(char **declar);
 
 //execute
 int     execute(t_parser *parser_data, char **envp);

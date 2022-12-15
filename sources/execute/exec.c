@@ -180,6 +180,13 @@ int execute(t_parser *parser_data, char **envp)
 		return -1;
 	}
 
+	//teste builtin echo
+	if (ft_strcmp(data.pipeline[0],"echo") == 0)
+	{
+		ft_echo(&data.pipeline[0]);
+		return -1;
+	}
+
 	//test simple expanded variable
 	simple_expand_variable(data.pipeline, &builtin_vars);
 

@@ -20,7 +20,7 @@ SRC				= main.c\
 				  signals.c\
 				  exit.c \
 				  get_token.c lexical_analyzer.c lexical_resources.c \
-				  env.c pwd.c
+				  env.c pwd.c echo.c
 
 VPATH 			:= $(SRC_PATH)\
 				$(SRC_PATH)prompt\
