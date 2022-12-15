@@ -62,6 +62,13 @@ struct s_hashtable {
     int count;
 };
 
+typedef struct s_builtin_vars 
+{
+    int         size;
+	char 		*args;
+    t_hashtable   *env;
+}   t_builtin_vars;
+
 typedef struct s_parser
 {
 	t_tokenizer	*tokenizer;
@@ -71,14 +78,9 @@ typedef struct s_parser
 	int			index;
 	t_hashtable	*table;
 	t_hashtable	*table_redirection;
+	t_builtin_vars *builtin_vars;
 }	t_parser;
 
-typedef struct s_builtin_vars 
-{
-    int         size;
-	char 		*args;
-    t_hashtable   *env;
-}   t_builtin_vars;
 
 enum e_TOKENS 
 {

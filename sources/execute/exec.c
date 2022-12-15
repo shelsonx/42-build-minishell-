@@ -92,6 +92,7 @@ int	new_get_fd_in(t_parser *parser_data, char *index_cmd)
 	return (file_fd);
 }
 
+void simple_expand_variable(char **args, t_builtin_vars *builtin_vars);
 int	new_get_fd_out(t_parser *parser_data, char *index_cmd)
 {
 	char	**redirection;
@@ -105,6 +106,7 @@ int	new_get_fd_out(t_parser *parser_data, char *index_cmd)
 	{
 		search = ht_search(parser_data->table_redirection, ft_itoa(i));
 		redirection = ft_split(search, ' ');
+		simple_expand_variable(redirection, parser_data->builtin_vars);
 		if (ft_strcmp(redirection[2], index_cmd) == 0)
 		{
 			if (strcmp(redirection[0], ">") == 0)
@@ -124,6 +126,29 @@ int	new_get_fd_out(t_parser *parser_data, char *index_cmd)
 	}
 	return (file_fd);
 }
+
+void simple_expand_variable(char **args, t_builtin_vars *builtin_vars)
+{
+	int		i;
+	char	*path;
+
+	i = 0;
+	while (args[i])
+	{
+		if (args[i][0] == '$')
+		{
+			path = get_env_path(
+				ft_substr(args[i], 
+					1, ft_strlen(args[i])), 
+				builtin_vars);
+			free(args[i]);
+			args[i] = ft_strdup(path);
+			free(path);
+		}
+		i++;
+	}
+}
+
 int execute(t_parser *parser_data, char **envp)
 {
 	t_data	data;
@@ -131,6 +156,7 @@ int execute(t_parser *parser_data, char **envp)
 	t_builtin_vars builtin_vars;
 
 	init_env(&builtin_vars, envp);
+	parser_data->builtin_vars = &builtin_vars;
     
 	total_commands = parser_data->index;
 	if (total_commands == 0)
@@ -153,6 +179,9 @@ int execute(t_parser *parser_data, char **envp)
 		ft_pwd(&builtin_vars);
 		return -1;
 	}
+
+	//test simple expanded variable
+	simple_expand_variable(data.pipeline, &builtin_vars);
 
 	if (total_commands == 1)
 		exec_one_command(&data, new_get_fd_in(parser_data, ft_itoa(0)), 

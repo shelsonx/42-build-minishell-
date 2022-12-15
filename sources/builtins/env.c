@@ -9,7 +9,6 @@ char	*get_env_path(char *path, t_builtin_vars *builtin)
 	char	*env_path;
     char    *result_search;
     char    *num_str;
-    char    *value;
 	int		i;
 
 	i = 0;
@@ -21,9 +20,7 @@ char	*get_env_path(char *path, t_builtin_vars *builtin)
 		if (env_path)
         {
             free(num_str);
-            value = ft_substr(env_path, ft_strlen(path)+1, ft_strlen(env_path));
-            result_search = ft_strjoin(value, "\n");
-            free(value);
+            result_search = ft_substr(env_path, ft_strlen(path)+1, ft_strlen(env_path));
 			return (result_search);
         }
         free(num_str);
