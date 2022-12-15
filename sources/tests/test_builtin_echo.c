@@ -1,7 +1,5 @@
 #include "../../includes/minishell.h"
 
-//gcc test_builtin_echo.c ../../libs/libft/libft.a 
-
 int	count_args(char **args)
 {
 	int	size;
@@ -14,8 +12,8 @@ int	count_args(char **args)
 
 int	ft_echo(char **args)
 {
-	int	i;
 	int	nb_type;
+	int	i;
 
 	i = 1;
 	nb_type = 0;
@@ -37,9 +35,4 @@ int	ft_echo(char **args)
 	if (nb_type == 0)
 		write(1, "\n", 1);
 	return (0);
-}
-
-int main(int argc, char *argv[])
-{
-    ft_echo(argv);
 }

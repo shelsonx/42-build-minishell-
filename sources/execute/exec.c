@@ -147,6 +147,13 @@ int execute(t_parser *parser_data, char **envp)
 		return -1;
 	}
 
+	//teste builtin pwd
+	if (ft_strcmp(data.pipeline[0],"pwd") == 0)
+	{
+		ft_pwd(&builtin_vars);
+		return -1;
+	}
+
 	if (total_commands == 1)
 		exec_one_command(&data, new_get_fd_in(parser_data, ft_itoa(0)), 
 			new_get_fd_out(parser_data, ft_itoa(0)));

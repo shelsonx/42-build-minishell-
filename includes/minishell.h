@@ -12,7 +12,9 @@
 # include <sys/types.h>
 # include <fcntl.h>
 
-#define CAPACITY 50000 // Size of the Hash Table
+# define MININT -2147483648 
+# define MAXINT 2147483647
+# define CAPACITY 50000 // Size of the Hash Table
 
 typedef struct s_data {
 	char    **pipeline;
@@ -74,6 +76,7 @@ typedef struct s_parser
 typedef struct s_builtin_vars 
 {
     int         size;
+	char 		*args;
     t_hashtable   *env;
 }   t_builtin_vars;
 
@@ -89,10 +92,11 @@ enum e_TOKENS
 	TK_EOF
 };
 
-//bultin
+//builtin
 char	*get_env_path(char *path, t_builtin_vars *builtin);
 void	init_env(t_builtin_vars *builtin_vars, char **envp);
-void ft_env(t_builtin_vars *builtin_vars);
+void	ft_env(t_builtin_vars *builtin_vars);
+void	ft_pwd(t_builtin_vars *builtin_vars);
 
 //execute
 int     execute(t_parser *parser_data, char **envp);
