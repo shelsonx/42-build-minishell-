@@ -16,4 +16,7 @@ void    init_env(t_builtin_vars *builtins, char **env);
 //lexer
 char    *get_name_token(int type_token);
 void test_lexer(void);
+
+///aux
+char    *get_join_lines(char *filename);
 #endif

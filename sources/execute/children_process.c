@@ -22,7 +22,7 @@ pid_t	execute_child_process(t_data *data)
 		dup2(data->fd_in, STDIN_FILENO);
 		dup2(data->fd_out, STDOUT_FILENO);
 		ft_close_fds(data->fds);
-		if (execve(data->args[0], data->args, NULL) == -1)
+		if (execve(data->args[0], data->args, get_env(data->builtin_vars)) == -1)
 			exit(EXIT_FAILURE);
 	}
 	return (pid);

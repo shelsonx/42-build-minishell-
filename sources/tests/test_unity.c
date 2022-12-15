@@ -85,9 +85,51 @@ void test_lexer_module(void)
      while (line = ft_get_next_line(fd_in))
         expected = ft_strjoin(expected, line);
     TEST_ASSERT_EQUAL_CHAR_ARRAY(expected, out, ft_strlen(expected)-1);
-    char *args[] = {"/bin/rm", "out", NULL};
-    execve(args[0], args, NULL);
+    pid_t pid = fork();
+    if (pid == 0)
+    {
+        char *args[] = {"/bin/rm", "out", NULL};
+        execve(args[0], args, NULL);
+    }
+    waitpid(pid, NULL, 0);
     close(fd_out);
+}
+
+void test_execute_minishell(void)
+{
+    pid_t pid = fork();
+    if (pid == 0)
+    {
+        char *args[] = {"/bin/ls", "-l", NULL};
+        int file_fd = open("files/out_origem", O_WRONLY | O_CREAT | O_TRUNC, 0777);
+        dup2(file_fd, STDOUT_FILENO);
+        execve(args[0], args, NULL);
+    }
+    waitpid(pid, NULL, 0);
+
+    pid = fork();
+    if (pid == 0)
+    {
+        char *args[] = {"./minishell",  NULL};
+        execve(args[0], args, NULL);
+        int file_fd = open("files/out_minishell", O_WRONLY | O_CREAT | O_TRUNC, 0777);
+        dup2(file_fd, STDOUT_FILENO);
+    }
+    waitpid(pid, NULL, 0);
+
+   /*  pid = fork();
+    if (pid == 0)
+    {
+        char *args[] = {"/bin/ls", "-l", NULL};
+        int file_fd = open("files/out_minishell", O_WRONLY | O_CREAT | O_TRUNC, 0777);
+        dup2(file_fd, STDOUT_FILENO);
+        execve(args[0], args, NULL);
+    }
+    waitpid(pid, NULL, 0); */
+
+    char *lines_minishell = get_join_lines("files/out_minishell");
+    char *lines_origem = get_join_lines("files/out_origem");
+    TEST_ASSERT_EQUAL_CHAR_ARRAY(lines_minishell, lines_origem, ft_strlen(lines_origem)-1);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -98,5 +140,6 @@ int main(int argc, char **argv, char **envp)
     RUN_TEST(test_token_word);
     RUN_TEST(test_token_redirections);
     RUN_TEST(test_lexer_module);
+    RUN_TEST(test_execute_minishell);
     return UNITY_END();
 }

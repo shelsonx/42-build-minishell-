@@ -157,7 +157,7 @@ int execute(t_parser *parser_data, char **envp)
 
 	init_env(&builtin_vars, envp);
 	parser_data->builtin_vars = &builtin_vars;
-    
+	data.builtin_vars = &builtin_vars;
 	total_commands = parser_data->index;
 	if (total_commands == 0)
 	{

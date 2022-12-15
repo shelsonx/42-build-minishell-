@@ -16,13 +16,6 @@
 # define MAXINT 2147483647
 # define CAPACITY 50000 // Size of the Hash Table
 
-typedef struct s_data {
-	char    **pipeline;
-	int		**fds;
-	char	**args;
-	int		fd_in;
-	int		fd_out;
-} t_data;
 
 typedef struct s_token
 {
@@ -81,6 +74,14 @@ typedef struct s_parser
 	t_builtin_vars *builtin_vars;
 }	t_parser;
 
+typedef struct s_data {
+	char    **pipeline;
+	int		**fds;
+	char	**args;
+	int		fd_in;
+	int		fd_out;
+	t_builtin_vars *builtin_vars;
+} t_data;
 
 enum e_TOKENS 
 {
@@ -99,6 +100,7 @@ char	*get_env_path(char *path, t_builtin_vars *builtin);
 void	init_env(t_builtin_vars *builtin_vars, char **envp);
 void	ft_env(t_builtin_vars *builtin_vars);
 void	ft_pwd(t_builtin_vars *builtin_vars);
+char    **get_env(t_builtin_vars *builtin_vars);
 
 //execute
 int     execute(t_parser *parser_data, char **envp);

@@ -26,7 +26,7 @@ char	*get_env_path(char *path, t_builtin_vars *builtin)
         free(num_str);
 		i++;
 	}
-    env_path = ft_strdup("\n");
+    env_path = ft_strdup("");
 	return (env_path);
 }
 
@@ -58,4 +58,25 @@ void ft_env(t_builtin_vars *builtin_vars)
         free(num_str);
         i++;
     } 
+}
+
+char    **get_env(t_builtin_vars *builtin_vars)
+{
+    int     i;
+    char    *num_str;
+    char    **env;
+
+    i = 0;
+    env = malloc(sizeof (char *) * builtin_vars->size + 1);
+
+    while (i < builtin_vars->size)
+    {
+        num_str = ft_itoa(i);
+        env[i] = malloc(sizeof(char) * 2);
+        env[i] = ht_search(builtin_vars->env, num_str);
+        free(num_str);
+        i++;
+    }
+    env[i] = NULL;
+    return (env); 
 }
