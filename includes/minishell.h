@@ -112,7 +112,7 @@ void	error_msg(char *declar, int status);
 void	ft_exit(char **declar);
 
 //execute
-int     execute(t_parser *parser_data, char **envp);
+int     execute(t_parser *parser_data);
 //after remove
 char **create_args(char **pipeline);
 

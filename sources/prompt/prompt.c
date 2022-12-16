@@ -6,17 +6,27 @@
 void    prompt(char **envp)
 {
     char    *line;
+    char    *prompt;
     t_parser parser_data;
+    t_builtin_vars builtin_vars;
 
+	init_env(&builtin_vars, envp);
+	parser_data.builtin_vars = &builtin_vars;
     parser_data.current_token = malloc(sizeof(t_token));
     parser_data.tokenizer = malloc(sizeof(t_tokenizer));
     parser_data.tokenizer->content = malloc(sizeof(char *));
+    
+    char *minishell_char = "\033[1;31m🎸MINISHELL𝄫:";
+    char *pwd = get_env_path( "PWD", &builtin_vars);
+    pwd = ft_strjoin("\033[1;33m", pwd);
+    prompt = ft_strjoin(minishell_char, pwd);
+    prompt = ft_strjoin(prompt, "$ \033[1;30m");
 
     while (true)
     {	
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sighandler);
-        line = readline("🎸MINISHELL𝄫: ");
+        line = readline(prompt);
         if(line == NULL) 
         {
             exit(0);
@@ -29,7 +39,7 @@ void    prompt(char **envp)
         parser_data.table_redirection = create_table(1000);
         init_tokenizer(parser_data.tokenizer);
         parser(&parser_data);
-        execute(&parser_data, envp);
+        execute(&parser_data);
         free_hashtable(parser_data.table);
         free_hashtable(parser_data.table_redirection);
         free(line);

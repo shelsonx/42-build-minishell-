@@ -149,15 +149,12 @@ void simple_expand_variable(char **args, t_builtin_vars *builtin_vars)
 	}
 }
 
-int execute(t_parser *parser_data, char **envp)
+int execute(t_parser *parser_data)
 {
 	t_data	data;
 	int		total_commands;
-	t_builtin_vars builtin_vars;
 
-	init_env(&builtin_vars, envp);
-	parser_data->builtin_vars = &builtin_vars;
-	data.builtin_vars = &builtin_vars;
+	data.builtin_vars = parser_data->builtin_vars;
 	total_commands = parser_data->index;
 	if (total_commands == 0)
 	{
@@ -167,19 +164,19 @@ int execute(t_parser *parser_data, char **envp)
 	data.pipeline = get_pipeline(&data, parser_data);
 
 	//test simple expanded variable
-	simple_expand_variable(data.pipeline, &builtin_vars);
+	simple_expand_variable(data.pipeline, parser_data->builtin_vars);
 	
 	//teste builtin env
 	if (ft_strcmp(data.pipeline[0],"env") == 0)
 	{
-		ft_env(&builtin_vars);
+		ft_env(parser_data->builtin_vars);
 		return -1;
 	}
 
 	//teste builtin pwd
 	if (ft_strcmp(data.pipeline[0],"pwd") == 0)
 	{
-		ft_pwd(&builtin_vars);
+		ft_pwd(parser_data->builtin_vars);
 		return -1;
 	}
 
