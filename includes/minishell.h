@@ -106,6 +106,11 @@ char    **get_env(t_builtin_vars *builtin_vars);
 int	count_args(char **declar);
 int	ft_echo(char **declar);
 
+int	check_len(char **declar);
+char check_str_nb(char *declar);
+void	error_msg(char *declar, int status);
+void	ft_exit(char **declar);
+
 //execute
 int     execute(t_parser *parser_data, char **envp);
 //after remove

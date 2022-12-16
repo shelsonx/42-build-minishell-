@@ -18,15 +18,15 @@ SRC				= main.c\
 				  here_doc.c\
 				  utils_pipes.c\
 				  signals.c\
-				  exit.c \
+				  exit_program.c \
 				  get_token.c lexical_analyzer.c lexical_resources.c \
-				  env.c pwd.c echo.c
+				  env.c pwd.c echo.c exit.c
 
 VPATH 			:= $(SRC_PATH)\
 				$(SRC_PATH)prompt\
 				$(SRC_PATH)execute\
 				$(SRC_PATH)utils\
-				$(SRC_PATH)exit\
+				$(SRC_PATH)exit_program\
 				$(SRC_PATH)lexer\
 				$(SRC_PATH)parser\
 				$(SRC_PATH)builtins\

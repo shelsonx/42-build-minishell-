@@ -165,6 +165,9 @@ int execute(t_parser *parser_data, char **envp)
 		return -1;
 	}
 	data.pipeline = get_pipeline(&data, parser_data);
+
+	//test simple expanded variable
+	simple_expand_variable(data.pipeline, &builtin_vars);
 	
 	//teste builtin env
 	if (ft_strcmp(data.pipeline[0],"env") == 0)
@@ -187,8 +190,12 @@ int execute(t_parser *parser_data, char **envp)
 		return -1;
 	}
 
-	//test simple expanded variable
-	simple_expand_variable(data.pipeline, &builtin_vars);
+	//teste builtin exit
+	if (ft_strcmp(data.pipeline[0],"exit") == 0)
+	{
+		ft_exit(&data.pipeline[0]);
+		return -1;
+	}
 
 	if (total_commands == 1)
 		exec_one_command(&data, new_get_fd_in(parser_data, ft_itoa(0)), 
