@@ -1,9 +1,9 @@
 #include "../../includes/minishell.h"
 
-void    error(void)
+void    error(t_parser *parser_data)
 {
     ft_printf("Invalid syntax\n");
-    prompt(NULL);
+    prompt(get_env(parser_data->builtin_vars));
 }
 
 void    consume(t_parser *parser)
@@ -15,7 +15,7 @@ void    consume(t_parser *parser)
         *parser->current_token = next_token(parser->tokenizer);
     }
     else
-        error();
+        error(parser);
 }
 
 t_token cmd_word(t_parser *parser)
@@ -126,5 +126,5 @@ void    parser(t_parser *parser)
     *parser->current_token = next_token(parser->tokenizer);
     pipe_sequence(parser);
     if (parser->current_token->type != TK_WORD && parser->current_token->type != TK_EOF)
-        error();
+        error(parser);
 }
