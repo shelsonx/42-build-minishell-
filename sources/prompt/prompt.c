@@ -9,6 +9,9 @@ void    prompt(char **envp)
     char    *prompt;
     t_parser parser_data;
     t_builtin_vars builtin_vars;
+    char *minishell_char = ft_strdup("\033[1;31m🎸MINISHELL𝄫:");
+    char *pwd = get_env_path( "PWD", &builtin_vars);
+    char *pwd_tmp = pwd;
 
     init_env(&builtin_vars, envp);
 	parser_data.builtin_vars = &builtin_vars;
@@ -16,20 +19,17 @@ void    prompt(char **envp)
     parser_data.tokenizer = malloc(sizeof(t_tokenizer));
     parser_data.tokenizer->content = malloc(sizeof(char *));
     
-    char *minishell_char = ft_strdup("\033[1;31m🎸MINISHELL𝄫:");
-    char *pwd = get_env_path( "PWD", &builtin_vars);
-    char *pwd_tmp = pwd;
-    pwd = ft_strjoin("\033[1;33m", pwd);
-    prompt = ft_strjoin(minishell_char, pwd);
-    prompt = ft_strjoin(prompt, "$ \033[0m");
-    free(minishell_char);
-    free(pwd_tmp);
-    free(pwd);
 
     while (true)
     {	
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sighandler);
+        minishell_char = ft_strdup("\033[1;31m🎸MINISHELL𝄫:");
+        pwd = get_env_path( "PWD", &builtin_vars);
+        pwd_tmp = pwd;
+        pwd = ft_strjoin("\033[1;33m", pwd);
+        prompt = ft_strjoin(minishell_char, pwd);
+        prompt = ft_strjoin(prompt, "$ \033[0m");
         line = readline(prompt);
         if(line == NULL) 
         {
@@ -47,6 +47,9 @@ void    prompt(char **envp)
         free_hashtable(parser_data.table);
         free_hashtable(parser_data.table_redirection);
         free(line);
+        free(minishell_char);
+        free(pwd_tmp);
+        free(pwd);
+        free(prompt);
     }
-    free(prompt);
 }

@@ -80,8 +80,6 @@ void	exec_one_command(t_data *data, int fd_in, int fd_out)
 
 void	exec_first_command(t_data *data, int fd_in, int fd_out)
 {
-	pid_t	child_pid;
-	int		status;
 	char	*input_cmd;
 
 	data->fd_in = fd_in;
@@ -94,8 +92,7 @@ void	exec_first_command(t_data *data, int fd_in, int fd_out)
 	error_command_msg(data->args, input_cmd);
 	if (data->args[0] == NULL)
 		return ;
-	child_pid = execute_child_process(data);
-    waitpid(child_pid, &status, 0);
+	execute_child_process(data);
 }
 
 void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_middles)
@@ -131,8 +128,6 @@ void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_m
 
 void	exec_last_command(t_data *data, int fd_in, int fd_out)
 {
-	pid_t	child_pid;
-	int		status;
 	char	*input_cmd;
 
 	data->fd_in = fd_in;
@@ -145,7 +140,5 @@ void	exec_last_command(t_data *data, int fd_in, int fd_out)
 	error_command_msg(data->args, input_cmd);
 	if (data->args[0] == NULL)
 		return ;
-	child_pid = execute_child_process(data);
-	ft_close_fds(data->fds);
-    waitpid(child_pid, &status, 0);
+	execute_child_process(data);
 }

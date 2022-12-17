@@ -223,5 +223,8 @@ int execute(t_parser *parser_data)
 		exec_last_command(&data, fd_in, new_get_fd_out(parser_data, ft_itoa(total_commands -1)));
 	}
 	exit_program(&data);
+	int i = -1;
+	while (i++ < total_commands)
+		waitpid(-1, NULL, 0);
     return (0);
 }
