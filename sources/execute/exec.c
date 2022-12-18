@@ -141,8 +141,19 @@ int execute(t_parser *parser_data)
 	data.pipeline = get_pipeline(&data, parser_data);
 
 	//test simple expanded variable
+	int result = expand_double_quotes(data.pipeline, parser_data->builtin_vars);
+	if (result == 0)
+	{
+		ft_putendl_fd("Unclosed Quotes!", 2);
+		return -1;
+	}
 	expand_variable(data.pipeline, parser_data->builtin_vars);
-	
+	result = expand_simple_quotes(data.pipeline);
+	if (result == 0)
+	{
+		ft_putendl_fd("Unclosed Quotes!", 2);
+		return -1;
+	}
 	//teste builtin env
 	if (ft_strcmp(data.pipeline[0],"env") == 0)
 	{

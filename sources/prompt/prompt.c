@@ -9,15 +9,15 @@ void    prompt(char **envp)
     char    *prompt;
     t_parser parser_data;
     t_builtin_vars builtin_vars;
-    char *minishell_char = ft_strdup("\033[1;31m🎸MINISHELL𝄫:");
-    char *pwd = get_env_path( "PWD", &builtin_vars);
-    char *pwd_tmp = pwd;
 
     init_env(&builtin_vars, envp);
 	parser_data.builtin_vars = &builtin_vars;
     parser_data.current_token = malloc(sizeof(t_token));
     parser_data.tokenizer = malloc(sizeof(t_tokenizer));
     parser_data.tokenizer->content = malloc(sizeof(char *));
+    char *minishell_char = ft_strdup("\033[1;31m🎸MINISHELL𝄫:");
+    char *pwd = get_env_path( "PWD", &builtin_vars);
+    char *pwd_tmp = pwd;
     
 
     while (true)

@@ -198,5 +198,7 @@ void    parser(t_parser *parser);
 
 //expander
 void expand_variable(char **args, t_builtin_vars *builtin_vars);
+int expand_simple_quotes(char **args);
+int expand_double_quotes(char **args, t_builtin_vars *builtin_vars);
 
 #endif /* MINISHELL */
