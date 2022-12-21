@@ -8,11 +8,19 @@ typedef struct builtin_vars
 {
     int         size;
     t_hashtable   *env;
-}   t_builtin_vars;
+}   t_builtin_vars_2;
 
-char	*get_env_path(char *path, t_builtin_vars *builtin)
+char	*get_env_path_2(char *path, t_builtin_vars_2 *builtin)
 {
-	char	*env_path;
+    builtin->size = builtin->size;
+    char *PATH = ft_strdup("");
+    PATH = getenv(path);
+    if (PATH == NULL)
+        PATH = ft_strdup("\n");
+    else
+        PATH = ft_strjoin(PATH, "\n");
+    return (PATH);
+	/* char	*env_path;
     char    *result_search;
     char    *num_str;
     char    *value;
@@ -23,7 +31,9 @@ char	*get_env_path(char *path, t_builtin_vars *builtin)
 	{
         num_str = ft_itoa(i);
         result_search = ht_search(builtin->env, num_str);
-		env_path = ft_strnstr(result_search, path, ft_strlen(result_search));
+        dprintf(2, "result_search= %s\n", result_search);
+		env_path = ft_strnstr(result_search, path, ft_strlen(path));
+        //dprintf(2, "env_path= %s\n\n", env_path);
 		if (env_path)
         {
             free(num_str);
@@ -36,10 +46,10 @@ char	*get_env_path(char *path, t_builtin_vars *builtin)
 		i++;
 	}
     env_path = ft_strdup("\n");
-	return (env_path);
+	return (env_path); */
 }
 
-void    init_env(t_builtin_vars *builtins, char **envp)
+void    init_env_2(t_builtin_vars_2 *builtins, char **envp)
 {
 
     builtins->env = create_table(500);
@@ -58,9 +68,9 @@ void    init_env(t_builtin_vars *builtins, char **envp)
 int main(int argc, char **argv, char **envp)
 {
    
-    t_builtin_vars builtins;
+    t_builtin_vars_2 builtins;
 
-    init_env(&builtins, envp);
+    init_env_2(&builtins, envp);
 
     /* printf("size env= %d\n", builtins.size);
     int i = 0;
@@ -72,13 +82,13 @@ int main(int argc, char **argv, char **envp)
         i++;
     } */
     
-    char *var = "SHELL";
+    char *var = "U";
     printf("*************************************************\n");
     printf("TEST GET_ENV |%s|\n", var);
     printf("*************************************************\n");
     
     char *result;
-    result = get_env_path(var, &builtins);
+    result = get_env_path_2(var, &builtins);
     printf("%s", result);
     free(result);
     free_hashtable(builtins.env);

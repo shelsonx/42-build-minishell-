@@ -22,7 +22,6 @@ int contains_quotes(char **args, int quote)
 	i = -1;
 	while (args[++i])
 	{
-		//dprintf(1, "%s\n", args[i]);
 		if (args[i][0] == quote || args[i][ft_strlen(args[i])-1] == quote)
 			count++;
 	}
@@ -51,62 +50,6 @@ int get_amount_character(char **args, char character)
 		i++;
 	}
 	return (count);
-}
-
-int	**get_indexes_parameters(char **args)
-{
-	int	i;
-	int	y;
-	int x;
-	int	**indexes;
-
-	indexes = malloc(sizeof(int **) * get_amount_character(args, '$') +1);
-	i = 0;
-	x = 0;
-	while (args[i])
-	{
-		y = 0;
-		while (args[i][y])
-		{
-			if (args[i][y] == '$')
-			{
-				indexes[x] = malloc(sizeof(int));
-				(*indexes[x]) = y;
-				x++;
-			}
-			y++;
-		}
-		i++;
-	}
-	indexes[x] = NULL;
-	return (indexes);
-}
-
-char	*get_parameters(char **args, t_builtin_vars *builtin_vars, int i, int y, int **indexes)
-{
-	char	*path;
-	char 	*sub;
-	//int 	**indexes;
-	char	*parameters;
-
-	parameters = ft_strdup("");
-	//indexes = get_indexes_parameters(args);
-	if (y > 0)
-		sub = ft_substr(args[i], y+1, (*indexes[0]) +1);
-	else
-		sub = ft_substr(args[i], y+1, (*indexes[1]) -1);
-	path = get_env_path(sub, builtin_vars);
-	if (y > 0)
-		parameters = concat_strs(ft_substr(args[i], 0, y), path, "");
-	else
-		parameters = ft_strdup(path);
-
-	char *sub2 = ft_substr(args[i], (*indexes[1]) +1, ft_strlen(args[i])-1);
-	char *path2 = get_env_path(sub2, 
-		builtin_vars);
-	parameters = concat_strs(parameters, path2, "");
-
-	return (parameters);
 }
 
 int get_amount_character_2(char *args, char character)
@@ -140,7 +83,6 @@ void    expand_variable(char **args, t_builtin_vars *builtin_vars)
 	sub = ft_strdup("");
 	while (args[i])
 	{
-		//dprintf(2, "args[%d]= %s\n", i, args[i]);
 		y = 0;
 		while (args[i][y])
 		{
@@ -156,8 +98,6 @@ void    expand_variable(char **args, t_builtin_vars *builtin_vars)
 						parameters = concat_strs(ft_substr(args[i], 0, y), path, "");
 					else
 						parameters = ft_strdup(path);
-					//dprintf(2, "paremeter= %s\n", parameters);
-					//dprintf(2, "path= %s\n", path);
 				}
 				else if (amount_parameters > 1)
 				{
@@ -167,7 +107,6 @@ void    expand_variable(char **args, t_builtin_vars *builtin_vars)
 					int i = -1;
 					while (splitted[++i])
 						parameters = concat_strs(parameters, get_env_path(splitted[i], builtin_vars), "");
-					
 				}
 				args[i] = ft_strdup(parameters);
 				free(parameters);

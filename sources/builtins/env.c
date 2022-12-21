@@ -1,14 +1,11 @@
 #include "../../includes/minishell.h"
-/*
-compile:
-    cc test_env.c ../utils/ht_functions.c ../utils/ht_utils.c ../utils/linkedlist_utils.c ../../libs/libft/libft.a 
-*/
 
 char	*get_env_path(char *path, t_builtin_vars *builtin)
 {
 	char	*env_path;
     char    *result_search;
     char    *num_str;
+    char    **splitted;
 	int		i;
 
 	i = 0;
@@ -16,16 +13,17 @@ char	*get_env_path(char *path, t_builtin_vars *builtin)
 	{
         num_str = ft_itoa(i);
         result_search = ht_search(builtin->env, num_str);
-		env_path = ft_strnstr(result_search, path, ft_strlen(result_search));
-		if (env_path)
+        splitted = ft_split(result_search, '=');
+        if (ft_strcmp(path, splitted[0]) == 0)
         {
-            free(num_str);
-            result_search = ft_substr(env_path, ft_strlen(path)+1, ft_strlen(env_path));
-			return (result_search);
+            env_path = ft_strdup(splitted[1]);
+            ft_free_tab(splitted);
+            return (env_path);
         }
         free(num_str);
 		i++;
 	}
+    ft_free_tab(splitted);
     env_path = ft_strdup("");
 	return (env_path);
 }
