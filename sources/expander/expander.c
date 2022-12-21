@@ -68,52 +68,70 @@ int get_amount_character_2(char *args, char character)
 	return (count);
 }
 
+char	*get_parameter(char **args, t_builtin_vars *builtin_vars, int x, int y)
+{
+	char	*parameter;
+	char	*path;
+	char	*sub;
+
+	sub = ft_substr(args[x], y+1, ft_strlen(args[x]) -1);
+	path = get_env_path(sub, builtin_vars);
+	if (y > 0)
+		parameter = concat_strs(ft_substr(args[x], 0, y), path, "");
+	else
+	{
+		parameter = ft_strdup(path);
+		free(path);
+	}
+	free(sub);
+	return (parameter);
+}
+
+char	*get_parameters(char **args, t_builtin_vars *builtin_vars, int x, int y)
+{
+	char	*parameters;
+	char 	**key_parameters;
+	int 	i;
+
+	parameters = ft_strdup("");
+	if (y > 0)
+		parameters = ft_substr(args[x], 0, y);
+	key_parameters = ft_split(args[x], '$');
+	i = -1;
+	while (key_parameters[++i])
+		parameters = concat_strs(parameters, get_env_path(key_parameters[i], builtin_vars), "");
+	ft_free_tab(key_parameters);
+	return (parameters);
+}
+
 void    expand_variable(char **args, t_builtin_vars *builtin_vars)
 {
-	int		i;
+	int		x;
 	int		y;
 	char	*parameters;
-	char	*path;
-	char 	*sub;
 	int		amount_parameters;
 
-	i = 0;
+	x = 0;
 	parameters = ft_strdup("");
-	path = ft_strdup("");
-	sub = ft_strdup("");
-	while (args[i])
+	while (args[x])
 	{
 		y = 0;
-		while (args[i][y])
+		while (args[x][y])
 		{
-			if (args[i][y] == '$')
+			if (args[x][y] == '$')
 			{
-				amount_parameters = get_amount_character_2(args[i], '$');
+				amount_parameters = get_amount_character_2(args[x], '$');
 				if (amount_parameters == 1)
-				{
-					sub = ft_substr(args[i], y+1, ft_strlen(args[i])-1);
-					path = get_env_path(sub, 
-						builtin_vars);
-					if (y > 0)
-						parameters = concat_strs(ft_substr(args[i], 0, y), path, "");
-					else
-						parameters = ft_strdup(path);
-				}
+					parameters = get_parameter(args, builtin_vars, x, y);
 				else if (amount_parameters > 1)
-				{
-					if (y > 0)
-						parameters = ft_substr(args[i], 0, y);
-					char **splitted = ft_split(args[i], '$');
-					int i = -1;
-					while (splitted[++i])
-						parameters = concat_strs(parameters, get_env_path(splitted[i], builtin_vars), "");
-				}
-				args[i] = ft_strdup(parameters);
+					parameters = get_parameters(args, builtin_vars, x, y);
+				free(args[x]);
+				args[x] = ft_strdup(parameters);
 				free(parameters);
 			}
 			y++;
 		}
-		i++;
+		x++;
 	}
 }
 
