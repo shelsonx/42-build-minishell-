@@ -26,7 +26,7 @@ int main(void)
     t_token token;
     t_tokenizer tokenizer;
 
-    tokenizer.content = ft_strdup("ls");
+    tokenizer.content = ft_strdup("ls -l echo ola | pwd > file << >> () ");
     init_tokenizer(&tokenizer);
 
     while (true)

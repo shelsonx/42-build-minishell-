@@ -63,6 +63,7 @@ int	new_get_fd_in(t_parser *parser_data, char *index_cmd)
 	{
 		search = ht_search(parser_data->table_redirection, ft_itoa(i));
 		redirection = ft_split(search, ' ');
+		expand_variable(redirection, parser_data->builtin_vars);
 		if (ft_strcmp(redirection[2], index_cmd) == 0)
 		{
 			if (strcmp(redirection[0], "<") == 0)
@@ -105,7 +106,7 @@ int	new_get_fd_out(t_parser *parser_data, char *index_cmd)
 	{
 		search = ht_search(parser_data->table_redirection, ft_itoa(i));
 		redirection = ft_split(search, ' ');
-		//expand_variable(redirection, parser_data->builtin_vars);
+		expand_variable(redirection, parser_data->builtin_vars);
 		if (ft_strcmp(redirection[2], index_cmd) == 0)
 		{
 			if (strcmp(redirection[0], ">") == 0)
@@ -141,7 +142,13 @@ int execute(t_parser *parser_data)
 	data.pipeline = get_pipeline(&data, parser_data);
 	
 	//test expander
-	expand_variable(data.pipeline, parser_data->builtin_vars);
+	//expand_variable(data.pipeline, parser_data->builtin_vars);
+	//test simple quotes
+	if (!expand_simple_quotes(data.pipeline, parser_data->builtin_vars))
+	{
+		dprintf(2, "Unclosed quotes!\n");
+		return -1;
+	}
 	//teste builtin env
 	if (ft_strcmp(data.pipeline[0],"env") == 0)
 	{

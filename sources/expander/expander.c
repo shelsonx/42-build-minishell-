@@ -68,6 +68,28 @@ int get_amount_character_2(char *args, char character)
 	return (count);
 }
 
+int get_amount_parameter_in_quotes(char **args)
+{
+	int	i;
+	int	y;
+	int	count;
+
+	count = 0;
+	i = 0;
+	while (args[i])
+	{
+		y = 0;
+		while (args[i][y])
+		{
+			if (args[i][y] == '\'' && args[i][y+1] == '$')
+				count++;
+			y++;
+		}
+		i++;
+	}
+	return (count);
+}
+
 char	*get_parameter(char **args, t_builtin_vars *builtin_vars, int x, int y)
 {
 	char	*parameter;
@@ -135,39 +157,107 @@ void    expand_variable(char **args, t_builtin_vars *builtin_vars)
 	}
 }
 
-int expand_simple_quotes(char **args)
+void	replace_str(char **args, int position, int start, int end)
 {
-	int		i;
-    int     count_quotes;
-	char	*path;
+	char *path;
 
+	path = ft_substr(args[position], start, end);
+	free(args[position]);
+	args[position] = ft_strdup(path);
+	free(path);
+}
+
+void	remove_extremities(char **args)
+{
+	int 	num_rows;
+
+	num_rows = ft_len_rows_tab(args);
+	if (args[1][0] == '\'')
+		replace_str(args, 1, 1, ft_strlen(args[1]));
+	if (args[num_rows-1][ft_strlen(args[num_rows-1]) -1] == '\'')
+		replace_str(args, num_rows -1, 0, ft_strlen(args[num_rows-1]) -1);
+}
+
+/* void	(char **args)
+{
+
+} */
+
+int expand_simple_quotes(char **args, t_builtin_vars *builtins)
+{
+	builtins->size = builtins->size;
+	int		x;
+	int		y;
+	int		i;
+	int		total_quotes;
+	int **indexes = malloc(sizeof(int **) * get_amount_parameter_in_quotes(args) +1);
+	total_quotes = get_amount_character(args, '\'');
+	if (total_quotes % 2 != 0)
+		return (false);
+	remove_extremities(args);
+	//dprintf(2, "total_quotes= %d\n", total_quotes);
+    x = 1;
 	i = 0;
-    count_quotes = 0;
-    while (args[i])
+	while (args[x])
 	{
-        if (args[i][0] == '\'')
-            count_quotes++;
-		if (args[i][ft_strlen(args[i])-1] == '\'')
-			count_quotes++;
-        i++;
-    }
-    if (count_quotes == 1)
-        return (false);
-    i = 0;
-	while (args[i])
-	{
-		if (args[i][0] == '\'')
+		dprintf(2, "%d %s\n", x, args[x]);
+		y = 0;
+		while(args[x][y])
 		{
-			path = ft_substr(args[i], 1, ft_strlen(args[i]));
-			args[i] = ft_strdup(path);
+			if (total_quotes > 2)
+			{
+				if (args[x][y] == '$' && args[x][y-1] == '\'')
+				{
+					dprintf(2, "Yes!\n");
+					indexes[i] = malloc(sizeof(int));
+ 					(*indexes[i]) = x;
+					i++;
+				}
+			}
+			/* while (args[x][y] == '\'')
+				ft_memmove(args[x] +y, args[x] + (y+1), sizeof(char) * ft_strlen(args[x])); */
+			y++;
+		}
+		x++;
+	}
+	x = 1;
+	while (args[x])
+	{
+		y = 0;
+		while (args[x][y])
+		{
+			while (args[x][y] == '\'')
+				ft_memmove(args[x] +y, args[x] + (y+1), sizeof(char) * ft_strlen(args[x]));
+			y++;
+		}
+		x++;
+	}
+	indexes[i] = NULL;
+	i = 0;
+	y = 0;
+	char	*parameter;
+	char	*path;
+	char	*sub;
+	//dprintf(2, "amount_quotes=%d\n", get_amount_character(args, '\''));
+	while (indexes[i])
+	{
+
+		sub = ft_substr(args[(*indexes[i])], y+1, ft_strlen(args[(*indexes[i])]) -1);
+		dprintf(2, "sub= |%s|\n", sub);
+		path = get_env_path(sub, builtins);
+		if (y > 0)
+			parameter = concat_strs(ft_substr(args[(*indexes[i])], 0, y), path, "");
+		else
+		{
+			parameter = ft_strdup(path);
 			free(path);
 		}
-        if (args[i][ft_strlen(args[i])-1] == '\'')
-		{
-			path = ft_substr(args[i], 0, ft_strlen(args[i])-1);
-			args[i] = ft_strdup(path);
-			free(path);
-		}
+		free(sub);
+
+		//char *parameter = get_parameter(args, builtins, (*indexes[i]), 0);
+		//dprintf(2, "parameter= %s\n", parameter);
+		free(args[(*indexes[i])]);
+		args[(*indexes[i])] = parameter; 
 		i++;
 	}
     return (true);

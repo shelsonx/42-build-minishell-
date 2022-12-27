@@ -198,7 +198,7 @@ void    parser(t_parser *parser);
 
 //expander
 void expand_variable(char **args, t_builtin_vars *builtin_vars);
-int expand_simple_quotes(char **args);
+ int expand_simple_quotes(char **args, t_builtin_vars *builtin_vars);
 int expand_double_quotes(char **args, t_builtin_vars *builtin_vars);
 int contains_quotes(char **args, int quote);
 int get_amount_character(char **args, char character);
