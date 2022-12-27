@@ -71,26 +71,9 @@ int key_exists(t_builtin_vars *builtins, char *args)
         i++;
     }
     return FALSE;
-   
 }
 
-int get_position_env(t_builtin_vars *builtins, char *key)
-{   
-    char *num_str;
-    int i;
-
-    i = 0;
-    while(i < builtins->size)
-    {
-        num_str = ft_itoa(i);
-        ht_search(builtins->env, num_str);
-        return i;
-
-        i++;
-    }
-}
-
-void insert_args_in_export(t_builtin_vars *builtins, char *args)
+int is_equal_values(t_builtin_vars *builtins, char *args)
 {
     char **splitted_args; 
     char **splitted_ht_search; 
@@ -98,40 +81,49 @@ void insert_args_in_export(t_builtin_vars *builtins, char *args)
     char *search;
     int i;
 
-        i = 0;
-        while(i < builtins->size)
-        {
-            num_str = ft_itoa(i);
-            search = ht_search(builtins->env, num_str);
-            splitted_args = ft_split(args, '=');
-            splitted_ht_search = ft_split(search, '=');
-            if(ft_strcmp(splitted_args[1], splitted_ht_search[1]) != 0 && 
-                ft_strcmp(splitted_args[0], splitted_ht_search[0]) == 0)
-            {
-                // printf("num_str = %s\n", num_str);
-                // printf("search = %s\n", search);
-                ht_delete(builtins->env, num_str); 
-                // builtins->size--; 
-                // num_str = ft_itoa(builtins->size);
-                // printf("builtins->size = %d\n", builtins->size);
-                // ht_insert(builtins->env, num_str, args);
-                // builtins->size++; 
-                // delete_args_in_ht(builtins, ft_itoa(i-1));
-                // builtins->size--; 
-                //args = ft_strjoin(splitted_args[0], splitted_args[1]);
-                // num_str = ft_itoa(builtins->size);
-                // insert_args_in_ht(builtins, ft_itoa(builtins->size), "TESTE");
-                free(num_str);
-                num_str = NULL; 
-                break;
-            }
-            i++;
-        }
-    if (num_str == NULL) 
+    i = 0;
+    num_str = ft_strdup("");
+    while(i < builtins->size)
     {
-        insert_args_in_ht(builtins, ft_itoa(i), args);
-        return;
+        num_str = ft_itoa(i);
+        search = ht_search(builtins->env, num_str);
+        splitted_args = ft_split(args, '=');
+        splitted_ht_search = ft_split(search, '=');
+        if(ft_strcmp(splitted_args[0], splitted_ht_search[0]) == 0 &&  
+            ft_strcmp(splitted_args[1], splitted_ht_search[1]) != 0)
+            return TRUE;
+        i++;
     }
+    return FALSE;
+}
+
+int get_position_env(t_builtin_vars *builtins, char *args)
+{   
+    char *num_str;
+    char *search;
+    char    **splitted;
+    int i;
+
+    i = 0;
+    while(i < builtins->size)
+    {
+        num_str = ft_itoa(i);
+        search = ht_search(builtins->env, num_str);
+        if (check_if_is_equal(args))
+        {
+            splitted = ft_split(args, '=');
+            if (ft_strncmp(search, args, ft_strlen(splitted[0])) == 0)
+                return (i);
+        }
+        i++;
+    }
+    return -1;
+}
+
+void insert_args_in_export(t_builtin_vars *builtins, char *args)
+{
+    char *num_str;
+
     num_str = ft_itoa(builtins->size);
     insert_args_in_ht(builtins, num_str, args);
 }
@@ -179,35 +171,43 @@ int check_if_is_equal(char *args) {
         return FALSE;
     }
 
-void ft_export_aux(t_builtin_vars builtins, char **args)
+void ft_export_aux(t_builtin_vars *builtins, char **args)
 {
     int i = 1;
     char **splitter_equals;
 
     while(args[i])
     {
-        if(!check_if_is_equal(args[i]))
+        if (is_equal_values(builtins, args[i]))
         {
-            if(is_valid_identifier(args[i]))
-                insert_args_in_export(&builtins, args[i]);
+            int position = get_position_env(builtins, args[i]);
+            delete_args_in_ht(builtins, ft_itoa(position));
+            insert_args_in_ht(builtins, ft_itoa(position), args[i]);
         }
         else
         {
-            splitter_equals = ft_split(args[i], '=');
-            if(ft_strlen(args[i]) > 1)
+            if(!check_if_is_equal(args[i]))
             {
-                if(is_valid_identifier(splitter_equals[0]))
-                    insert_args_in_export(&builtins, args[i]);
+                if(is_valid_identifier(args[i]))
+                    insert_args_in_export(builtins, args[i]);
             }
             else
             {
-                if(is_valid_identifier(args[i]))
-                    insert_args_in_export(&builtins, args[i]);
+                splitter_equals = ft_split(args[i], '=');
+                if(ft_strlen(args[i]) > 1)
+                {
+                    if(is_valid_identifier(splitter_equals[0]))
+                        insert_args_in_export(builtins, args[i]);
+                }
+                else
+                {
+                    if(is_valid_identifier(args[i]))
+                        insert_args_in_export(builtins, args[i]);
+                }
             }
         }
         i++; 
     }
-    print_export(&builtins);
 }
 
 
@@ -216,13 +216,13 @@ int main(int argc, char **argv, char **envp)
 	t_builtin_vars builtins;
     init_env(&builtins, envp);
 
-    ft_export_aux(builtins, argv);
-   
+    ft_export_aux(&builtins, argv);
+    //ft_env(&builtins);
     // delete_args_in_ht(&builtins, ft_itoa(builtins.size--)); 
     // (builtins.size)--; 
     // delete_args_in_ht(&builtins, ft_itoa(builtins.size--));
     // (builtins.size)--; 
-    // print_export(&builtins);
+    print_export(&builtins);
 }
 
 //
