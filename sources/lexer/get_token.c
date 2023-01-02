@@ -2,7 +2,9 @@
 
 t_token get_word(t_tokenizer *tokenizer)
 {
-    identifier(tokenizer);
+    tk_word(tokenizer);
+    if (tokenizer->token.type == TK_ERROR)
+        return (tokenizer->token);
     tokenizer->token.type = TK_WORD;
     tokenizer->token.value = ft_strdup(tokenizer->characteres);
     return (tokenizer->token);

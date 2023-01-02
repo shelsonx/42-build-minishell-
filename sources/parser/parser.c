@@ -2,7 +2,8 @@
 
 void    error(t_parser *parser_data)
 {
-    ft_printf("Invalid syntax\n");
+    if (parser_data->tokenizer->token.type != TK_ERROR)
+        ft_printf("Invalid syntax\n");
     prompt(get_env(parser_data->builtin_vars));
 }
 
@@ -85,7 +86,7 @@ t_token simple_command(t_parser *parser)
     while (parser->current_token->type == TK_WORD)
     {
         current_token = cmd_word(parser);
-        tokens = ft_strjoin(tokens, " ");
+        tokens = ft_strjoin(tokens, "|");
         tokens = ft_strjoin(tokens, current_token.value);
     }
     while (parser->current_token->type == TK_GREAT ||
@@ -96,7 +97,7 @@ t_token simple_command(t_parser *parser)
     while (parser->current_token->type == TK_WORD)
     {
         current_token = cmd_word(parser);
-        tokens = ft_strjoin(tokens, " ");
+        tokens = ft_strjoin(tokens, "|");
         tokens = ft_strjoin(tokens, current_token.value);
     }
     if (ft_strcmp(tokens, "") != 0)

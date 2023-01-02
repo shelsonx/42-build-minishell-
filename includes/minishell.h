@@ -17,7 +17,7 @@
 # define MININT -2147483648 
 # define MAXINT 2147483647
 # define CAPACITY 50000 // Size of the Hash Table
-
+# define METACHARS	"|<>&() "
 
 typedef struct s_token
 {
@@ -93,7 +93,8 @@ enum e_TOKENS
 	TK_DGREAT,
 	TK_DLESS,
 	TK_PIPE,
-	TK_EOF
+	TK_EOF,
+	TK_ERROR
 };
 
 //builtin
@@ -112,6 +113,7 @@ void	error_msg(char *declar, int status);
 void	ft_exit(char **declar);
 
 //execute
+char	**get_pipeline(t_data *data, t_parser *parser_data, int position);
 int     execute(t_parser *parser_data);
 //after remove
 char **create_args(char **pipeline);
@@ -191,7 +193,8 @@ void 	add_char(t_tokenizer *tokenizer);
 void 	invalid_token(t_tokenizer *tokenizer);
 void    advance(t_tokenizer *tokenizer);
 void    skip_space(t_tokenizer *tokenizer);
-void    identifier(t_tokenizer *tokenizer);
+void    tk_word(t_tokenizer *tokenizer);
+
 
 //parser
 void    parser(t_parser *parser);

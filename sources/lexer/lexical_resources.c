@@ -27,16 +27,52 @@ void    skip_space(t_tokenizer *tokenizer)
         advance(tokenizer);
 }
 
-void    identifier(t_tokenizer *tokenizer)
+int is_quote_cloded(t_tokenizer *tokenizer, char quote)
 {
-    while (tokenizer->current_char != '\0' && 
-            !ft_isparenthesis(tokenizer->current_char) &&
-            !ft_isgreat(tokenizer->current_char) &&
-            !ft_isless(tokenizer->current_char) &&
-            !ft_ispipe(tokenizer->current_char) &&
-            !ft_isspace(tokenizer->current_char) &&
-            (tokenizer->token.type != TK_EOF))
+    while (tokenizer->current_char != quote)
     {
+        if (tokenizer->current_char == '\0' || tokenizer->token.type == TK_EOF)
+            return (false);
+        add_char(tokenizer);
+        advance(tokenizer);
+    }
+    return (true);
+}
+
+int is_quote(char c)
+{
+    return (c == '\'' || c == '"');
+}
+
+int check_quotes(t_tokenizer *tokenizer)
+{
+    char    quote;
+    int     closed;
+    if (is_quote(tokenizer->current_char))
+    {
+        quote = tokenizer->current_char;
+        add_char(tokenizer);
+        advance(tokenizer);
+        closed = is_quote_cloded(tokenizer, quote);
+        if (!closed)
+        {
+            ft_putendl_fd("Unclosed quotes!", 2);
+            tokenizer->token.type = TK_ERROR;
+            return (true);
+        }
+        add_char(tokenizer);
+        advance(tokenizer);
+        return (true);
+    }
+    return (false);
+}
+
+void    tk_word(t_tokenizer *tokenizer)
+{
+    while (!ft_strchr(METACHARS, tokenizer->current_char))
+    {
+        if (check_quotes(tokenizer))
+            return ;
         add_char(tokenizer);
         advance(tokenizer);
         if (tokenizer->token.type == TK_EOF)

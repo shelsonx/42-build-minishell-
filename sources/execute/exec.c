@@ -38,9 +38,18 @@ void	create_fd_out(t_parser *parser_data)
 	}
 }
 
-char	**get_pipeline(t_data *data, t_parser *parser_data)
+char	**get_pipeline(t_data *data, t_parser *parser_data, int position)
 {
-	data->pipeline = ft_split(ht_search(parser_data->table, ft_itoa(0)), ' ');
+	char *search = ht_search(parser_data->table, ft_itoa(position));
+	if (search[0] != '\'')
+		data->pipeline = ft_split(ht_search(parser_data->table, ft_itoa(position)), '|');
+	else
+	{
+		data->pipeline = malloc(sizeof(char **) * 2);
+		data->pipeline[0] = malloc(sizeof (char *) * ft_strlen(search) + 1);
+		data->pipeline[0] = ft_strdup(search);
+		data->pipeline[1] = NULL;
+	}
 	return data->pipeline;
 }
 
@@ -139,10 +148,11 @@ int execute(t_parser *parser_data)
 		create_fd_out(parser_data);
 		return -1;
 	}
-	data.pipeline = get_pipeline(&data, parser_data);
+	data.pipeline = get_pipeline(&data, parser_data, 0);
 	
 	//test expander
-	//expand_variable(data.pipeline, parser_data->builtin_vars);
+	if (get_amount_character(data.pipeline, '\'') <=0 )
+		expand_variable(data.pipeline, parser_data->builtin_vars);
 	//test simple quotes
 	if (!expand_simple_quotes(data.pipeline, parser_data->builtin_vars))
 	{
@@ -186,7 +196,7 @@ int execute(t_parser *parser_data)
 		exec_first_command(&data, 
 			new_get_fd_in(parser_data, ft_itoa(0)),
 			new_get_fd_out(parser_data, ft_itoa(0)));
-		data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(1)), ' ');
+		data.pipeline = get_pipeline(&data, parser_data, 1); //ft_split(ht_search(parser_data->table, ft_itoa(1)), ' ');
 		int fd_in = new_get_fd_in(parser_data, ft_itoa(1));
 		if (fd_in == -1)
 			fd_in = data.fds[0][0];
