@@ -151,14 +151,8 @@ int execute(t_parser *parser_data)
 	data.pipeline = get_pipeline(&data, parser_data, 0);
 	
 	//test expander
-	if (get_amount_character(data.pipeline, '\'') <=0 )
-		expand_variable(data.pipeline, parser_data->builtin_vars);
-	//test simple quotes
-	if (!expand_simple_quotes(data.pipeline, parser_data->builtin_vars))
-	{
-		dprintf(2, "Unclosed quotes!\n");
-		return -1;
-	}
+	//if (get_amount_character(data.pipeline, '\'') <=0 )
+	expand_variable(data.pipeline, parser_data->builtin_vars);
 	//teste builtin env
 	if (ft_strcmp(data.pipeline[0],"env") == 0)
 	{

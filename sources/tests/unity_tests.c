@@ -19,7 +19,7 @@ void    init_env(t_builtin_vars *builtins, char **env)
     }
 }
 
-char	*get_env_path(char *path, t_builtin_vars *builtin)
+/* char	*get_env_path(char *path, t_builtin_vars *builtin)
 {
 	char	*env_path;
     char    *result_search;
@@ -46,7 +46,7 @@ char	*get_env_path(char *path, t_builtin_vars *builtin)
 	}
     env_path = ft_strdup("\n");
 	return (env_path);
-}
+} */
 
 
 //functions to test lexer

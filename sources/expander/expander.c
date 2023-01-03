@@ -13,23 +13,6 @@ char	*concat_strs(char *str1, char *str2, char *separator)
 	return (joinned);
 }
 
-int contains_quotes(char **args, int quote)
-{
-	int	i;
-	int	count;
-
-	count = 0;
-	i = -1;
-	while (args[++i])
-	{
-		if (args[i][0] == quote || args[i][ft_strlen(args[i])-1] == quote)
-			count++;
-	}
-	if (count > 0)
-		return (true);
-	return (false);
-}
-
 int get_amount_character(char **args, char character)
 {
 	int	i;
@@ -68,62 +51,76 @@ int get_amount_character_2(char *args, char character)
 	return (count);
 }
 
-int get_amount_parameter_in_quotes(char **args)
+int count_occurrences(const char *s, const char *old)
 {
-	int	i;
-	int	y;
-	int	count;
+    int     i;
+    int     count;
+    int     old_len;
 
-	count = 0;
-	i = 0;
-	while (args[i])
-	{
-		y = 0;
-		while (args[i][y])
-		{
-			if (args[i][y] == '\'' && args[i][y+1] == '$')
-				count++;
-			y++;
-		}
-		i++;
-	}
-	return (count);
+    i = 0;
+    count = 0;
+    old_len = strlen(old);
+    while (s[i])
+    {
+        if (ft_strnstr(&s[i], old, ft_strlen(s)) == &s[i])
+        {
+            count++;
+            i += old_len - 1;
+        }
+        i++;
+    }
+    return (count);
 }
 
-char	*get_parameter(char **args, t_builtin_vars *builtin_vars, int x, int y)
+char    *replace_str(const char *s, const char *old, const char *new)
 {
-	char	*parameter;
-	char	*path;
-	char	*sub;
+    char    *result;
+    int     i;
+    int     new_len;
+    int     old_len;
 
-	sub = ft_substr(args[x], y+1, ft_strlen(args[x]) -1);
-	path = get_env_path(sub, builtin_vars);
-	if (y > 0)
-		parameter = concat_strs(ft_substr(args[x], 0, y), path, "");
-	else
-	{
-		parameter = ft_strdup(path);
-		free(path);
-	}
-	free(sub);
-	return (parameter);
+    new_len = ft_strlen(new);
+    old_len = ft_strlen(old);
+    result = malloc(ft_strlen(s) + 
+        count_occurrences(s, old) * (new_len - old_len) + 1);
+    i = 0;
+    while (*s)
+    {
+        if (ft_strnstr(s, old, ft_strlen(s)) == s)
+        {
+            ft_strcpy(&result[i], (char *) new);
+            i += new_len;
+            s += old_len;
+        }
+        else
+            result[i++] = *s++;
+    }
+    result[i] = '\0';
+    return result;
 }
 
-char	*get_parameters(char **args, t_builtin_vars *builtin_vars, int x, int y)
+void	expanded_variavel_OFICIAL(char **str, char *parameters, t_builtin_vars *builtin_vars)
 {
-	char	*parameters;
-	char 	**key_parameters;
-	int 	i;
+	int		i;
+	char	**splitted;
+	char	*env;
+	char	*replaced;
+	char	*joinned;
 
-	parameters = ft_strdup("");
-	if (y > 0)
-		parameters = ft_substr(args[x], 0, y);
-	key_parameters = ft_split(args[x], '$');
+	splitted = ft_split(parameters, ' ');
 	i = -1;
-	while (key_parameters[++i])
-		parameters = concat_strs(parameters, get_env_path(key_parameters[i], builtin_vars), "");
-	ft_free_tab(key_parameters);
-	return (parameters);
+	while (splitted[++i])
+	{
+		env = get_env_path(splitted[i], builtin_vars);
+		dprintf(2, "env= %s\n", env);
+		joinned = ft_strjoin("$", splitted[i]);
+		replaced = replace_str(*str, joinned, env);
+		dprintf(2, "replaced= %s\n", replaced);
+		free(*str);
+		*str = replaced;
+		free(joinned);
+	}
+	ft_free_tab(splitted);
 }
 
 void    expand_variable(char **args, t_builtin_vars *builtin_vars)
@@ -131,96 +128,83 @@ void    expand_variable(char **args, t_builtin_vars *builtin_vars)
 	int		x;
 	int		y;
 	char	*parameters;
-	int		amount_parameters;
+	builtin_vars->size = builtin_vars->size;
+	//int		amount_parameters;
+	int start;
+	//int end;
+	//char quote;
+	char *sub = NULL;
 
 	x = 0;
 	parameters = ft_strdup("");
+	start = -1;
 	while (args[x])
 	{
+		dprintf(2, "%d |%s|\n", x, args[x]);
 		y = 0;
 		while (args[x][y])
 		{
 			if (args[x][y] == '$')
 			{
-				amount_parameters = get_amount_character_2(args[x], '$');
-				if (amount_parameters == 1)
-					parameters = get_parameter(args, builtin_vars, x, y);
-				else if (amount_parameters > 1)
-					parameters = get_parameters(args, builtin_vars, x, y);
-				free(args[x]);
-				args[x] = ft_strdup(parameters);
-				free(parameters);
+				y++;
+				if (ft_isalpha(args[x][y]) || args[x][y] == '_')
+				{
+					start = y;
+					y++;
+					if (ft_isalnum(args[x][y]) || args[x][y] == '_')
+					{
+						while (ft_isalnum(args[x][y]) || args[x][y] == '_')
+							y++;
+					}
+					sub = ft_substr(args[x], start, y-start);
+					if (sub)
+						parameters = concat_strs(parameters, sub, " ");
+				}
+				y--;
 			}
 			y++;
 		}
+		if (args[x][0] != '\'' && args[x][ft_strlen(args[x])] != '\'')
+			expanded_variavel_OFICIAL(&args[x], parameters, builtin_vars);
 		x++;
 	}
+	free(parameters);
 }
-
-void	replace_str(char **args, int position, int start, int end)
-{
-	char *path;
-
-	path = ft_substr(args[position], start, end);
-	free(args[position]);
-	args[position] = ft_strdup(path);
-	free(path);
-}
-
-void	remove_extremities(char **args)
-{
-	int 	num_rows;
-
-	num_rows = ft_len_rows_tab(args);
-	if (args[1][0] == '\'')
-		replace_str(args, 1, 1, ft_strlen(args[1]));
-	if (args[num_rows-1][ft_strlen(args[num_rows-1]) -1] == '\'')
-		replace_str(args, num_rows -1, 0, ft_strlen(args[num_rows-1]) -1);
-}
-
-/* void	(char **args)
-{
-
-} */
 
 int expand_simple_quotes(char **args, t_builtin_vars *builtins)
 {
 	builtins->size = builtins->size;
 	int		x;
 	int		y;
-	int		i;
-	int		total_quotes;
-	int **indexes = malloc(sizeof(int **) * get_amount_parameter_in_quotes(args) +1);
-	total_quotes = get_amount_character(args, '\'');
-	if (total_quotes % 2 != 0)
-		return (false);
-	remove_extremities(args);
+	//int		start;
+	//int 	end;
+
+	
 	//dprintf(2, "total_quotes= %d\n", total_quotes);
-    x = 1;
-	i = 0;
+    x = 0;
 	while (args[x])
 	{
-		dprintf(2, "%d %s\n", x, args[x]);
+		//dprintf(2, "%d |%s|\n", x, args[x]);
 		y = 0;
 		while(args[x][y])
 		{
-			if (total_quotes > 2)
+			/* if (args[x][y] == '\'')
 			{
-				if (args[x][y] == '$' && args[x][y-1] == '\'')
-				{
-					dprintf(2, "Yes!\n");
-					indexes[i] = malloc(sizeof(int));
- 					(*indexes[i]) = x;
-					i++;
-				}
-			}
-			/* while (args[x][y] == '\'')
-				ft_memmove(args[x] +y, args[x] + (y+1), sizeof(char) * ft_strlen(args[x])); */
+				start = y+1;
+				dprintf(2, "start is %d\n", y);
+				y++;
+				while (args[x][y] != '\'')
+					y++;
+				dprintf(2, "end!\nStop!\n position y= %d\n", y);
+				char *sub = ft_substr(args[x], start, y);
+				dprintf(2, "sub= |%s|\n", sub);
+				//start = y;
+			} */
 			y++;
 		}
 		x++;
 	}
-	x = 1;
+	/* x = 1;
 	while (args[x])
 	{
 		y = 0;
@@ -231,8 +215,8 @@ int expand_simple_quotes(char **args, t_builtin_vars *builtins)
 			y++;
 		}
 		x++;
-	}
-	indexes[i] = NULL;
+	} */
+/* 	indexes[i] = NULL;
 	i = 0;
 	y = 0;
 	char	*parameter;
@@ -259,7 +243,7 @@ int expand_simple_quotes(char **args, t_builtin_vars *builtins)
 		free(args[(*indexes[i])]);
 		args[(*indexes[i])] = parameter; 
 		i++;
-	}
+	} */
     return (true);
 }
 
