@@ -206,4 +206,8 @@ void expander(char **args, t_builtin_vars *builtin_vars);
 int expand_double_quotes(char **args, t_builtin_vars *builtin_vars);
 int contains_quotes(char **args, int quote);
 int get_amount_character(char **args, char character);
+
+//quotes
+void    remove_quotes(char **args);
+
 #endif /* MINISHELL */

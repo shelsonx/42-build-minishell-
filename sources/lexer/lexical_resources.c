@@ -27,7 +27,7 @@ void    skip_space(t_tokenizer *tokenizer)
         advance(tokenizer);
 }
 
-int is_quote_cloded(t_tokenizer *tokenizer, char quote)
+int is_quote_closed(t_tokenizer *tokenizer, char quote)
 {
     while (tokenizer->current_char != quote)
     {
@@ -53,7 +53,7 @@ int check_quotes(t_tokenizer *tokenizer)
         quote = tokenizer->current_char;
         add_char(tokenizer);
         advance(tokenizer);
-        closed = is_quote_cloded(tokenizer, quote);
+        closed = is_quote_closed(tokenizer, quote);
         if (!closed)
         {
             ft_putendl_fd("Unclosed quotes!", 2);

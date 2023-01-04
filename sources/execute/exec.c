@@ -40,16 +40,16 @@ void	create_fd_out(t_parser *parser_data)
 
 char	**get_pipeline(t_data *data, t_parser *parser_data, int position)
 {
-	char *search = ht_search(parser_data->table, ft_itoa(position));
-	if (search[0] != '\'')
+	//char *search = ht_search(parser_data->table, ft_itoa(position));
+	//if (search[0] != '\'')
 		data->pipeline = ft_split(ht_search(parser_data->table, ft_itoa(position)), '|');
-	else
+	/* else
 	{
 		data->pipeline = malloc(sizeof(char **) * 2);
 		data->pipeline[0] = malloc(sizeof (char *) * ft_strlen(search) + 1);
 		data->pipeline[0] = ft_strdup(search);
 		data->pipeline[1] = NULL;
-	}
+	} */
 	return data->pipeline;
 }
 
@@ -152,6 +152,8 @@ int execute(t_parser *parser_data)
 	
 	//test expander
 	expander(data.pipeline, parser_data->builtin_vars);
+	//test remove quotes
+	remove_quotes(data.pipeline);
 	//teste builtin env
 	if (ft_strcmp(data.pipeline[0],"env") == 0)
 	{
