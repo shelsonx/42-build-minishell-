@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: progerio <progerio@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: shelson <shelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 13:32:44 by sjhony-x          #+#    #+#             */
-/*   Updated: 2022/11/19 18:46:30 by progerio         ###   ########.fr       */
+/*   Updated: 2023/01/03 22:39:04 by shelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,6 @@ char	*ft_utoa(unsigned int n);
 int		ft_len_rows_tab(char **tab);
 void	ft_free_tab(char **tab);
 int		ft_abs(int value);
-
+char	*ft_concat_strs(char *str1, char *str2, char *separator);
+char    *ft_replace_str(const char *s, const char *old, const char *new);
 #endif

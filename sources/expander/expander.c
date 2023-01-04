@@ -1,66 +1,5 @@
 #include "../../includes/minishell.h"
 
-char	*concat_strs(char *str1, char *str2, char *separator)
-{
-	char	*joinned;
-	char	*tmp;
-
-	tmp = ft_strjoin(str1, separator);
-	joinned = ft_strjoin(tmp, str2);
-	free(tmp);
-	free(str1);
-	free(str2);
-	return (joinned);
-}
-
-int count_occurrences(const char *s, const char *old)
-{
-    int     i;
-    int     count;
-    int     old_len;
-
-    i = 0;
-    count = 0;
-    old_len = strlen(old);
-    while (s[i])
-    {
-        if (ft_strnstr(&s[i], old, ft_strlen(s)) == &s[i])
-        {
-            count++;
-            i += old_len - 1;
-        }
-        i++;
-    }
-    return (count);
-}
-
-char    *replace_str(const char *s, const char *old, const char *new)
-{
-    char    *result;
-    int     i;
-    int     new_len;
-    int     old_len;
-
-    new_len = ft_strlen(new);
-    old_len = ft_strlen(old);
-    result = malloc(ft_strlen(s) + 
-        count_occurrences(s, old) * (new_len - old_len) + 1);
-    i = 0;
-    while (*s)
-    {
-        if (ft_strnstr(s, old, ft_strlen(s)) == s)
-        {
-            ft_strcpy(&result[i], (char *) new);
-            i += new_len;
-            s += old_len;
-        }
-        else
-            result[i++] = *s++;
-    }
-    result[i] = '\0';
-    return result;
-}
-
 void	parameter_expander(char **str, char *parameters, t_builtin_vars *builtin_vars)
 {
 	int		i;
@@ -75,7 +14,7 @@ void	parameter_expander(char **str, char *parameters, t_builtin_vars *builtin_va
 	{
 		env = get_env_path(splitted[i], builtin_vars);
 		joinned = ft_strjoin("$", splitted[i]);
-		replaced = replace_str(*str, joinned, env);
+		replaced = ft_replace_str(*str, joinned, env);
 		free(*str);
 		*str = replaced;
 		free(joinned);
@@ -103,7 +42,7 @@ char	*get_parameter(char **args, int *x, int *y)
 		}
 		sub = ft_substr(args[(*x)], start, (*y)-start);
 		if (sub)
-			parameter = concat_strs(parameter, sub, " ");
+			parameter = ft_concat_strs(parameter, sub, " ");
 	}
 	return (parameter);
 }
@@ -118,7 +57,7 @@ char	*get_parameters(char **args, int *x, int *y)
 		if (args[(*x)][(*y)] == '$')
 		{
 			(*y)++;
-			parameters = concat_strs(parameters, get_parameter(args, x, y), " ");
+			parameters = ft_concat_strs(parameters, get_parameter(args, x, y), " ");
 			(*y)--;
 		}
 		(*y)++;
