@@ -201,7 +201,7 @@ int 	is_quote(char c);
 void    parser(t_parser *parser);
 
 //expander
-void expand_variable(char **args, t_builtin_vars *builtin_vars);
+void expander(char **args, t_builtin_vars *builtin_vars);
  int expand_simple_quotes(char **args, t_builtin_vars *builtin_vars);
 int expand_double_quotes(char **args, t_builtin_vars *builtin_vars);
 int contains_quotes(char **args, int quote);
