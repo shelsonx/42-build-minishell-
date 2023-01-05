@@ -11,7 +11,6 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <fcntl.h>
-
 # define TRUE 1
 # define FALSE 0
 # define MININT -2147483648 
@@ -81,6 +80,7 @@ typedef struct s_data {
 	char	**args;
 	int		fd_in;
 	int		fd_out;
+	int 	*exit_status;
 	t_builtin_vars *builtin_vars;
 } t_data;
 
@@ -201,7 +201,7 @@ int 	is_quote(char c);
 void    parser(t_parser *parser);
 
 //expander
-void expander(char **args, t_builtin_vars *builtin_vars);
+void    expander(t_data *data, t_builtin_vars *builtin_vars);
  int expand_simple_quotes(char **args, t_builtin_vars *builtin_vars);
 int expand_double_quotes(char **args, t_builtin_vars *builtin_vars);
 int contains_quotes(char **args, int quote);

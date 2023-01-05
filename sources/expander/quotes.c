@@ -14,7 +14,7 @@ void    remove_quotes(char **args)
             quote[0] = args[x][0];
             args[x] = ft_strtrim(args[x], quote);
         }
-        while (args[x][ft_strlen(args[x]) -1] == quote[0])
+        while (args[x][ft_strlen(args[x]) -1] == quote[0] && is_quote(quote[0]))
            args[x] = ft_strtrim(args[x], quote);
         x++;
     }

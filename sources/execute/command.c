@@ -16,6 +16,40 @@ int	is_full_path(char *arg)
 	return (false);
 }
 
+int	get_exit_status(char *arg)
+{
+	char	*exec_command;
+	char	**paths;
+	int		i;
+
+	paths = get_paths_cmds(getenv("PATH"));
+	i = 0;
+	exec_command = NULL;
+	while (paths[i])
+	{
+		if (ft_strncmp("./", arg, 2) == 0)
+			exec_command = ft_substr(arg, 2, ft_strlen(arg));
+		else if (!is_full_path(arg))
+			exec_command = join_path_command(paths[i], arg);
+		else
+			exec_command = ft_strdup(arg);
+		if (access(exec_command, X_OK) == 0)
+		{
+			ft_free_tab(paths);
+			free(exec_command);
+			return (0);
+		}
+		i++;
+	}
+	if (access(exec_command, F_OK) == 0)
+	{
+		ft_free_tab(paths);
+		return (126);
+	}
+	ft_free_tab(paths);
+	return (127);
+}
+
 char	*get_exec_command(char *arg)
 {
 	char	*exec_command;
@@ -26,7 +60,9 @@ char	*get_exec_command(char *arg)
 	i = 0;
 	while (paths[i])
 	{
-		if (!is_full_path(arg))
+		if (ft_strncmp("./", arg, 2) == 0)
+			exec_command = ft_substr(arg, 2, ft_strlen(arg));
+		else if (!is_full_path(arg))
 			exec_command = join_path_command(paths[i], arg);
 		else
 			exec_command = ft_strdup(arg);
@@ -69,6 +105,7 @@ void	exec_one_command(t_data *data, int fd_in, int fd_out)
 	data->fd_in = fd_in;
 	data->fd_out = fd_out;
 	input_cmd = ft_strdup(data->pipeline[0]);
+	*data->exit_status = get_exit_status(input_cmd);
 	data->args = create_args(data->pipeline);
 	error_command_msg(data->args, input_cmd);
 	if (data->args[0] == NULL)
@@ -136,9 +173,12 @@ void	exec_last_command(t_data *data, int fd_in, int fd_out)
 	else
 		data->fd_out = fd_out;
 	input_cmd = ft_strdup(data->pipeline[0]);
+	*data->exit_status = get_exit_status(input_cmd);
 	data->args = create_args(data->pipeline);
 	error_command_msg(data->args, input_cmd);
 	if (data->args[0] == NULL)
 		return ;
+	else
+		*data->exit_status = 0;
 	execute_child_process(data);
 }

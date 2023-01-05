@@ -42,7 +42,7 @@ char	**get_pipeline(t_data *data, t_parser *parser_data, int position)
 {
 	//char *search = ht_search(parser_data->table, ft_itoa(position));
 	//if (search[0] != '\'')
-		data->pipeline = ft_split(ht_search(parser_data->table, ft_itoa(position)), '|');
+		data->pipeline = ft_split(ht_search(parser_data->table, ft_itoa(position)), '*');
 	/* else
 	{
 		data->pipeline = malloc(sizeof(char **) * 2);
@@ -72,7 +72,7 @@ int	new_get_fd_in(t_parser *parser_data, char *index_cmd)
 	{
 		search = ht_search(parser_data->table_redirection, ft_itoa(i));
 		redirection = ft_split(search, ' ');
-		expander(redirection, parser_data->builtin_vars);
+		//expander(redirection, parser_data->builtin_vars);
 		if (ft_strcmp(redirection[2], index_cmd) == 0)
 		{
 			if (strcmp(redirection[0], "<") == 0)
@@ -115,7 +115,7 @@ int	new_get_fd_out(t_parser *parser_data, char *index_cmd)
 	{
 		search = ht_search(parser_data->table_redirection, ft_itoa(i));
 		redirection = ft_split(search, ' ');
-		expander(redirection, parser_data->builtin_vars);
+		//expander(redirection, parser_data->builtin_vars);
 		if (ft_strcmp(redirection[2], index_cmd) == 0)
 		{
 			if (strcmp(redirection[0], ">") == 0)
@@ -140,6 +140,11 @@ int execute(t_parser *parser_data)
 {
 	t_data	data;
 	int		total_commands;
+	
+	//test exit status
+	
+	static int	 exit_status = 0;
+	data.exit_status = &exit_status;
 
 	data.builtin_vars = parser_data->builtin_vars;
 	total_commands = parser_data->index;
@@ -151,7 +156,7 @@ int execute(t_parser *parser_data)
 	data.pipeline = get_pipeline(&data, parser_data, 0);
 	
 	//test expander
-	expander(data.pipeline, parser_data->builtin_vars);
+	expander(&data, parser_data->builtin_vars);
 	//test remove quotes
 	remove_quotes(data.pipeline);
 	//teste builtin env
@@ -204,7 +209,8 @@ int execute(t_parser *parser_data)
 			new_get_fd_in(parser_data, ft_itoa(0)),
 			new_get_fd_out(parser_data, ft_itoa(0)));
 		exec_middles_commands(&data, parser_data, total_commands -2);
-		data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(total_commands -1)), ' ');
+		data.pipeline = get_pipeline(&data, parser_data, total_commands -1); 
+		//data.pipeline = ft_split(ht_search(parser_data->table, ft_itoa(total_commands -1)), ' ');
 		int fd_in = new_get_fd_in(parser_data, ft_itoa(total_commands -1));
 		if (fd_in == -1)
 			fd_in = data.fds[total_commands -2][0];
@@ -214,5 +220,7 @@ int execute(t_parser *parser_data)
 	int i = -1;
 	while (i++ < total_commands)
 		waitpid(-1, NULL, 0);
+	//test exit status
+	//dprintf(2, "exit status= %d\n", data.exit_status);
     return (0);
 }
