@@ -4,7 +4,7 @@ void			ft_pwd(t_builtin_vars *builtin_vars)
 {
 	char		*current_path;
 
-	current_path = getcwd((char *)NULL, 0);
+	current_path = get_env_path("PWD", builtin_vars);
 		if (!current_path)
 		{
 			printf("error"); //verificar o que colocar aqui
@@ -15,5 +15,4 @@ void			ft_pwd(t_builtin_vars *builtin_vars)
 			free(current_path);
 		}
 	ft_putstr_fd("\n", 1);
-	(void)builtin_vars;
 }

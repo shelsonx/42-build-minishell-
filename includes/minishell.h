@@ -103,6 +103,9 @@ void	init_env(t_builtin_vars *builtin_vars, char **envp);
 void	ft_env(t_builtin_vars *builtin_vars);
 void	ft_pwd(t_builtin_vars *builtin_vars);
 char    **get_env(t_builtin_vars *builtin_vars);
+char    **get_builtins_names(void);
+int 	is_builtins(char *builtin_name);
+int 	handler_builtins(t_data *data);
 
 int	count_args(char **declar);
 int	ft_echo(char **declar);

@@ -21,7 +21,8 @@ SRC				= main.c\
 				  exit_program.c \
 				  get_token.c lexical_analyzer.c lexical_resources.c \
 				  env.c pwd.c echo.c exit.c\
-				  expander.c quotes.c
+				  expander.c quotes.c \
+				  builtins.c
 
 VPATH 			:= $(SRC_PATH)\
 				$(SRC_PATH)prompt\

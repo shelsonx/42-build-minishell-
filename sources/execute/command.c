@@ -41,12 +41,9 @@ int	get_exit_status(char *arg)
 		}
 		i++;
 	}
-	if (access(exec_command, F_OK) == 0)
-	{
-		ft_free_tab(paths);
-		return (126);
-	}
 	ft_free_tab(paths);
+	if (access(exec_command, F_OK) == 0)
+		return (126);
 	return (127);
 }
 
@@ -105,14 +102,19 @@ void	exec_one_command(t_data *data, int fd_in, int fd_out)
 	data->fd_in = fd_in;
 	data->fd_out = fd_out;
 	input_cmd = ft_strdup(data->pipeline[0]);
-	*data->exit_status = get_exit_status(input_cmd);
-	data->args = create_args(data->pipeline);
-	error_command_msg(data->args, input_cmd);
-	if (data->args[0] == NULL)
-		return ;
-	child_pid = execute_child_process(data);
-	ft_close_fds(data->fds);
-	waitpid(child_pid, &status, 0);
+	if (is_builtins(input_cmd))
+		handler_builtins(data);
+	else
+	{
+		*data->exit_status = get_exit_status(input_cmd);
+		data->args = create_args(data->pipeline);
+		error_command_msg(data->args, input_cmd);
+		if (data->args[0] == NULL)
+			return ;
+		child_pid = execute_child_process(data);
+		ft_close_fds(data->fds);
+		waitpid(child_pid, &status, 0);
+	}
 }
 
 void	exec_first_command(t_data *data, int fd_in, int fd_out)
@@ -125,11 +127,19 @@ void	exec_first_command(t_data *data, int fd_in, int fd_out)
 	else
 		data->fd_out = fd_out;
 	input_cmd = ft_strdup(data->pipeline[0]);
-	data->args = create_args(data->pipeline);
-	error_command_msg(data->args, input_cmd);
-	if (data->args[0] == NULL)
+	if (is_builtins(input_cmd))
+	{
+		handler_builtins(data);
 		return ;
-	execute_child_process(data);
+	}
+	else
+	{
+		data->args = create_args(data->pipeline);
+		error_command_msg(data->args, input_cmd);
+		if (data->args[0] == NULL)
+			return ;
+		execute_child_process(data);
+	}
 }
 
 void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_middles)
@@ -154,6 +164,11 @@ void	exec_middles_commands(t_data *data, t_parser *parser_data, int total_cmds_m
 			data->fd_out = fd_out;
 		data->pipeline = ft_split(ht_search(parser_data->table, ft_itoa(i+1)), ' ');
 		input_cmd = ft_strdup(data->pipeline[0]);
+		if (is_builtins(input_cmd))
+		{
+			handler_builtins(data);
+			return ;
+		}
 		data->args = create_args(data->pipeline);
 		error_command_msg(data->args, input_cmd);
 		if (data->args[0] == NULL)
@@ -173,6 +188,11 @@ void	exec_last_command(t_data *data, int fd_in, int fd_out)
 	else
 		data->fd_out = fd_out;
 	input_cmd = ft_strdup(data->pipeline[0]);
+	if (is_builtins(input_cmd))
+	{
+		handler_builtins(data);
+		return ;
+	}
 	*data->exit_status = get_exit_status(input_cmd);
 	data->args = create_args(data->pipeline);
 	error_command_msg(data->args, input_cmd);
